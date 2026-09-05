@@ -6,29 +6,36 @@
   <link rel="icon" type="image/png" href="favicon.png">
   <title>UPSC Craft | Mains PYQ cum QCAB Generator</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=201">
+  <link rel="stylesheet" href="styles.css?v=10000">
 </head>
 <body>
 <script>
-  var APP_VERSION = '201'; 
+  // Force clear old data if version mismatches
+  var APP_VERSION = '10.0'; 
   if (localStorage.getItem('qcab_app_version') !== APP_VERSION) {
-    localStorage.clear();
-    localStorage.setItem('qcab_app_version', APP_VERSION);
+    localStorage.removeItem('qcab_user'); localStorage.removeItem('userToken');
+    localStorage.removeItem('qcab_nested_folders'); localStorage.removeItem('qcab_preset_bank'); 
+    localStorage.removeItem('user_progress'); localStorage.setItem('qcab_app_version', APP_VERSION);
+  }
+</script>
+<script>
+  // INSTANT GUEST BYPASS FOR TESTING
+  if (!localStorage.getItem('qcab_user')) {
+    localStorage.setItem('qcab_user', JSON.stringify({ email: 'guest@test.com', name: 'Guest', token: 'guest-token' }));
   }
 </script>
 
 <div class="app">
-  <!-- ===== SIDEBAR ===== -->
   <aside class="sidebar" id="main-sidebar">
     <div class="sidebar-header-mobile">
-      <span>Navigation Menu</span>
+      <span style="font-weight:750; font-size:13px; color:var(--muted);">Navigation Menu</span>
       <button type="button" class="mobile-menu-close" id="mobile-menu-close">✕</button>
     </div>
     <div class="brand">
       <img src="logo.png" alt="UPSC Craft Logo" class="brand-logo">
     </div>
 
-    <!-- Pure Navigation Sidebar -->
+    <!-- PURE NAVIGATION SIDEBAR -->
     <div class="nav-title">Workspace</div>
     <nav class="nav">
       <button type="button" class="nav-btn active" data-scroll="dashboard"><span class="nav-icon">⌂</span>Dashboard</button>
@@ -38,8 +45,10 @@
       <button type="button" class="nav-btn" data-scroll="my-study"><span class="nav-icon">📘</span>My Study</button>
     </nav>
 
+    <!-- SYLLABUS BUTTON -->
     <button type="button" class="nav-btn syllabus-btn" onclick="openSyllabusModal()">
-      <span class="nav-icon">📚</span>View Syllabus
+      <span class="nav-icon">📚</span>
+      <span>View Syllabus</span>
     </button>
     
     <div class="sidebar-bottom"></div>
@@ -47,7 +56,7 @@
 
   <div class="content">
     <div class="mobile-nav">
-      <div class="mobile-brand"><img src="logo.png" alt="Logo" class="brand-logo-mobile"> UPSC CRAFT</div>
+      <div class="mobile-brand"><img src="logo.png" alt="UPSC Craft Logo" class="brand-logo-mobile"> UPSC CRAFT</div>
       <div class="mobile-actions-right">
         <button type="button" class="mobile-theme-toggle" id="mobile-theme-toggle">🌙</button>
         <button type="button" class="mobile-menu-toggle" id="mobile-menu-toggle">☰</button>
@@ -58,7 +67,7 @@
     <header class="topbar">
       <div>
         <div class="topbar-title">UPSC Mains Answer Writing Workspace</div>
-        <div class="topbar-sub">Build, organize and print your booklet</div>
+        <div class="topbar-sub">Build, organize and print your question-cum-answer booklet</div>
       </div>
       <div class="topbar-actions">
         <button type="button" class="theme-toggle" id="theme-toggle"><span id="theme-icon">🌙</span><span id="theme-text">Dark Mode</span></button>
@@ -68,9 +77,9 @@
     <main class="page">
       <section class="hero" id="dashboard">
         <div>
-          <p class="eyebrow">An Initiative to Success</p>
+          <p class="eyebrow">An Initiative to success</p>
           <h1>UPSC Craft<br>PYQ cum QCAB Generator</h1>
-          <p>Find previous year questions, build your custom practice set and generate a print-ready booklet.</p>
+          <p>Find previous year questions, build your custom practice set and generate a print-ready answer booklet.</p>
         </div>
       </section>
       
@@ -78,9 +87,7 @@
         <div class="stat">
           <div class="stat-label">QUESTION BANK</div>
           <div class="stat-value" id="dashboard-bank-count">—</div>
-          <div class="stat-note">Click to view analysis</div>
-          <!-- Energetic "View Analysis" Button -->
-          <button type="button" class="btn btn-primary stats-btn" id="open-stats-btn">View Breakdown</button>
+          <div class="stat-note" id="question-breakdown" style="cursor:pointer; text-decoration:underline;">Click for paper breakdown</div>
         </div>
         <div class="stat"><div class="stat-label">ACTIVE QCAB</div><div class="stat-value" id="dashboard-q-count">0</div><div class="stat-note">Questions selected</div></div>
         <div class="stat"><div class="stat-label">ANSWER PAGES</div><div class="stat-value" id="dashboard-pages">0</div><div class="stat-note">Based on marks selected</div></div>
@@ -91,19 +98,19 @@
         <div class="folder-bar" id="folder-bar"></div>
       </div>
 
-      <section class="workspace">
+      <div class="workspace">
         <section>
           <div class="card" id="create-question">
             <div class="card-header">
-              <div><h2 class="card-title">Create Custom Question</h2><p class="card-sub">Add your own question directly to the active booklet.</p></div>
+              <div><h2 class="card-title" id="add-heading">Create Custom Question</h2><p class="card-sub">Add your own question directly to the active booklet.</p></div>
               <button type="button" class="btn btn-secondary-sm" id="toggle-create-section-btn">Hide Form ▾</button>
             </div>
             <div id="create-form-body">
-              <div class="field"><label>Paper</label><select id="q-paper"><option value="GS1">GS Paper 1</option><option value="GS2">GS Paper 2</option><option value="GS3">GS Paper 3</option><option value="GS4">GS Paper 4</option><option value="OPT1">Anthropology Optional Paper 1</option><option value="OPT2">Anthropology Optional Paper 2</option></select></div>
-              <div class="field"><label>Subtopic</label><select id="q-topic"></select></div>
-              <div class="field"><label>Question Text</label><textarea id="q-text" placeholder="Paste or type your question here..."></textarea></div>
-              <div class="field"><label>Marks</label><div class="marks-row"><button type="button" class="marks-btn" data-marks="10" aria-pressed="true">10 Marks</button><button type="button" class="marks-btn" data-marks="15">15 Marks</button><button type="button" class="marks-btn" data-marks="20">20 Marks</button></div></div>
-              <div class="field"><label>Year (optional)</label><input type="text" id="q-year" placeholder="e.g. 2025"></div>
+              <div class="field"><label for="q-paper">Paper</label><select id="q-paper"><option value="GS1">GS Paper 1</option><option value="GS2">GS Paper 2</option><option value="GS3">GS Paper 3</option><option value="GS4">GS Paper 4</option><option value="OPT1">Anthropology Optional Paper 1</option><option value="OPT2">Anthropology Optional Paper 2</option></select></div>
+              <div class="field"><label for="q-topic">Subtopic</label><select id="q-topic"></select></div>
+              <div class="field"><label for="q-text">Question Text</label><textarea id="q-text" placeholder="Paste or type your question here..."></textarea></div>
+              <div class="field"><label>Marks</label><div class="marks-row"><button type="button" class="marks-btn" data-marks="10" aria-pressed="true">10 Marks</button><button type="button" class="marks-btn" data-marks="15" aria-pressed="false">15 Marks</button><button type="button" class="marks-btn" data-marks="20" aria-pressed="false">20 Marks</button></div></div>
+              <div class="field"><label for="q-year">Year <span style="font-weight:500">(optional)</span></label><input type="text" id="q-year" placeholder="e.g. 2025"></div>
               <div class="field checkbox-row"><input type="checkbox" id="include-index" checked><label for="include-index">Include index page in PDF</label></div>
               <div class="form-actions">
                 <button type="button" class="btn btn-primary btn-wide" id="add-btn">Add to Active Folder</button>
@@ -115,16 +122,16 @@
 
           <div class="card" id="pyq-bank">
             <div class="card-header">
-              <div><h2 class="card-title">PYQ Bank</h2><p class="card-sub">Search by question, topic, paper or year.</p></div>
+              <div><h2 class="card-title">PYQ Bank</h2><p class="card-sub">Search by question, topic, paper or year. Results update as you type.</p></div>
               <div class="bank-top-actions">
-                <button type="button" class="btn-bank-action" id="toggle-bank-btn"><span id="toggle-bank-icon">▼</span><span id="toggle-bank-text">Hide<br>Bank</span></button>
+                <button type="button" class="btn-bank-action" id="toggle-bank-btn"><span class="action-arrow" id="toggle-bank-icon">▼</span><span id="toggle-bank-text">Hide<br>Bank</span></button>
                 <button type="button" class="btn-bank-action reset-btn" id="clear-bank-btn"><span>Reset<br>Bank</span></button>
               </div>
             </div>
             
             <div id="pyq-bank-body">
               <div class="pill-switcher-container">
-                <div class="pill-switcher">
+                <div class="pill-switcher" id="search-mode-switcher">
                   <button type="button" class="pill-btn active" id="btn-filter-year" onclick="switchFilterMode('year', this)">Filter by Year</button>
                   <button type="button" class="pill-btn" id="btn-filter-subtopic" onclick="switchFilterMode('subtopic', this)">Filter by Subtopic</button>
                 </div>
@@ -134,9 +141,7 @@
 
               <div class="filter-box">
                 <div class="filter-controls-stack">
-                  <select id="filter-paper">
-                    <option value="ALL">All Papers</option><option value="GS1">GS Paper 1</option><option value="GS2">GS Paper 2</option><option value="GS3">GS Paper 3</option><option value="GS4">GS Paper 4</option><option value="OPT1">Anthro Optional Paper 1</option><option value="OPT2">Anthro Optional Paper 2</option>
-                  </select>
+                  <select id="filter-paper"><option value="ALL">All Papers</option><option value="GS1">GS Paper 1</option><option value="GS2">GS Paper 2</option><option value="GS3">GS Paper 3</option><option value="GS4">GS Paper 4</option><option value="OPT1">Anthropology Optional Paper 1</option><option value="OPT2">Anthropology Optional Paper 2</option></select>
                   <select id="filter-topic"><option value="ALL">All Subtopics</option></select>
                   <select id="filter-year"><option value="ALL">All Years</option></select>
                   <button type="button" class="btn btn-primary btn-wide" id="search-bank-btn">Search</button>
@@ -148,7 +153,7 @@
             </div>
           </div>
         </section>
-      </section>
+      </div>
 
       <aside class="card sticky-card" id="my-qcab">
         <div class="card-header"><div><h2 class="card-title">My QCAB</h2><p class="card-sub">Questions in your active booklet.</p></div><span class="tag" id="count-tag">0 questions</span></div>
@@ -157,7 +162,7 @@
           <button type="button" class="btn btn-secondary-sm btn-danger" id="delete-folder-btn">Delete</button>
           <button type="button" class="btn btn-secondary-sm" id="clear-q-btn">Clear</button>
         </div>
-        <div id="empty-state" class="empty-state"><div style="font-size:28px;margin-bottom:8px;">▣</div><strong>Your booklet is empty</strong>Add questions from the PYQ Bank or create a custom question.</div>
+        <div id="empty-state" class="empty-state"><div style="font-size:28px;margin-bottom:8px;">▣</div><strong style="display:block;color:var(--text);margin-bottom:4px;">Your booklet is empty</strong>Add questions from the PYQ Bank or create a custom question.</div>
         <ol class="q-list" id="q-list"></ol>
         <div class="summary-bar" id="summary-bar" style="display:none;"><div class="summary-stat"><span>TOTAL MARKS</span><strong id="total-marks">0</strong></div><div class="summary-stat"><span>ANSWER PAGES</span><strong id="total-pages">0</strong></div></div>
         <button type="button" class="btn-generate" id="generate-btn" disabled>⇩ Generate &amp; Download PDF</button>
@@ -165,14 +170,14 @@
 
       <section id="my-study" style="margin-top:30px;">
         <div class="card">
-          <div class="card-header"><div><h2 class="card-title">📘 My Study</h2><p class="card-sub">Bookmark questions, mark as revised, add notes, and track progress.</p></div></div>
+          <div class="card-header"><div><h2 class="card-title">📘 My Study</h2><p class="card-sub">Bookmark questions, mark as revised, add notes, and track your progress.</p></div></div>
           <div id="study-dashboard">
             <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin-bottom:16px;">
               <div class="stat" style="padding:14px;"><div class="stat-label">📌 Bookmarked</div><div class="stat-value" id="study-bookmarked">0</div></div>
               <div class="stat" style="padding:14px;"><div class="stat-label">✅ Revised</div><div class="stat-value" id="study-revised">0</div></div>
               <div class="stat" style="padding:14px;"><div class="stat-label">📝 With Notes</div><div class="stat-value" id="study-notes">0</div></div>
             </div>
-            <div id="study-list-container"></div>
+            <div id="study-list-container"><p style="color:var(--muted);">Your bookmarked questions will appear here.</p></div>
           </div>
         </div>
       </section>
@@ -182,18 +187,7 @@
   </div>
 </div>
 
-<!-- Stats Modal (Stylish, not Alert) -->
-<div class="stats-modal-overlay" id="stats-modal-overlay">
-  <div class="stats-modal-content">
-    <div class="stats-modal-header">
-      <h2>📊 Question Analysis</h2>
-      <button class="stats-modal-close" onclick="closeStatsModal()">✕</button>
-    </div>
-    <div id="stats-modal-body"></div>
-  </div>
-</div>
-
-<!-- Syllabus Modal -->
+<!-- SYLLABUS MODAL -->
 <div class="syllabus-modal-overlay" id="syllabus-modal-overlay">
   <div class="syllabus-modal-content">
     <div class="syllabus-modal-header"><h2>UPSC Syllabus</h2><button class="syllabus-modal-close" onclick="closeSyllabusModal()">✕</button></div>
@@ -205,188 +199,104 @@
 </div>
 
 <div class="study-modal" id="note-modal"><div class="study-modal-content"><h3>📝 Add Note</h3><textarea id="note-textarea"></textarea><div class="btn-row"><button class="btn btn-secondary-sm" id="note-save-btn">Save</button><button class="btn btn-secondary-sm btn-danger" id="note-cancel-btn">Cancel</button></div></div></div>
+<div class="toast" id="toast"><span class="toast-icon" id="toastIcon">✅</span><span id="toastMessage">Copied!</span></div>
 
-<!-- SCRIPTS -->
-<script src="js/syllabus-data.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.6.2"></script>
+<script src="js/config.js?v=10000"></script>
+<script src="js/syllabus-data.js?v=10000"></script>
+<script src="js/app.js?v=10000"></script>
+<script src="js/features.js?v=10000"></script>
+
 <script>
 document.addEventListener('DOMContentLoaded', function() {
   lucide.createIcons();
-  
-  /* ==========================================
-     1. SIDEBAR NAVIGATION (Fix for clicking)
-     ========================================== */
-  document.querySelectorAll('[data-scroll]').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const id = btn.dataset.scroll;
-      const target = document.getElementById(id);
-      if (target) {
-        const offset = window.innerWidth <= 820 ? 70 : 10;
-        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        window.scrollBy(0, -offset);
-      }
-      document.querySelectorAll('.nav-btn[data-scroll]').forEach(n => n.classList.remove('active'));
-      const match = document.querySelector(`.nav-btn[data-scroll="${id}"]`);
-      if (match) match.classList.add('active');
-      
-      // Close mobile menu if open
-      document.getElementById('main-sidebar').classList.remove('mobile-open');
-      document.getElementById('mobile-backdrop').classList.remove('active');
-    });
-  });
+});
 
-  /* ==========================================
-     2. STATS MODAL (Replaces the ugly alert)
-     ========================================== */
-  const statsBtn = document.getElementById('open-stats-btn');
-  const statsModal = document.getElementById('stats-modal-overlay');
-
-  function openStatsModal() {
-    const bank = JSON.parse(localStorage.getItem('qcab_preset_bank') || '[]');
-    const body = document.getElementById('stats-modal-body');
-    
-    // Group by paper
-    let data = {};
-    bank.forEach(q => {
-      let paper = q.paper || 'GS1';
-      let topic = q.topic || 'General';
-      
-      if(!data[paper]) data[paper] = {};
-      if(!data[paper][topic]) data[paper][topic] = 0;
-      data[paper][topic]++;
-    });
-
-    let html = '';
-    for (let paper in data) {
-      let totalPaper = 0;
-      let topicsHTML = '';
-      
-      for (let topic in data[paper]) {
-        let count = data[paper][topic];
-        totalPaper += count;
-        topicsHTML += `<div class="stats-topic-row">
-            <span>${topic}</span>
-            <strong>${count} questions</strong>
-          </div>`;
-      }
-      
-      html += `<div class="stats-paper-card">
-        <div class="stats-paper-header">
-          <h3>${paper}</h3>
-          <span class="stats-paper-total">Total: ${totalPaper}</span>
-        </div>
-        <div class="stats-topic-list">${topicsHTML}</div>
-      </div>`;
+/* NAVIGATION LOGIC */
+document.querySelectorAll('[data-scroll]').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const id = btn.dataset.scroll;
+    const target = document.getElementById(id);
+    if (target) {
+      const offset = window.innerWidth <= 820 ? 70 : 10;
+      target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      window.scrollBy(0, -offset);
     }
-    
-    if(bank.length === 0) {
-      html = '<p style="color:var(--muted)">No questions loaded.</p>';
-    }
-    
-    body.innerHTML = html;
-    statsModal.classList.add('active');
-    document.body.classList.add('modal-open');
-  }
-
-  function closeStatsModal() {
-    statsModal.classList.remove('active');
-    document.body.classList.remove('modal-open');
-  }
-
-  statsBtn.addEventListener('click', openStatsModal);
-  statsModal.addEventListener('click', function(e) {
-    if (e.target === this) closeStatsModal();
-  });
-
-  /* ==========================================
-     3. SYLLABUS MODAL LOGIC
-     ========================================== */
-  window.openSyllabusModal = function() {
-    var cardsHolder = document.getElementById('syllabus-cards-holder');
-    var menu = document.getElementById('syllabus-main-menu');
-    var detail = document.getElementById('syllabus-detail-view');
-    menu.style.display = 'block';
-    detail.style.display = 'none';
-
-    if (cardsHolder.children.length === 0) {
-      for (var key in SYLLABUS_DATA) {
-        var item = SYLLABUS_DATA[key];
-        var card = document.createElement('div');
-        card.className = 'syllabus-menu-card';
-        card.style.borderTop = '5px solid ' + item.color;
-        card.innerHTML = '<span class="syllabus-menu-card-icon">' + item.icon + '</span><div class="syllabus-menu-card-title" style="color:' + item.color + ';">' + item.title + '</div>';
-        card.setAttribute('data-key', key);
-        card.onclick = function() { openSyllabusTopic(this.getAttribute('data-key')); };
-        cardsHolder.appendChild(card);
-      }
-    }
-    document.getElementById('syllabus-modal-overlay').classList.add('active');
-    document.body.classList.add('modal-open');
-  };
-
-  window.closeSyllabusModal = function() {
-    document.getElementById('syllabus-modal-overlay').classList.remove('active');
-    document.body.classList.remove('modal-open');
-  };
-
-  window.openSyllabusTopic = function(key) {
-    var item = SYLLABUS_DATA[key];
-    document.getElementById('syllabus-main-menu').style.display = 'none';
-    document.getElementById('syllabus-detail-view').style.display = 'block';
-    var detailContent = document.getElementById('syllabus-detail-content');
-    detailContent.style.borderTop = '5px solid ' + item.color;
-    detailContent.innerHTML = '<h3 style="color:' + item.color + '; margin-bottom: 15px;">' + item.title + '</h3>' + item.html;
-  };
-
-  window.backToSyllabusMenu = function() {
-    document.getElementById('syllabus-detail-view').style.display = 'none';
-    document.getElementById('syllabus-main-menu').style.display = 'block';
-  };
-
-  /* ==========================================
-     4. FILTER MODE (Always show Year & Topic)
-     ========================================== */
-  window.switchFilterMode = function(mode, btn) {
-    document.getElementById('btn-filter-year').classList.remove('active');
-    document.getElementById('btn-filter-subtopic').classList.remove('active');
-    btn.classList.add('active');
-    
-    document.getElementById('filter-year').style.display = 'block';
-    document.getElementById('filter-topic').style.display = 'block';
-    
-    document.getElementById('search-bank-btn').click();
-  };
-
-  /* ==========================================
-     5. MOBILE MENU
-     ========================================== */
-  const sidebar = document.getElementById('main-sidebar');
-  const backdrop = document.getElementById('mobile-backdrop');
-  document.getElementById('mobile-menu-toggle').addEventListener('click', () => {
-    sidebar.classList.add('mobile-open');
-    backdrop.classList.add('active');
-  });
-  document.getElementById('mobile-menu-close').addEventListener('click', () => {
-    sidebar.classList.remove('mobile-open');
-    backdrop.classList.remove('active');
-  });
-  backdrop.addEventListener('click', () => {
-    sidebar.classList.remove('mobile-open');
-    backdrop.classList.remove('active');
-  });
-
-  /* ==========================================
-     6. THEME
-     ========================================== */
-  const themeToggle = document.getElementById('theme-toggle');
-  const themeIcon = document.getElementById('theme-icon');
-  const themeText = document.getElementById('theme-text');
-  themeToggle.addEventListener('click', () => {
-    document.body.classList.toggle('dark-mode');
-    const isDark = document.body.classList.contains('dark-mode');
-    themeIcon.textContent = isDark ? '☀️' : '🌙';
-    themeText.textContent = isDark ? 'Light Mode' : 'Dark Mode';
+    document.querySelectorAll('.nav-btn[data-scroll]').forEach(n => n.classList.remove('active'));
+    const match = document.querySelector(`.nav-btn[data-scroll="${id}"]`);
+    if (match) match.classList.add('active');
   });
 });
+
+/* QUESTION BANK BREAKDOWN CLICK */
+document.addEventListener('DOMContentLoaded', function() {
+  const qbEl = document.getElementById('question-breakdown');
+  if (qbEl) {
+    qbEl.addEventListener('click', function() {
+      const bank = JSON.parse(localStorage.getItem('qcab_preset_bank') || '[]');
+      let stats = {};
+      bank.forEach(q => { stats[q.paper] = (stats[q.paper] || 0) + 1; });
+      let text = '📊 Question Breakdown:\n\n';
+      text += 'GS1: ' + (stats['GS1'] || 0) + '\nGS2: ' + (stats['GS2'] || 0) + '\nGS3: ' + (stats['GS3'] || 0) + '\nGS4: ' + (stats['GS4'] || 0);
+      if(stats['OPT1']) text += '\nOPT1: ' + stats['OPT1'];
+      if(stats['OPT2']) text += '\nOPT2: ' + stats['OPT2'];
+      alert(text);
+    });
+  }
+});
+
+/* SYLLABUS FUNCTIONS */
+function openSyllabusModal() {
+  var cardsHolder = document.getElementById('syllabus-cards-holder');
+  var menu = document.getElementById('syllabus-main-menu');
+  var detail = document.getElementById('syllabus-detail-view');
+  menu.style.display = 'block'; detail.style.display = 'none';
+  if (cardsHolder.children.length === 0) {
+    cardsHolder.innerHTML = '';
+    for (var key in SYLLABUS_DATA) {
+      var item = SYLLABUS_DATA[key];
+      var card = document.createElement('div');
+      card.className = 'syllabus-menu-card';
+      card.style.borderTop = '5px solid ' + item.color;
+      card.innerHTML = '<span class="syllabus-menu-card-icon">' + item.icon + '</span><div class="syllabus-menu-card-title" style="color:' + item.color + ';">' + item.title + '</div>';
+      card.setAttribute('data-key', key);
+      card.onclick = function() { openSyllabusTopic(this.getAttribute('data-key')); };
+      cardsHolder.appendChild(card);
+    }
+  }
+  document.getElementById('syllabus-modal-overlay').classList.add('active');
+  document.body.classList.add('modal-open');
+}
+
+function closeSyllabusModal() {
+  document.getElementById('syllabus-modal-overlay').classList.remove('active');
+  document.body.classList.remove('modal-open');
+}
+
+function openSyllabusTopic(key) {
+  var item = SYLLABUS_DATA[key]; if (!item) return;
+  document.getElementById('syllabus-main-menu').style.display = 'none';
+  document.getElementById('syllabus-detail-view').style.display = 'block';
+  var detailContent = document.getElementById('syllabus-detail-content');
+  detailContent.style.borderTop = '5px solid ' + item.color;
+  detailContent.innerHTML = '<h3 style="color:' + item.color + '; margin-bottom: 15px;">' + item.title + '</h3>' + item.html;
+}
+
+function backToSyllabusMenu() {
+  document.getElementById('syllabus-detail-view').style.display = 'none';
+  document.getElementById('syllabus-main-menu').style.display = 'block';
+}
+
+/* FILTER MODE (Always shows both Year and Topic) */
+function switchFilterMode(mode, btn) {
+  document.getElementById('btn-filter-year').classList.remove('active');
+  document.getElementById('btn-filter-subtopic').classList.remove('active');
+  btn.classList.add('active');
+  document.getElementById('filter-year').style.display = 'block';
+  document.getElementById('filter-topic').style.display = 'block';
+  document.getElementById('search-bank-btn').click();
+}
 </script>
 </body>
 </html>
