@@ -285,3 +285,61 @@ body.modal-open { overflow: hidden; }
   .bank-actions { justify-content: flex-start; width: 100%; }
   .btn-study, .btn-add-item, .btn-direct-pdf, .btn-ai-highlight { width: auto; flex: 1 1 45%; }
 }
+/* ==========================================================
+   FINAL PREMIUM GRADIENT OVERRIDE (PASTE AT BOTTOM)
+   ========================================================== */
+
+/* New Folder / Folder Tabs - Vibrant Indigo Gradient */
+.folder-tab, .btn-new-folder {
+    background: linear-gradient(135deg, #6366f1, #06b6d4) !important;
+    border: none !important;
+    color: #ffffff !important;
+    font-weight: 800 !important;
+    border-radius: 999px !important;
+    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3) !important;
+}
+.folder-tab:hover, .btn-new-folder:hover {
+    background: linear-gradient(135deg, #4f46e5, #0891b2) !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 0 8px 20px rgba(99, 102, 241, 0.4) !important;
+}
+
+/* Rename, Delete, Clear - Soft Gradient with Dark Indigo Text */
+.btn-secondary-sm {
+    background: linear-gradient(135deg, #e0e7ff, #cffafe) !important;
+    border: 1px solid #a5b4fc !important;
+    color: #4f46e5 !important;
+    font-weight: 800 !important;
+    box-shadow: 0 2px 8px rgba(99, 102, 241, 0.1) !important;
+}
+.btn-secondary-sm:hover {
+    background: linear-gradient(135deg, #6366f1, #06b6d4) !important;
+    color: #ffffff !important;
+    border-color: transparent !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 0 6px 16px rgba(99, 102, 241, 0.3) !important;
+}
+
+/* Hide Bank / Reset Bank - Premium Gradient */
+.btn-bank-action {
+    background: linear-gradient(135deg, #e0e7ff, #cffafe) !important;
+    border: 1px solid #a5b4fc !important;
+    color: #4f46e5 !important;
+    font-weight: 800 !important;
+}
+.btn-bank-action:hover {
+    background: linear-gradient(135deg, #6366f1, #06b6d4) !important;
+    color: #ffffff !important;
+    border-color: transparent !important;
+}
+
+/* Reset Bank (Danger Action) - Red Gradient */
+.btn-bank-action.reset-btn {
+    background: linear-gradient(135deg, #fee2e2, #fecaca) !important;
+    border: 1px solid #fca5a5 !important;
+    color: #b91c1c !important;
+}
+.btn-bank-action.reset-btn:hover {
+    background: linear-gradient(135deg, #dc2626, #b91c1c) !important;
+    color: #ffffff !important;
+}
