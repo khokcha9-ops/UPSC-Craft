@@ -1,10 +1,10 @@
 // ============================================================
-// UPSC SYLLABUS DATA (Single-Column Full Text + Unique Styles)
+// UPSC SYLLABUS DATA (FULL TEXT - NO SUMMARIES)
 // ============================================================
 
 const PRELIMS_TEXT = `
     <div class="detail-card-content prelims-card">
-        <strong>Paper I - (200 marks) Duration : Two hours</strong>
+        <strong>Paper I - (200 marks) Duration : Two hours</strong><br>
         <ul>
             <li>Current events of national and international importance.</li>
             <li>History of India and Indian National Movement.</li>
@@ -13,8 +13,7 @@ const PRELIMS_TEXT = `
             <li>Economic and Social Development Sustainable Development, Poverty, Inclusion, Demographics, Social Sector initiatives, etc.</li>
             <li>General issues on Environmental Ecology, Bio-diversity and Climate Change - that do not require subject specialization.</li>
             <li>General Science.</li>
-        </ul>
-        <br>
+        </ul><br>
         <strong>Paper II- (200 marks) Duration: Two hours</strong>
         <ul>
             <li>Comprehension</li>
@@ -121,37 +120,94 @@ const GS4_TEXT = `
     </div>`;
 
 const ANTHRO1_TEXT = `
-    <ul class="anthro-index">
-        <li><strong>1.1 Meaning, scope and development of Anthropology.</strong><p>Relationships with other disciplines: Social Sciences, Behavioural Sciences, Life Sciences, Medical Sciences, Earth Sciences and Humanities.</p></li>
-        <li><strong>1.3 Main branches of Anthropology</strong><p>Social-cultural, Biological, Archaeological, and Linguistic Anthropology.</p></li>
-        <li><strong>1.4 Human Evolution and emergence of Man</strong><p>Biological and Cultural factors in human evolution. Theories of Organic Evolution. Synthetic theory of evolution, terms and concepts of evolutionary biology.</p></li>
-        <li><strong>1.5 Characteristics of Primates</strong><p>Evolutionary Trend and Primate Taxonomy, Primate Adaptations, Primate Behaviour, Comparative Anatomy of Man and Apes.</p></li>
-        <li><strong>1.6 Phylogenetic status</strong><p>Australopithecines, Homo erectus, Neanderthal Man, Rhodesian man, Homo sapiens — Cromagnon, Grimaldi and Chancelede.</p></li>
-        <li><strong>1.7 Biological basis of life</strong><p>The Cell, DNA structure and replication, Protein Synthesis, Gene, Mutation, Chromosomes, and Cell Division.</p></li>
-        <li><strong>1.8 Principles of Prehistoric Archaeology</strong><p>Chronology: Relative and Absolute Dating methods. Cultural Evolution: Paleolithic to Iron Age.</p></li>
-        <li><strong>2.1-2.5 Culture, Society, Marriage, Family, Kinship</strong><p>Ethnocentrism, Social Institutions, Types of marriage, Types of family, Descent groups.</p></li>
-        <li><strong>3-5 Economic, Political, Religion</strong><p>Formalist/Substantivist debate, Band/tribe/state, Anthropological approaches to religion, Religion and magic.</p></li>
-        <li><strong>6. Anthropological theories</strong><p>Evolutionism, Historical particularism, Functionalism, Structuralism, Culture and personality, Neo-evolutionism, Cultural materialism, Post-modernism.</p></li>
-        <li><strong>7-8 Culture, language, communication & Research methods</strong><p>Nature of language, Fieldwork tradition, Tools of data collection, Analysis & interpretation.</p></li>
-        <li><strong>9.1-9.8 Human Genetics, Race, Ecology</strong><p>Mendelian genetics, Genetic polymorphism, Chromosomal aberrations, Race and racism, Ecological Anthropology, Epidemiological Anthropology.</p></li>
-        <li><strong>10-11 Human growth & Fertility</strong><p>Stages of growth, Ageing, Somatotypes, Demographic theories, Biological factors influencing fertility.</p></li>
-        <li><strong>12. Applications of Anthropology</strong><p>Forensic Anthropology, Applied human genetics, DNA technology, Sports & Nutritional anthropology.</p></li>
-    </ul>`;
+    <div class="detail-card-content anthro1-card">
+        <strong>PAPER - I</strong>
+        <ul>
+            <li><strong>1.1</strong> Meaning, scope and development of Anthropology.</li>
+            <li><strong>1.2</strong> Relationships with other disciplines: Social Sciences, Behavioural Sciences, Life Sciences, Medical Sciences, Earth Sciences and Humanities.</li>
+            <li><strong>1.3</strong> Main branches of Anthropology, their scope and relevance:
+                <ul>
+                    <li>(a) Social- cultural Anthropology.</li>
+                    <li>(b) Biological Anthropology.</li>
+                    <li>(c) Archaeological Anthropology.</li>
+                    <li>(d) Linguistic Anthropology.</li>
+                </ul>
+            </li>
+            <li><strong>1.4</strong> Human Evolution and emergence of Man:
+                <ul>
+                    <li>(a) Biological and Cultural factors in human evolution.</li>
+                    <li>(b) Theories of Organic Evolution (PreDarwinian, Darwinian and Post-Darwinian).</li>
+                    <li>(c) Synthetic theory of evolution; Brief outline of terms and concepts of evolutionary biology (Doll's rule, Cope's rule, Gause's rule, parallelism, convergence, adaptive radiation, and mosaic evolution).</li>
+                </ul>
+            </li>
+            <li><strong>1.5</strong> Characteristics of Primates; Evolutionary Trend and Primate Taxonomy; Primate Adaptations; (Arboreal and Terrestrial) Primate Taxonomy; Primate Behaviour; Tertiary and Quaternary fossil primates; Living Major Primates; Comparative Anatomy of Man and Apes; Skeletal changes due to erect posture and its implications.</li>
+            <li><strong>1.6</strong> Phylogenetic status, characteristics and geographical distribution of the following:
+                <ul>
+                    <li>(a) Plio-pleistocene hominids in South and East Africa - Australopithecines.</li>
+                    <li>(b) Homo erectus: Africa (Paranthropus), Europe (Homo erectus heidelbergensis), Asia (Homo erectus javanicus, Homo erectus pekinensis)</li>
+                    <li>(c) Neanderthal Man- La-Chapelle-auxsaints (Classical type), Mt. Carmel (Progressive type).</li>
+                    <li>(d) Rhodesian man.</li>
+                    <li>(e) Homo sapiens — Cromagnon, Grimaldi and Chancelede.</li>
+                </ul>
+            </li>
+            <li><strong>1.7</strong> The biological basis of life: The Cell, DNA structure and replication, Protein Synthesis, Gene, Mutation, Chromosomes, and Cell Division.</li>
+            <li><strong>1.8</strong> (a) Principles of Prehistoric Archaeology. Chronology: Relative and Absolute Dating methods. (b) Cultural Evolution- Broad Outlines of Prehistoric cultures: (i) Paleolithic (ii) Mesolithic (iii) Neolithic (iv) Chalcolithic (v) Copper-Bronze Age (vi) Iron Age</li>
+            <li><strong>2.1</strong> The Nature of Culture : The concept and characteristics of culture and civilization; Ethnocentrism vis-à-vis cultural Relativism.</li>
+            <li><strong>2.2</strong> The Nature of Society: Concept of Society; Society and Culture; Social Institutions; Social groups; and Social stratification.</li>
+            <li><strong>2.3</strong> Marriage: Definition and universality; Laws of marriage (endogamy, exogamy, hypergamy, hypogamy, incest taboo); Types of marriage (monogamy, polygamy, polyandry, group marriage). Functions of marriage; Marriage regulations (preferential, prescriptive and proscriptive); Marriage payments (bride wealth and dowry).</li>
+            <li><strong>2.4</strong> Family: Definition and universality; Family, household and domestic groups; functions of family; Types of family (from the perspectives of structure, blood relation, marriage, residence and succession); Impact of urbanization, industrialization and feminist movements on family.</li>
+            <li><strong>2.5</strong> Kinship: Consanguinity and Affinity; Principles and types of descent (Unilineal, Double, Bilateral, Ambilineal); Forms of descent groups (lineage, clan, phratry, moiety and kindred); Kinship terminology (descriptive and classificatory); Descent, Filiation and Complimentary Filiation; Descent and Alliance.</li>
+            <li><strong>3.</strong> Economic organization: Meaning, scope and relevance of economic anthropology; Formalist and Substantivist debate; Principles governing production, distribution and exchange (reciprocity, redistribution and market), in communities, subsisting on hunting and gathering, fishing, swiddening, pastoralism, horticulture, and agriculture; globalization and indigenous economic systems.</li>
+            <li><strong>4.</strong> Political organization and Social Control: Band, tribe, chiefdom, kingdom and state; concepts of power, authority and legitimacy; social control, law and justice in simple societies.</li>
+            <li><strong>5.</strong> Religion: Anthropological approaches to the study of religion (evolutionary, psychological and functional); monotheism and polytheism; sacred and profane; myths and rituals; forms of religion in tribal and peasant societies (animism, animatism, fetishism, naturism and totemism); religion, magic and science distinguished; magicoreligious functionaries (priest, shaman, medicine man, sorcerer and witch).</li>
+            <li><strong>6.</strong> Anthropological theories: (a) Classical evolutionism (Tylor, Morgan and Frazer) (b) Historical particularism (Boas); Diffusionism (British, German and American) (c) Functionalism (Malinowski); Structural-functionlism (Radcliffe-Brown) (d) Structuralism (L'evi - Strauss and E.Leach) (e) Culture and personality (Benedict, Mead, Linton, Kardiner and Cora – du Bois). (f) Neo - evolutionism (Childe, White, Steward, Sahlins and Service) (g) Cultural materialism (Harris) (h) Symbolic and interpretive theories (Turner, Schneider and Geertz) (i) Cognitive theories (Tyler, Conklin) (j) Post- modernism in anthropology</li>
+            <li><strong>7.</strong> Culture, language and communication: Nature, origin and characteristics of language; verbal and non-verbal communication; social context of language use.</li>
+            <li><strong>8.</strong> Research methods in anthropology: (a) Fieldwork tradition in anthropology (b) Distinction between technique, method and methodology (c) Tools of data collection: observation, interview, schedules, questionnaire, Case study, genealogy, life-history, oral history, secondary sources of information, participatory methods. (d) Analysis, interpretation and presentation of data.</li>
+            <li><strong>9.1</strong> Human Genetics : Methods and Application: Methods for study of genetic principles in man-family study (pedigree analysis, twin study, foster child, co-twin method, cytogenetic method, chromosomal and karyo-type analysis), biochemical methods, immunological methods, D.N.A. technology and recombinant technologies.</li>
+            <li><strong>9.2</strong> Mendelian genetics in man-family study, single factor, multifactor, lethal, sublethal and polygenic inheritance in man.</li>
+            <li><strong>9.3</strong> Concept of genetic polymorphism and selection, Mendelian population, HardyWeinberg law; causes and changes which bring down frequency – mutation, isolation, migration, selection, inbreeding and genetic drift. Consanguineous and non-consanguineous mating, genetic load, genetic effect of consanguineous and cousin marriages.</li>
+            <li><strong>9.4</strong> Chromosomes and chromosomal aberrations in man, methodology. (a) Numerical and structural aberrations (disorders). (b) Sex chromosomal aberrations – Klinefelter (XXY), Turner (XO), Super female (XXX), intersex and other syndromic disorders. (c) Autosomal aberrations – Down syndrome, Patau, Edward and Cri-du-chat syndromes. (d) Genetic imprints in human disease, genetic screening, genetic counseling, human DNA profiling, gene mapping and genome study.</li>
+            <li><strong>9.5</strong> Race and racism, biological basis of morphological variation of non-metric and metric characters. Racial criteria, racial traits in relation to heredity and environment; biological basis of racial classification, racial differentiation and race crossing in man.</li>
+            <li><strong>9.6</strong> Age, sex and population variation as genetic marker- ABO, Rh blood groups, HLA Hp, transferring, Gm, blood enzymes. Physiological characteristics-Hb level, body fat, pulse rate, respiratory functions and sensory perceptions in different cultural and socio-economic groups.</li>
+            <li><strong>9.7</strong> Concepts and methods of Ecological Anthropology. Bio-cultural Adaptations – Genetic and Non- genetic factors. Man's physiological responses to environmental stresses: hot desert, cold, high altitude climate.</li>
+            <li><strong>9.8</strong> Epidemiological Anthropology: Health and disease. Infectious and non-infectious diseases. Nutritional deficiency related diseases.</li>
+            <li><strong>10.</strong> Concept of human growth and development: stages of growth - pre-natal, natal, infant, childhood, adolescence, maturity, senescence. Factors affecting growth and development genetic, environmental, biochemical, nutritional, cultural and socio-economic. Ageing and senescence. Theories and observations - biological and chronological longevity. Human physique and somatotypes. Methodologies for growth studies.</li>
+            <li><strong>11.1</strong> Relevance of menarche, menopause and other bioevents to fertility. Fertility patterns and differentials.</li>
+            <li><strong>11.2</strong> Demographic theories- biological, social and cultural.</li>
+            <li><strong>11.3</strong> Biological and socio-ecological factors influencing fecundity, fertility, natality and mortality.</li>
+            <li><strong>12.</strong> Applications of Anthropology: Anthropology of sports, Nutritional anthropology, Anthropology in designing of defence and other equipments, Forensic Anthropology, Methods and principles of personal identification and reconstruction, Applied human genetics – Paternity diagnosis, genetic counseling and eugenics, DNA technology in diseases and medicine, serogenetics and cytogenetics in reproductive biology.</li>
+        </ul>
+    </div>`;
 
 const ANTHRO2_TEXT = `
-    <ul class="anthro-index">
-        <li><strong>1.1 Evolution of the Indian Culture and Civilization</strong><p>Prehistoric, Protohistoric (Indus Civilization), Contributions of tribal cultures.</p></li>
-        <li><strong>1.2 Palaeo-anthropological evidences</strong><p>Siwaliks and Narmada basin (Ramapithecus, Sivapithecus and Narmada Man).</p></li>
-        <li><strong>1.3 Ethno-archaeology in India</strong><p>Concept of ethno-archaeology, Survivals and Parallels among communities.</p></li>
-        <li><strong>2. Demographic profile of India</strong><p>Ethnic and linguistic elements in the Indian population, factors influencing its structure and growth.</p></li>
-        <li><strong>3.1-3.4 Traditional Indian social system</strong><p>Varnashram, Purushartha, Karma, Caste system, Jajmani system, Sacred Complex, Impact of Buddhism, Jainism, Islam, Christianity.</p></li>
-        <li><strong>4. Emergence of anthropology in India</strong><p>Contributions of scholar-administrators and Indian anthropologists to tribal and caste studies.</p></li>
-        <li><strong>5.1-5.3 Indian Village & Social change</strong><p>Significance of village study, Agrarian relations, Impact of globalization, Sanskritization, Westernization, Panchayati raj.</p></li>
-        <li><strong>6.1-6.3 Tribal situation & Problems</strong><p>Bio-genetic variability, Land alienation, Poverty, Health, Developmental projects, Impact of urbanization.</p></li>
-        <li><strong>7.1-7.3 Exploitation & Ethnic conflicts</strong><p>Constitutional safeguards, Social change, Regionalism, Pseudo-tribalism.</p></li>
-        <li><strong>8.1-8.2 Religions & Nation state</strong><p>Impact of religions on tribal societies, Tribe and nation state comparison.</p></li>
-        <li><strong>9.1-9.3 Development & Administration</strong><p>History of tribal administration, PTGs, Role of NGOs, Anthropology in rural development, Regionalism and movements.</p></li>
-    </ul>`;
+    <div class="detail-card-content anthro2-card">
+        <strong>Paper II</strong>
+        <ul>
+            <li><strong>1.1</strong> Evolution of the Indian Culture and Civilization — Prehistoric (Palaeolithic, Mesolithic, Neolithic and Neolithic Chalcolithic). Protohistoric (Indus Civilization): Pre- Harappan, Harappan and postHarappan cultures. Contributions of tribal cultures to Indian civilization.</li>
+            <li><strong>1.2</strong> Palaeo – anthropological evidences from India with special reference to Siwaliks and Narmada basin (Ramapithecus, Sivapithecus and Narmada Man).</li>
+            <li><strong>1.3</strong> Ethno-archaeology in India : The concept of ethno-archaeology; Survivals and Parallels among the hunting, foraging, fishing, pastoral and peasant communities including arts and crafts producing communities.</li>
+            <li><strong>2.</strong> Demographic profile of India — Ethnic and linguistic elements in the Indian population and their distribution. Indian population – factors influencing its structure and growth.</li>
+            <li><strong>3.1</strong> The structure and nature of traditional Indian social system — Varnashram, Purushartha, Karma, Rina and Rebirth.</li>
+            <li><strong>3.2</strong> Caste system in India- structure and characteristics, Varna and caste, Theories of origin of caste system, Dominant caste, Caste mobility, Future of caste system, Jajmani system, Tribe- caste continuum.</li>
+            <li><strong>3.3</strong> Sacred Complex and Nature- Man-Spirit Complex.</li>
+            <li><strong>3.4</strong> Impact of Buddhism, Jainism, Islam and Christianity on Indian society.</li>
+            <li><strong>4.</strong> Emergence and growth of anthropology in India-Contributions of the 18th, 19th and early 20th Century scholar-administrators. Contributions of Indian anthropologists to tribal and caste studies.</li>
+            <li><strong>5.1</strong> Indian Village: Significance of village study in India; Indian village as a social system; Traditional and changing patterns of settlement and inter-caste relations; Agrarian relations in Indian villages; Impact of globalization on Indian villages.</li>
+            <li><strong>5.2</strong> Linguistic and religious minorities and their social, political and economic status.</li>
+            <li><strong>5.3</strong> Indigenous and exogenous processes of socio-cultural change in Indian society: Sanskritization, Westernization, Modernization; Inter-play of little and great traditions; Panchayati raj and social change; Media and social change.</li>
+            <li><strong>6.1</strong> Tribal situation in India – Bio-genetic variability, linguistic and socio-economic characteristics of tribal populations and their distribution.</li>
+            <li><strong>6.2</strong> Problems of the tribal Communities — land alienation, poverty, indebtedness, low literacy, poor educational facilities, unemployment, underemployment, health and nutrition.</li>
+            <li><strong>6.3</strong> Developmental projects and their impact on tribal displacement and problems of rehabilitation. Development of forest policy and tribals. Impact of urbanization and industrialization on tribal populations.</li>
+            <li><strong>7.1</strong> Problems of exploitation and deprivation of Scheduled Castes, Scheduled Tribes and Other Backward Classes. Constitutional safeguards for Scheduled Tribes and Scheduled Castes.</li>
+            <li><strong>7.2</strong> Social change and contemporary tribal societies: Impact of modern democratic institutions, development programmes and welfare measures on tribals and weaker sections.</li>
+            <li><strong>7.3</strong> The concept of ethnicity; Ethnic conflicts and political developments; Unrest among tribal communities; Regionalism and demand for autonomy; Pseudo-tribalism; Social change among the tribes during colonial and post-Independent India.</li>
+            <li><strong>8.1</strong> Impact of Hinduism, Buddhism, Christianity, Islam and other religions on tribal societies.</li>
+            <li><strong>8.2</strong> Tribe and nation state — a comparative study of tribal communities in India and other countries.</li>
+            <li><strong>9.1</strong> History of administration of tribal areas, tribal policies, plans, programmes of tribal development and their implementation. The concept of PTGs (Primitive Tribal Groups), their distribution, special programmes for their development. Role of N.G.O.s in tribal development.</li>
+            <li><strong>9.2</strong> Role of anthropology in tribal and rural development.</li>
+            <li><strong>9.3</strong> Contributions of anthropology to the understanding of regionalism, communalism, and ethnic and political movements.</li>
+        </ul>
+    </div>`;
 
 // Master Object
 const SYLLABUS_DATA = {
