@@ -10,7 +10,6 @@
 </head>
 <body>
 <script>
-  // Force clear old data if version mismatches
   var APP_VERSION = '10.0'; 
   if (localStorage.getItem('qcab_app_version') !== APP_VERSION) {
     localStorage.removeItem('qcab_user'); localStorage.removeItem('userToken');
@@ -19,7 +18,6 @@
   }
 </script>
 <script>
-  // INSTANT GUEST BYPASS (no login needed)
   if (!localStorage.getItem('qcab_user')) {
     localStorage.setItem('qcab_user', JSON.stringify({ email: 'guest@test.com', name: 'Guest', token: 'guest-token' }));
   }
@@ -44,7 +42,7 @@
       <button type="button" class="nav-btn" data-scroll="my-study"><span class="nav-icon">📘</span>My Study</button>
     </nav>
 
-    <button type="button" class="nav-btn syllabus-btn" onclick="openSyllabusModal()">
+    <button type="button" class="nav-btn syllabus-btn" id="syllabus-sidebar-btn">
       <span class="nav-icon">📚</span>
       <span>View Syllabus</span>
     </button>
@@ -91,10 +89,10 @@
       </section>
       
       <section class="stats">
-        <div class="stat">
+        <div class="stat stat-bank" id="stat-bank-click">
           <div class="stat-label">QUESTION BANK</div>
           <div class="stat-value" id="dashboard-bank-count">—</div>
-          <div class="stat-note" id="question-breakdown" style="cursor:pointer; text-decoration:underline;">Click for paper breakdown</div>
+          <div class="stat-note" id="question-breakdown" style="cursor:pointer; text-decoration:underline;">📊 Click for detailed breakdown</div>
         </div>
         <div class="stat"><div class="stat-label">ACTIVE QCAB</div><div class="stat-value" id="dashboard-q-count">0</div><div class="stat-note">Questions selected</div></div>
         <div class="stat"><div class="stat-label">ANSWER PAGES</div><div class="stat-value" id="dashboard-pages">0</div><div class="stat-note">Based on marks selected</div></div>
@@ -137,24 +135,27 @@
             </div>
             
             <div id="pyq-bank-body">
-              <div class="pill-switcher-container">
-                <div class="pill-switcher" id="search-mode-switcher">
-                  <button type="button" class="pill-btn active" id="btn-filter-year" onclick="switchFilterMode('year', this)">Filter by Year</button>
-                  <button type="button" class="pill-btn" id="btn-filter-subtopic" onclick="switchFilterMode('subtopic', this)">Filter by Subtopic</button>
+              <!-- SINGLE LINE FILTER BAR -->
+              <div class="filter-bar-single-line">
+                <div class="filter-group">
+                  <label>Paper</label>
+                  <select id="filter-paper"><option value="ALL">All Papers</option><option value="GS1">GS Paper 1</option><option value="GS2">GS Paper 2</option><option value="GS3">GS Paper 3</option><option value="GS4">GS Paper 4</option><option value="OPT1">Anthro Paper 1</option><option value="OPT2">Anthro Paper 2</option></select>
                 </div>
-              </div>
-
-              <div class="search-main"><span class="search-icon">🔍</span><input type="text" id="search-input" placeholder="Search Constitution, Monsoon, Federalism, 2024..."></div>
-
-              <div class="filter-box">
-                <div class="filter-controls-stack">
-                  <select id="filter-paper"><option value="ALL">All Papers</option><option value="GS1">GS Paper 1</option><option value="GS2">GS Paper 2</option><option value="GS3">GS Paper 3</option><option value="GS4">GS Paper 4</option><option value="OPT1">Anthropology Optional Paper 1</option><option value="OPT2">Anthropology Optional Paper 2</option></select>
+                <div class="filter-group">
+                  <label>Subtopic</label>
                   <select id="filter-topic"><option value="ALL">All Subtopics</option></select>
-                  <select id="filter-year"><option value="ALL">All Years</option></select>
-                  <button type="button" class="btn btn-primary btn-wide" id="search-bank-btn">Search</button>
-                  <button type="button" class="btn btn-wide" id="clear-results-btn">Clear</button>
                 </div>
+                <div class="filter-group">
+                  <label>Year</label>
+                  <select id="filter-year"><option value="ALL">All Years</option></select>
+                </div>
+                <div class="filter-group filter-search">
+                  <input type="text" id="search-input" placeholder="🔍 Search questions...">
+                </div>
+                <button type="button" class="btn btn-primary btn-filter-search" id="search-bank-btn">Search</button>
+                <button type="button" class="btn btn-clear-filter" id="clear-results-btn">Clear</button>
               </div>
+
               <div id="bank-status-text">Loading question bank...</div>
               <div id="bank-results-container"></div>
             </div>
@@ -238,10 +239,37 @@
   </div>
 </div>
 
+<!-- Stats Breakdown Modal -->
+<div class="modal-overlay" id="stats-modal">
+  <div class="modal-content" style="max-width: 700px;">
+    <div class="modal-header">
+      <h2>📊 Question Bank Breakdown</h2>
+      <button class="modal-close" onclick="document.getElementById('stats-modal').classList.remove('active')">✕</button>
+    </div>
+    <div class="modal-body" id="stats-modal-body">
+      <div id="stats-loading">Loading breakdown...</div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="document.getElementById('stats-modal').classList.remove('active')">Close</button>
+    </div>
+  </div>
+</div>
+
+<!-- Syllabus Modal -->
+<div class="syllabus-modal-overlay" id="syllabus-modal-overlay">
+  <div class="syllabus-modal-content">
+    <div class="syllabus-modal-header"><h2>📚 UPSC Syllabus</h2><button class="syllabus-modal-close" onclick="closeSyllabusModal()">✕</button></div>
+    <div class="syllabus-modal-body">
+      <div id="syllabus-main-menu"><div class="syllabus-grid" id="syllabus-cards-holder"></div></div>
+      <div id="syllabus-detail-view"><button class="back-btn" onclick="backToSyllabusMenu()">← Back to Papers</button><div id="syllabus-detail-content"></div></div>
+    </div>
+  </div>
+</div>
+
 <!-- Back to Top Button -->
 <button id="back-to-top" style="position:fixed; bottom:24px; right:24px; background:var(--primary); color:#fff; border:none; border-radius:50%; width:50px; height:50px; font-size:24px; box-shadow:0 6px 20px rgba(99,102,241,0.4); display:none; align-items:center; justify-content:center; z-index:999; cursor:pointer;">↑</button>
 
-<!-- Note Modal (already exists) -->
+<!-- Note Modal -->
 <div class="study-modal" id="note-modal"><div class="study-modal-content"><h3>📝 Add Note</h3><textarea id="note-textarea"></textarea><div class="btn-row"><button class="btn btn-secondary-sm" id="note-save-btn">Save</button><button class="btn btn-secondary-sm btn-danger" id="note-cancel-btn">Cancel</button></div></div></div>
 <div class="toast" id="toast"><span class="toast-icon" id="toastIcon">✅</span><span id="toastMessage">Copied!</span></div>
 
@@ -254,40 +282,7 @@
 <script src="js/features.js?v=10000"></script>
 
 <script>
-/* NAVIGATION LOGIC */
-document.querySelectorAll('[data-scroll]').forEach(btn => {
-  btn.addEventListener('click', () => {
-    const id = btn.dataset.scroll;
-    const target = document.getElementById(id);
-    if (target) {
-      const offset = window.innerWidth <= 820 ? 70 : 10;
-      target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      window.scrollBy(0, -offset);
-    }
-    document.querySelectorAll('.nav-btn[data-scroll]').forEach(n => n.classList.remove('active'));
-    const match = document.querySelector(`.nav-btn[data-scroll="${id}"]`);
-    if (match) match.classList.add('active');
-  });
-});
-
-/* QUESTION BANK BREAKDOWN CLICK */
-document.addEventListener('DOMContentLoaded', function() {
-  const qbEl = document.getElementById('question-breakdown');
-  if (qbEl) {
-    qbEl.addEventListener('click', function() {
-      const bank = JSON.parse(localStorage.getItem('qcab_preset_bank') || '[]');
-      let stats = {};
-      bank.forEach(q => { stats[q.paper] = (stats[q.paper] || 0) + 1; });
-      let text = '📊 Question Breakdown:\n\n';
-      text += 'GS1: ' + (stats['GS1'] || 0) + '\nGS2: ' + (stats['GS2'] || 0) + '\nGS3: ' + (stats['GS3'] || 0) + '\nGS4: ' + (stats['GS4'] || 0);
-      if(stats['OPT1']) text += '\nOPT1: ' + stats['OPT1'];
-      if(stats['OPT2']) text += '\nOPT2: ' + stats['OPT2'];
-      alert(text);
-    });
-  }
-});
-
-/* SYLLABUS FUNCTIONS */
+/* ========== SYLLABUS FUNCTIONS ========== */
 function openSyllabusModal() {
   var cardsHolder = document.getElementById('syllabus-cards-holder');
   var menu = document.getElementById('syllabus-main-menu');
@@ -329,7 +324,103 @@ function backToSyllabusMenu() {
   document.getElementById('syllabus-main-menu').style.display = 'block';
 }
 
-/* FILTER MODE (Always shows both Year and Topic) */
+/* ========== SIDEBAR SYLLABUS BUTTON ========== */
+document.getElementById('syllabus-sidebar-btn').addEventListener('click', openSyllabusModal);
+
+/* ========== NAVIGATION ========== */
+document.querySelectorAll('[data-scroll]').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const id = btn.dataset.scroll;
+    const target = document.getElementById(id);
+    if (target) {
+      const offset = window.innerWidth <= 820 ? 70 : 10;
+      target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      window.scrollBy(0, -offset);
+    }
+    document.querySelectorAll('.nav-btn[data-scroll]').forEach(n => n.classList.remove('active'));
+    const match = document.querySelector(`.nav-btn[data-scroll="${id}"]`);
+    if (match) match.classList.add('active');
+  });
+});
+
+/* ========== QUESTION BANK BREAKDOWN CLICK ========== */
+document.addEventListener('DOMContentLoaded', function() {
+  const statBank = document.getElementById('stat-bank-click');
+  if (statBank) {
+    statBank.addEventListener('click', function() {
+      showStatsBreakdown();
+    });
+  }
+});
+
+function showStatsBreakdown() {
+  const modal = document.getElementById('stats-modal');
+  const body = document.getElementById('stats-modal-body');
+  if (!modal || !body) return;
+
+  const bank = JSON.parse(localStorage.getItem('qcab_preset_bank') || '[]');
+  
+  // Group by paper
+  let paperStats = {};
+  bank.forEach(q => {
+    const paper = q.paper || 'Unknown';
+    if (!paperStats[paper]) paperStats[paper] = { total: 0, subtopics: {} };
+    paperStats[paper].total++;
+    const topic = q.topic || 'General';
+    if (!paperStats[paper].subtopics[topic]) paperStats[paper].subtopics[topic] = 0;
+    paperStats[paper].subtopics[topic]++;
+  });
+
+  // Define colours for each paper
+  const paperColors = {
+    'GS1': 'linear-gradient(135deg, #2563eb, #3b82f6)',
+    'GS2': 'linear-gradient(135deg, #059669, #10b981)',
+    'GS3': 'linear-gradient(135deg, #d97706, #f59e0b)',
+    'GS4': 'linear-gradient(135deg, #7c3aed, #a78bfa)',
+    'OPT1': 'linear-gradient(135deg, #db2777, #f472b6)',
+    'OPT2': 'linear-gradient(135deg, #ea580c, #fb923c)',
+    'Unknown': 'linear-gradient(135deg, #64748b, #94a3b8)'
+  };
+
+  let html = '<div style="display:grid; gap:16px;">';
+  const sortedPapers = Object.keys(paperStats).sort();
+  
+  if (sortedPapers.length === 0) {
+    html = '<p style="color:var(--muted);">No questions loaded yet.</p>';
+    body.innerHTML = html;
+    modal.classList.add('active');
+    return;
+  }
+
+  sortedPapers.forEach(paper => {
+    const data = paperStats[paper];
+    const gradient = paperColors[paper] || paperColors['Unknown'];
+    html += `
+      <div style="background:var(--surface-2); border-radius:12px; padding:16px; border-left: 5px solid var(--primary);">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+          <strong style="font-size:16px; background:${gradient}; -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;">${paper}</strong>
+          <span style="background:${gradient}; color:#fff; padding:4px 12px; border-radius:999px; font-weight:800; font-size:13px;">${data.total} questions</span>
+        </div>
+        <div style="display:flex; flex-wrap:wrap; gap:6px; margin-top:8px;">
+    `;
+    const sortedTopics = Object.keys(data.subtopics).sort();
+    sortedTopics.forEach(topic => {
+      const count = data.subtopics[topic];
+      html += `
+        <span style="background:var(--surface); border:1px solid var(--border); border-radius:999px; padding:4px 12px; font-size:12px; font-weight:600; color:var(--text-soft);">
+          ${topic} <span style="background:${gradient}; color:#fff; border-radius:999px; padding:1px 8px; margin-left:4px; font-size:11px;">${count}</span>
+        </span>
+      `;
+    });
+    html += `</div></div>`;
+  });
+
+  html += '</div>';
+  body.innerHTML = html;
+  modal.classList.add('active');
+}
+
+/* ========== FILTER MODE ========== */
 function switchFilterMode(mode, btn) {
   document.getElementById('btn-filter-year').classList.remove('active');
   document.getElementById('btn-filter-subtopic').classList.remove('active');
