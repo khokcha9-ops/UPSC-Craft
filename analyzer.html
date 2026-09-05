@@ -2,301 +2,403 @@
 <html>
 <head>
 <meta charset="utf-8">
-<title>UPSC Mains - Exhaustive Micro-Themes Dashboard</title>
+<title>UPSC Mains - 310 Microthemes Analyzer</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <style>
-  :root {
-    --bg-1: #090d16; --bg-2: #0f172a; --bg-3: #1e1b4b;
-    --card-bg: rgba(30, 41, 59, 0.85); --card-border: rgba(255, 255, 255, 0.12);
-    --text-main: #f8fafc; --text-sub: #94a3b8; --q-bg: rgba(15, 23, 42, 0.75); --q-border: rgba(255, 255, 255, 0.08);
-  }
-  body.light-mode {
-    --bg-1: #f1f5f9; --bg-2: #e2e8f0; --bg-3: #cbd5e1;
-    --card-bg: rgba(255, 255, 255, 0.95); --card-border: rgba(0, 0, 0, 0.1);
-    --text-main: #0f172a; --text-sub: #475569; --q-bg: rgba(241, 245, 249, 1); --q-border: rgba(0, 0, 0, 0.08);
-  }
+  :root { --bg-1: #090d16; --bg-2: #0f172a; --bg-3: #1e1b4b; --card-bg: rgba(30, 41, 59, 0.85); --card-border: rgba(255, 255, 255, 0.12); --text-main: #f8fafc; --text-sub: #94a3b8; --q-bg: rgba(15, 23, 42, 0.75); --q-border: rgba(255, 255, 255, 0.08); }
+  body.light-mode { --bg-1: #f1f5f9; --bg-2: #e2e8f0; --bg-3: #cbd5e1; --card-bg: rgba(255, 255, 255, 0.95); --card-border: rgba(0, 0, 0, 0.1); --text-main: #0f172a; --text-sub: #475569; --q-bg: rgba(241, 245, 249, 1); --q-border: rgba(0, 0, 0, 0.08); }
   * { box-sizing: border-box; }
-  body {
-    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-    padding: 30px; margin: 0; min-height: 100vh;
-    background: linear-gradient(-45deg, var(--bg-1), var(--bg-2), var(--bg-3), var(--bg-2));
-    background-size: 400% 400%; animation: gradientBG 15s ease infinite;
-    color: var(--text-main); transition: background 0.3s ease, color 0.3s ease;
-  }
+  body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; padding: 30px; margin: 0; min-height: 100vh; background: linear-gradient(-45deg, var(--bg-1), var(--bg-2), var(--bg-3), var(--bg-2)); background-size: 400% 400%; animation: gradientBG 15s ease infinite; color: var(--text-main); transition: background 0.3s ease, color 0.3s ease; }
   @keyframes gradientBG { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
-
   .header-container { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; }
   h1 { margin: 0 0 5px 0; font-size: 28px; font-weight: 800; letter-spacing: -0.5px; }
   .subtitle { color: var(--text-sub); font-size: 14px; }
-
   .theme-toggle { background: var(--card-bg); border: 1px solid var(--card-border); color: var(--text-main); padding: 10px 18px; border-radius: 25px; cursor: pointer; font-weight: 600; font-size: 14px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); transition: transform 0.2s, background 0.2s; }
   .theme-toggle:hover { transform: translateY(-2px); }
-
   .dashboard-container { display: flex; gap: 25px; flex-wrap: wrap; align-items: flex-start; }
-
   .sidebar { flex: 1.2; min-width: 320px; background: var(--card-bg); backdrop-filter: blur(12px); border-radius: 20px; padding: 24px; border: 1px solid var(--card-border); box-shadow: 0 20px 40px rgba(0,0,0,0.2); max-height: 82vh; overflow-y: auto; }
-  .sidebar::-webkit-scrollbar { width: 6px; }
-  .sidebar::-webkit-scrollbar-thumb { background: rgba(148, 163, 184, 0.4); border-radius: 3px; }
-
+  .sidebar::-webkit-scrollbar { width: 6px; } .sidebar::-webkit-scrollbar-thumb { background: rgba(148, 163, 184, 0.4); border-radius: 3px; }
   .section-title { font-size: 12px; text-transform: uppercase; letter-spacing: 1px; color: var(--text-sub); font-weight: 700; margin: 18px 0 10px 4px; }
   .section-title:first-child { margin-top: 0; }
   .tags-wrapper { display: flex; flex-direction: column; gap: 8px; }
-
   .tag-btn { border: none; padding: 11px 16px; border-radius: 12px; cursor: pointer; font-weight: 600; font-size: 13.5px; color: white; display: flex; justify-content: space-between; align-items: center; transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1); box-shadow: 0 3px 10px rgba(0,0,0,0.15); text-align: left; }
   .tag-btn:hover { transform: translateX(4px); filter: brightness(1.12); }
   .tag-btn.active { outline: 2.5px solid #fff; box-shadow: 0 0 15px rgba(255,255,255,0.4); }
   .badge { background: rgba(0, 0, 0, 0.3); padding: 3px 9px; border-radius: 20px; font-size: 12px; font-weight: 700; color: #fff; }
-
   .content-area { flex: 2; min-width: 350px; max-height: 82vh; overflow-y: auto; }
-  .content-area::-webkit-scrollbar { width: 6px; }
-  .content-area::-webkit-scrollbar-thumb { background: rgba(148, 163, 184, 0.4); border-radius: 3px; }
-
+  .content-area::-webkit-scrollbar { width: 6px; } .content-area::-webkit-scrollbar-thumb { background: rgba(148, 163, 184, 0.4); border-radius: 3px; }
   .theme-panel { display: none; background: var(--card-bg); backdrop-filter: blur(12px); border-radius: 20px; padding: 25px; border: 1px solid var(--card-border); box-shadow: 0 20px 40px rgba(0,0,0,0.2); animation: fadeIn 0.3s ease-in-out; }
   .theme-panel.active { display: block; }
   @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
-
   .panel-header { font-size: 20px; font-weight: 800; margin-bottom: 20px; padding-bottom: 12px; border-bottom: 2px solid var(--card-border); display: flex; justify-content: space-between; align-items: center; }
   .questions-list { display: flex; flex-direction: column; gap: 14px; }
   .q-card { background: var(--q-bg); padding: 16px 18px; border-radius: 12px; border: 1px solid var(--q-border); transition: transform 0.2s; }
   .q-card:hover { transform: translateY(-2px); }
   .q-meta { font-size: 11.5px; color: var(--text-sub); margin-bottom: 6px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; display: flex; gap: 12px; }
   .q-text { font-size: 14.5px; line-height: 1.55; color: var(--text-main); }
-
   .welcome-msg { background: var(--card-bg); backdrop-filter: blur(12px); border-radius: 20px; padding: 50px 30px; text-align: center; color: var(--text-sub); font-size: 16px; border: 1px solid var(--card-border); }
-
   .chart-box { flex: 1.1; min-width: 320px; background: var(--card-bg); backdrop-filter: blur(12px); border-radius: 20px; padding: 24px; border: 1px solid var(--card-border); box-shadow: 0 20px 40px rgba(0,0,0,0.2); display: flex; flex-direction: column; align-items: center; max-height: 82vh; }
   .chart-title { font-size: 16px; font-weight: 700; margin-bottom: 15px; color: var(--text-main); }
-
-  /* Colors for dynamic gradients */
-  .grad-1 { background: linear-gradient(135deg, #FF5E62, #FF9966); }
-  .grad-2 { background: linear-gradient(135deg, #FF9966, #FFCC33); }
-  .grad-3 { background: linear-gradient(135deg, #F12711, #F5AF19); }
-  .grad-4 { background: linear-gradient(135deg, #EB3349, #F45C43); }
-  .grad-5 { background: linear-gradient(135deg, #1D976C, #93F9B9); }
-  .grad-6 { background: linear-gradient(135deg, #373B44, #4286f4); }
-  .grad-7 { background: linear-gradient(135deg, #005C97, #363795); }
-  .grad-8 { background: linear-gradient(135deg, #8A2387, #E94057); }
-  .grad-9 { background: linear-gradient(135deg, #B24592, #F15F79); }
-  .grad-10 { background: linear-gradient(135deg, #7F00FF, #E100FF); }
-  .grad-11 { background: linear-gradient(135deg, #56CCF2, #2F80ED); }
-  .grad-12 { background: linear-gradient(135deg, #0072FF, #00C6FF); }
-  .grad-13 { background: linear-gradient(135deg, #F2994A, #F2C94C); }
-  .grad-14 { background: linear-gradient(135deg, #F953C6, #B91D73); }
+  .grad-1 { background: linear-gradient(135deg, #FF5E62, #FF9966); } .grad-2 { background: linear-gradient(135deg, #FF9966, #FFCC33); } .grad-3 { background: linear-gradient(135deg, #F12711, #F5AF19); } .grad-4 { background: linear-gradient(135deg, #EB3349, #F45C43); } .grad-5 { background: linear-gradient(135deg, #1D976C, #93F9B9); } .grad-6 { background: linear-gradient(135deg, #373B44, #4286f4); } .grad-7 { background: linear-gradient(135deg, #005C97, #363795); } .grad-8 { background: linear-gradient(135deg, #8A2387, #E94057); } .grad-9 { background: linear-gradient(135deg, #B24592, #F15F79); } .grad-10 { background: linear-gradient(135deg, #7F00FF, #E100FF); } .grad-11 { background: linear-gradient(135deg, #56CCF2, #2F80ED); } .grad-12 { background: linear-gradient(135deg, #0072FF, #00C6FF); } .grad-13 { background: linear-gradient(135deg, #F2994A, #F2C94C); } .grad-14 { background: linear-gradient(135deg, #F953C6, #B91D73); }
 </style>
 </head>
 <body>
-
   <div class="header-container">
-    <div>
-      <h1>UPSC Mains: Exhaustive Micro-Theme Matrix</h1>
-      <div class="subtitle">Auto-analyzed from your question text (No themes required in JSON)</div>
-    </div>
+    <div><h1>UPSC Mains: Exhaustive Micro-Themes</h1><div class="subtitle">Based on 310 official microthemes & 2026 updates</div></div>
     <button class="theme-toggle" onclick="toggleTheme()">🌓 Toggle Theme</button>
   </div>
-
   <div class="dashboard-container">
-    <div class="sidebar" id="sidebar-container">
-      <div class="section-title">Loading...</div>
-    </div>
-
-    <div class="content-area" id="content-area">
-      <div id="welcome-panel" class="welcome-msg">
-        👉 Select any explicit micro-theme tag on the left to inspect categorized Mains question cards.
-      </div>
-    </div>
-
-    <div class="chart-box">
-      <div class="chart-title">Exhaustive Topic Weightage</div>
-      <div style="width: 100%; max-width: 280px; position: relative;">
-        <canvas id="exhaustivePieChart"></canvas>
-      </div>
-    </div>
+    <div class="sidebar" id="sidebar-container"><div class="section-title">Loading...</div></div>
+    <div class="content-area" id="content-area"><div id="welcome-panel" class="welcome-msg">👉 Select any micro-theme tag on the left</div></div>
+    <div class="chart-box"><div class="chart-title">Exhaustive Topic Weightage</div><div style="width: 100%; max-width: 280px; position: relative;"><canvas id="exhaustivePieChart"></canvas></div></div>
   </div>
 
   <script>
     function toggleTheme() { document.body.classList.toggle('light-mode'); }
-
-    // --- AUTO-THEME GENERATOR BASED ON QUESTION TEXT ---
-    function getExplicitTheme(q) {
-      const t = q.question.toLowerCase();
-
-      // GS1 - Art & Culture
-      if (t.includes('chola') || t.includes('temple') || t.includes('nagara') || t.includes('vesara')) return { main: "GS1: Art & Architecture", sub: "Temple & Chola Architecture" };
-      if (t.includes('gandhara') || t.includes('sculpture') || t.includes('amravati')) return { main: "GS1: Art & Architecture", sub: "Gandhara & Sculpture Schools" };
-      if (t.includes('bhakti') || t.includes('sufi') || t.includes('sangam') || t.includes('literature')) return { main: "GS1: Art & Architecture", sub: "Bhakti, Sufi & Literature" };
-      
-      // GS1 - Modern History
-      if (t.includes('dalhousie') || t.includes('curzon') || t.includes('british') || t.includes('famine')) return { main: "GS1: Modern History", sub: "Colonial Policies & British Rule" };
-      if (t.includes('freedom') || t.includes('gandhi') || t.includes('1857') || t.includes('quit india')) return { main: "GS1: Modern History", sub: "Freedom Struggle & Nationalism" };
-      if (t.includes('bhoodan') || t.includes('tashkent') || t.includes('princely')) return { main: "GS1: Modern History", sub: "Post-Independence Consolidation" };
-      
-      // GS1 - Society & Geography
-      if (t.includes('caste') || t.includes('tribal') || t.includes('secularism') || t.includes('urbanization')) return { main: "GS1: Society", sub: "Social Diversity & Urbanization" };
-      if (t.includes('globalization') || t.includes('women')) return { main: "GS1: Society", sub: "Globalization & Women" };
-      if (t.includes('cyclone') || t.includes('earthquake') || t.includes('monsoon') || t.includes('tsunami')) return { main: "GS1: Geography", sub: "Geophysical Phenomena" };
-      if (t.includes('resources') || t.includes('industry') || t.includes('mineral')) return { main: "GS1: Geography", sub: "Resources & Industries" };
-
-      // GS2 - Polity & Governance
-      if (t.includes('federal') || t.includes('centre-state') || t.includes('gst') || t.includes('101st')) return { main: "GS2: Polity", sub: "Federalism & GST" };
-      if (t.includes('constitution') || t.includes('amendment') || t.includes('parliament') || t.includes('rajya sabha')) return { main: "GS2: Polity", sub: "Constitution & Parliament" };
-      if (t.includes('judiciary') || t.includes('court') || t.includes('rti') || t.includes('cbi')) return { main: "GS2: Polity", sub: "Judiciary & RTI" };
-      if (t.includes('election') || t.includes('evm') || t.includes('representation')) return { main: "GS2: Polity", sub: "Elections & RPA" };
-      if (t.includes('welfare') || t.includes('scheme') || t.includes('health') || t.includes('education')) return { main: "GS2: Social Justice", sub: "Welfare Schemes & Health" };
-      if (t.includes('poverty') || t.includes('hunger') || t.includes('malnutrition')) return { main: "GS2: Social Justice", sub: "Poverty & Hunger" };
-      if (t.includes('china') || t.includes('pakistan') || t.includes('un') || t.includes('quad') || t.includes('brics')) return { main: "GS2: IR", sub: "Bilateral & Global Groupings" };
-
-      // GS3 - Economy & Agriculture
-      if (t.includes('gdp') || t.includes('growth') || t.includes('tax') || t.includes('budget') || t.includes('startup')) return { main: "GS3: Economy", sub: "Growth, Budget & Startups" };
-      if (t.includes('crop') || t.includes('irrigation') || t.includes('msp') || t.includes('subsidy')) return { main: "GS3: Agriculture", sub: "Cropping, Irrigation & MSP" };
-      if (t.includes('food processing') || t.includes('supply chain') || t.includes('apmc')) return { main: "GS3: Agriculture", sub: "Food Processing & Marketing" };
-      if (t.includes('land') || t.includes('reform')) return { main: "GS3: Agriculture", sub: "Land Reforms" };
-      
-      // GS3 - Environment & Security
-      if (t.includes('climate') || t.includes('pollution') || t.includes('environment')) return { main: "GS3: Environment", sub: "Climate & Environment" };
-      if (t.includes('disaster') || t.includes('flood') || t.includes('cyclone')) return { main: "GS3: Environment", sub: "Disaster Management" };
-      if (t.includes('cyber') || t.includes('terrorism') || t.includes('naxal') || t.includes('money laundering')) return { main: "GS3: Security", sub: "Cyber, Terrorism & Internal Security" };
-      if (t.includes('space') || t.includes('isro') || t.includes('ai') || t.includes('science')) return { main: "GS3: S&T", sub: "Space, AI & Science" };
-
-      // GS4 - Ethics
-      if (t.includes('integrity') || t.includes('probity') || t.includes('transparency') || t.includes('corruption')) return { main: "GS4: Probity", sub: "Probity & Transparency" };
-      if (t.includes('emotion') || t.includes('anger') || t.includes('intelligence')) return { main: "GS4: Ethics", sub: "Emotional Intelligence" };
-      if (t.includes('gandhi') || t.includes('buddha') || t.includes('kant') || t.includes('philosopher')) return { main: "GS4: Ethics", sub: "Moral Thinkers" };
-      if (q.marks === "20" || q.marks === "25") return { main: "GS4: Ethics", sub: "Case Studies" };
-
-      return { main: "General / Other", sub: "Miscellaneous" };
+    function showTheme(themeId, btnElement) {
+      document.querySelectorAll('.theme-panel').forEach(p => p.classList.remove('active'));
+      document.getElementById('welcome-panel').style.display = 'none';
+      document.getElementById(themeId).classList.add('active');
+      document.querySelectorAll('.tag-btn').forEach(b => b.classList.remove('active'));
+      btnElement.classList.add('active');
     }
 
-    // --- LOAD AND BUILD ---
+    // ==========================================
+    // MAPPING FUNCTION (Based on your 310 Microthemes & 2026 additions)
+    // ==========================================
+    function getMicrotheme(q) {
+      const t = q.question.toLowerCase();
+      let main = "General", sub = "Miscellaneous / New Theme";
+
+      // GS1 - Art and Culture
+      if (/taxila|nalanda/.test(t)) { main = "GS1: Art and Culture"; sub = "Ancient History x Education, Science, Medicine"; }
+      else if (/rock.cut architecture|mesolithic rock/.test(t)) { main = "GS1: Art and Culture"; sub = "Architecture x Caves, Rock-cut"; }
+      else if (/tandava dance/.test(t)) { main = "GS1: Art and Culture"; sub = "Art forms x Dance"; }
+      else if (/bhakti literature|bhakti movement|chaitanya|sufis|medieval mystic saints/.test(t)) { main = "GS1: Art and Culture"; sub = "Bhakti and Sufi Movements"; }
+      else if (/gandhara|buddhist stupa|buddhism in india/.test(t)) { main = "GS1: Art and Culture"; sub = "Buddhism and Jainism"; }
+      else if (/safeguarding.*art heritage/.test(t)) { main = "GS1: Art and Culture"; sub = "Conservation of Indian Art & Heritage"; }
+      else if (/chinese and arab travellers/.test(t)) { main = "GS1: Art and Culture"; sub = "Foreign Travellers"; }
+      else if (/sangam literature/.test(t)) { main = "GS1: Art and Culture"; sub = "Historical Sources"; }
+      else if (/harappan|indus valley/.test(t)) { main = "GS1: Art and Culture"; sub = "Indus Valley Civilization"; }
+      else if (/chandella|pallavas|pala period|gupta numismatic/.test(t)) { main = "GS1: Art and Culture"; sub = "Kingdoms"; }
+      else if (/chola architecture|great cholas/.test(t)) { main = "GS1: Art and Culture"; sub = "Kingdoms x Chola"; }
+      else if (/akbar.*syncretism|krishnadeva raya/.test(t)) { main = "GS1: Art and Culture"; sub = "Kingdoms x Kings"; }
+      else if (/gupta period and chola/.test(t)) { main = "GS1: Art and Culture"; sub = "Kingdom x Chola x Gupta"; }
+      else if (/sultanate period/.test(t)) { main = "GS1: Art and Culture"; sub = "Kingdom x Sultanate"; }
+      else if (/geographical factors.*ancient india/.test(t)) { main = "GS1: Art and Culture"; sub = "Miscellaneous"; }
+      else if (/indian philosophy.*monuments/.test(t)) { main = "GS1: Art and Culture"; sub = "Philosophical Schools"; }
+      else if (/temple sculptures|lion and bull/.test(t)) { main = "GS1: Art and Culture"; sub = "Sculptures"; }
+      else if (/persian literary sources/.test(t)) { main = "GS1: Art and Culture"; sub = "Sources x Literature"; }
+      else if (/rig vedic|later vedic/.test(t)) { main = "GS1: Art and Culture"; sub = "Vedic Culture"; }
+
+      // GS1 - Modern History
+      else if (/1857|uprising|revolt|naval mutiny|panipat/.test(t)) { main = "GS1: Modern History"; sub = "1857 Revolt, other wars"; }
+      else if (/east india company.*armies/.test(t)) { main = "GS1: Modern History"; sub = "British Policies x Armies"; }
+      else if (/artisanal industry|economic policies.*british/.test(t)) { main = "GS1: Modern History"; sub = "British Policies x Economic"; }
+      else if (/famines/.test(t)) { main = "GS1: Modern History"; sub = "British Policies x Famine"; }
+      else if (/colonial rule.*tribals|tribal response/.test(t)) { main = "GS1: Modern History"; sub = "British Policies x Tribal"; }
+      else if (/lord curzon|lord dalhousie/.test(t)) { main = "GS1: Modern History"; sub = "Governor Generals"; }
+      else if (/gandhi.*tagore|bose.*gandhi|ambedkar|jotirao phule/.test(t)) { main = "GS1: Modern History"; sub = "Gandhi x Indian Leaders of Freedom Struggle"; }
+      else if (/socio-religious reform|young bengal|brahmo samaj/.test(t)) { main = "GS1: Modern History"; sub = "Movement x Social Reform"; }
+
+      // GS1: Freedom Struggle
+      else if (/foreigners made india|foreigners.*freedom/.test(t)) { main = "GS1: Freedom Struggle"; sub = "Contribution x Foreigners"; }
+      else if (/moderates/.test(t)) { main = "GS1: Freedom Struggle"; sub = "Contribution x Moderates"; }
+      else if (/women.*freedom struggle|women.*gandhian phase/.test(t)) { main = "GS1: Freedom Struggle"; sub = "Contribution x Women"; }
+      else if (/government of india act, 1935/.test(t)) { main = "GS1: Freedom Struggle"; sub = "Council Acts, Commissions"; }
+      else if (/quit india|non-cooperation|civil disobedience|1920s|transfer of power|renaissance|national identity/.test(t)) { main = "GS1: Freedom Struggle"; sub = "Freedom Struggle Stages"; }
+
+      // GS1: Post Independence
+      else if (/consolidation|princely states/.test(t)) { main = "GS1: Post Independence"; sub = "Consolidation after Independence"; }
+      else if (/lenin.*economic policy/.test(t)) { main = "GS1: Post Independence"; sub = "Foreign influence on Independent India's Policies"; }
+      else if (/maulana abul kalam azad/.test(t)) { main = "GS1: Post Independence"; sub = "Freedom Movement Personalities"; }
+      else if (/bhoodan|gramdan/.test(t)) { main = "GS1: Post Independence"; sub = "Land Reforms"; }
+      else if (/jai jawana jai kisan/.test(t)) { main = "GS1: Post Independence"; sub = "Slogan Based"; }
+      else if (/reorganization.*states|new states|linguistic states/.test(t)) { main = "GS1: Post Independence"; sub = "States Reorganization"; }
+      else if (/tashkent agreement|bangladesh/.test(t)) { main = "GS1: Post Independence"; sub = "Wars after Independence"; }
+
+      // GS1: World History
+      else if (/french revolution|american revolution/.test(t)) { main = "GS1: World History"; sub = "American and French Revolution"; }
+      else if (/decolon|malay peninsula|west africa|anti-colonial|africa.*chopped/.test(t)) { main = "GS1: World History"; sub = "Decolonisation"; }
+      else if (/indentured labour/.test(t)) { main = "GS1: World History"; sub = "Indian Diaspora"; }
+      else if (/industrial revolution.*england|industrial revolution.*japan|handicrafts/.test(t)) { main = "GS1: World History"; sub = "Industrial Revolution"; }
+      else if (/railways.*countries/.test(t)) { main = "GS1: World History"; sub = "Miscellaneous"; }
+      else if (/suez crisis|great economic depression/.test(t)) { main = "GS1: World History"; sub = "World History Events"; }
+      else if (/first world war|democratic state system|germany.*world wars/.test(t)) { main = "GS1: World History"; sub = "World Wars"; }
+
+      // GS1: Society
+      else if (/regional disparity|diversities.*socio-economic|sect.*caste|cultural pockets|regions form cultural units|cultural elements/.test(t)) { main = "GS1: Society"; sub = "Diversity and pluralism"; }
+      else if (/intercaste marriages|marriage.*sacrament|child cuddling|work from home|joint family/.test(t)) { main = "GS1: Society"; sub = "Family"; }
+      else if (/tribal development|tribal communities|tribal knowledge|sex ratio.*tribes/.test(t)) { main = "GS1: Society"; sub = "Tribal Issues"; }
+      else if (/traditional social values|unique in sustaining its culture|tolerance and love/.test(t)) { main = "GS1: Society"; sub = "Uniqueness of Indian society"; }
+      else if (/sustainable growth.*environment|collaboration.*government|cryptocurrency|digital initiatives/.test(t)) { main = "GS1: Society"; sub = "Development and related issues"; }
+      else if (/demographic winter|human development.*economic|population education|population.*poverty|labour migration/.test(t)) { main = "GS1: Society"; sub = "Population and associated issues"; }
+      else if (/covid-19.*inequalities|poverty eradication|poverty.*programmes|poverty.*liberate/.test(t)) { main = "GS1: Society"; sub = "Poverty"; }
+      else if (/gender equality.*equity|suicide among young women|gig economy|challenges for women|empowering women|women's movement|feminization|patriarchy|prosperous regions.*sex ratio|male membership/.test(t)) { main = "GS1: Society"; sub = "Women"; }
+
+      // GS1: Urbanization
+      else if (/tier 2 cities|i.t. hubs|it industries|social problems.*urbanization/.test(t)) { main = "GS1: Society"; sub = "Emerging Urbanisation Trends"; }
+      else if (/smart city.*poverty|large cities.*migrants|segregation.*poor/.test(t)) { main = "GS1: Society"; sub = "Poverty x Urban x Migration"; }
+      else if (/urban mass transport|aspirational districts|smart city programme|smart cities.*villages/.test(t)) { main = "GS1: Society"; sub = "Urban Planning"; }
+      else if (/reclamation.*water|flooding.*million cities|major cities.*flood/.test(t)) { main = "GS1: Society"; sub = "Urban Water Management"; }
+
+      // GS1: Globalisation
+      else if (/fast food|consumer culture|globalization.*migration|globalization.*technology|diversity.*globalisation|local identity|cultural homogenization|cultural diversity.*globalisation|globalization.*women|globalization.*aged/.test(t)) { main = "GS1: Society"; sub = "Globalisation"; }
+
+      // GS1: Social empowerment
+      else if (/caste identity|relevance of caste|caste system|caste.*annihilation/.test(t)) { main = "GS1: Society"; sub = "Caste System"; }
+      else if (/post-liberal economy|communalism|religiousness.*communalism/.test(t)) { main = "GS1: Society"; sub = "Communalism"; }
+      else if (/civil service.*nationalistic|customs and traditions/.test(t)) { main = "GS1: Society"; sub = "Miscellaneous"; }
+      else if (/regionalism|basis of regionalism|growing feeling/.test(t)) { main = "GS1: Society"; sub = "Regionalism"; }
+      else if (/tolerance.*secularism|challenges.*secularism|indian concept.*secularism|debates on secularism/.test(t)) { main = "GS1: Society"; sub = "Secularism"; }
+      else if (/affirmative action|legal initiatives.*scheduled tribes|scheduled tribes.*upliftment/.test(t)) { main = "GS1: Society"; sub = "Social empowerment"; }
+
+      // GS1: Geography
+      else if (/troposphere|air mass/.test(t)) { main = "GS1: Geography"; sub = "Climatology x Atmosphere"; }
+      else if (/south-west monsoon|monsoon climate|behaviour of the indian monsoon|el-nino/.test(t)) { main = "GS1: Geography"; sub = "Climatology x Monsoon, ENSO, IOD"; }
+      else if (/temperature inversion/.test(t)) { main = "GS1: Geography"; sub = "Climatology x Temperature Inversion"; }
+      else if (/hot deserts/.test(t)) { main = "GS1: Geography"; sub = "Climatology x Wind and Pressure Systems"; }
+      else if (/continents|fjords|primary rocks|mountain ranges|subcontinent|circum-pacific|mantle plume|islands|fold mountain|continental drift|deltas/.test(t)) { main = "GS1: Geography"; sub = "Geomorphology"; }
+      else if (/ocean currents|dead zones|salinity|oceanic resources/.test(t)) { main = "GS1: Geography"; sub = "Oceanography"; }
+      else if (/ganga river basin|solar energy|off-shore oil|coastline|deccan trap|wind energy|arctic region|africa|shale oil|atomic energy|mineral oil/.test(t)) { main = "GS1: Geography"; sub = "Oil, Natural Resources"; }
+      else if (/multi-dimensional implications.*mineral oil/.test(t)) { main = "GS1: Geography"; sub = "World Geography: Minerals, Oil and other Natural Resources"; }
+      else if (/net food importer/.test(t)) { main = "GS1: Geography"; sub = "Buffer Stock & Food Security"; }
+      else if (/agro-based food processing/.test(t)) { main = "GS1: Geography"; sub = "Food Processing Sector"; }
+      else if (/artificial intelligence.*gis|drones.*gis/.test(t)) { main = "GS1: Geography"; sub = "Land Use, Planning"; }
+      else if (/cultivation of pulse/.test(t)) { main = "GS1: Geography"; sub = "Millets, Pulses"; }
+      else if (/non-farm primary|rubber|mining industry|blue revolution|coal mining|tea gardens/.test(t)) { main = "GS1: Geography"; sub = "Primary sector"; }
+      else if (/green revolution/.test(t)) { main = "GS1: Geography"; sub = "Revolutions and Missions"; }
+      else if (/iron and steel|manufacturing|industrial corridors|petroleum refineries|sugar mills|cotton textile/.test(t)) { main = "GS1: Geography"; sub = "Secondary Sector"; }
+      else if (/irnss/.test(t)) { main = "GS1: Geography"; sub = "Space Programs x IND"; }
+      else if (/straits|mountain ecosystem|inland water transport|ecological carrying capacity/.test(t)) { main = "GS1: Geography"; sub = "Tertiary sector"; }
+      else if (/aurora/.test(t)) { main = "GS1: Geography"; sub = "Aurora"; }
+      else if (/cloudburst/.test(t)) { main = "GS1: Geography"; sub = "Cloudbursts"; }
+      else if (/sea surface temperature|weather warnings|tropical cyclones|cyclone.*named/.test(t)) { main = "GS1: Geography"; sub = "Cyclones"; }
+      else if (/landslides.*himalayan|landslides.*western ghats|causes.*landslides/.test(t)) { main = "GS1: Geography"; sub = "Landslides"; }
+      else if (/tsunamis/.test(t)) { main = "GS1: Geography"; sub = "Tsunami"; }
+      else if (/twisters/.test(t)) { main = "GS1: Geography"; sub = "Twisters"; }
+      else if (/volcanic eruptions/.test(t)) { main = "GS1: Geography"; sub = "Volcanic Activity"; }
+      else if (/sea level rise|consequences.*climate change|desertification|arctic ice|himalayan glaciers|cryosphere|shrinking himalayan/.test(t)) { main = "GS1: Geography"; sub = "Climate Change"; }
+      else if (/natural vegetation|forest resources|global warming.*coral|mangroves/.test(t)) { main = "GS1: Geography"; sub = "Flora and Fauna"; }
+      else if (/south china sea/.test(t)) { main = "GS1: Geography"; sub = "Political Geography"; }
+      else if (/juno mission/.test(t)) { main = "GS1: Geography"; sub = "Space Programs x Intl"; }
+      else if (/air pollution.*delhi|heat islands/.test(t)) { main = "GS1: Geography"; sub = "Urban Geography"; }
+      else if (/groundwater|freshwater|interlinking of rivers|water stress|water harvesting|flood.*irrigation|micro-watershed|indus water treaty|land and water resources|water scarcity/.test(t)) { main = "GS1: Geography"; sub = "Water Management"; }
+
+      // GS2: Polity
+      else if (/amending power|basic structure|101st/.test(t)) { main = "GS2: Polity"; sub = "Amendment"; }
+      else if (/gender justice.*case|environmental problems.*supreme court|coelho/.test(t)) { main = "GS2: Polity"; sub = "Case Laws"; }
+      else if (/constitutional morality/.test(t)) { main = "GS2: Polity"; sub = "Constitutional Morality"; }
+      else if (/government of india act/.test(t)) { main = "GS2: Polity"; sub = "Council Acts, Commissions"; }
+      else if (/uniform civil code/.test(t)) { main = "GS2: Polity"; sub = "DPSP"; }
+      else if (/right to privacy|right to life|right to movement|clean environment|freedom of speech|section 66a/.test(t)) { main = "GS2: Polity"; sub = "Fundamental Rights and Duties"; }
+      else if (/adjective.*republic/.test(t)) { main = "GS2: Polity"; sub = "Preamble"; }
+      else if (/article 356|financial emergency/.test(t)) { main = "GS2: Polity"; sub = "Emergency"; }
+      else if (/centre-state financial|centre-state relations|accommodative spirit|cooperation.*confrontation|centralising tendencies|federal supremacy|cooperative federalism|strong centre|smaller states|inter-state water/.test(t)) { main = "GS2: Polity"; sub = "Federalism"; }
+      else if (/69th.*amendment|article 370|371a|j&k reorganization/.test(t)) { main = "GS2: Polity"; sub = "Governor x Union Territory"; }
+      else if (/cabinet system|accountability.*executive|ordinances/.test(t)) { main = "GS2: Polity"; sub = "Executive Vs Legislature"; }
+      else if (/legislative powers.*governor|re-promulgation/.test(t)) { main = "GS2: Polity"; sub = "Governor"; }
+      else if (/supreme court judgement.*delhi|lg vs/.test(t)) { main = "GS2: Polity"; sub = "Governor x Union Territory"; }
+      else if (/njac|judicial legislation|parliament in amending|judicial independence/.test(t)) { main = "GS2: Polity"; sub = "Judiciary"; }
+      else if (/public interest litigation/.test(t)) { main = "GS2: Polity"; sub = "Judiciary vs Legislature"; }
+      else if (/strict separation of powers/.test(t)) { main = "GS2: Polity"; sub = "Separation of Powers"; }
+      else if (/rural local bodies|urban local bodies|decentralisation|functionality|women.*local self|panchayat system|local self-government|panchayats.*samitis/.test(t)) { main = "GS2: Polity"; sub = "Local Self-Government"; }
+      else if (/collegium|president.*pardon|secular state.*us|parliamentary sovereignty|presidents.*france|right to equality|judicial systems.*uk|secularism.*france|basic tenets/.test(t)) { main = "GS2: Polity"; sub = "Constitutional Comparison"; }
+      else if (/parliamentary committee|standing committees|estimates committee|public accounts committee/.test(t)) { main = "GS2: Polity"; sub = "Parliament x Committees"; }
+      else if (/legislative councils|rajya sabha|joint session/.test(t)) { main = "GS2: Polity"; sub = "Parliament x Houses"; }
+      else if (/presiding officers|vice-president.*chairman|speaker.*loksabha/.test(t)) { main = "GS2: Polity"; sub = "Parliament x Presiding Officers"; }
+      else if (/parliamentary privileges/.test(t)) { main = "GS2: Polity"; sub = "Parliament x Privileges"; }
+      else if (/individual mps|anti-defection/.test(t)) { main = "GS2: Polity"; sub = "Role of MPs"; }
+      else if (/lok adalats|nalsa|arbitration and conciliation/.test(t)) { main = "GS2: Polity"; sub = "Alternate Dispute Resolution"; }
+      else if (/attorney general/.test(t)) { main = "GS2: Polity"; sub = "Attorney General"; }
+      else if (/khap panchayats/.test(t)) { main = "GS2: Polity"; sub = "Informal Associations"; }
+      else if (/environmental pressure groups|business associations|farmers organizations|pressure groups/.test(t)) { main = "GS2: Polity"; sub = "Pressure Groups"; }
+      else if (/administrative tribunals|tribunal reforms|tribunals curtail/.test(t)) { main = "GS2: Polity"; sub = "Tribunal"; }
+      else if (/size of the cabinet/.test(t)) { main = "GS2: Polity"; sub = "Union and State Executive"; }
+
+      // GS2: Governance
+      else if (/cag|comptroller and auditor general/.test(t)) { main = "GS2: Governance"; sub = "Comptroller and Auditor General"; }
+      else if (/cbi/.test(t)) { main = "GS2: Governance"; sub = "Domestic Bodies/Agencies"; }
+      else if (/finance commission/.test(t)) { main = "GS2: Governance"; sub = "Finance Commission"; }
+      else if (/ncbc|ncsc|national commission for protection of child rights|competition commission|human rights commissions|national commission for women/.test(t)) { main = "GS2: Governance"; sub = "National Commissions"; }
+      else if (/umbrella human rights|ncw|nhrc|lokpal/.test(t)) { main = "GS2: Governance"; sub = "Non-Constitutional/Statutory Bodies"; }
+      else if (/regulatory institutions|rail tariff authority|sebi and irda/.test(t)) { main = "GS2: Governance"; sub = "Sectoral Regulatory Bodies"; }
+      else if (/central administrative tribunal|tribunals curtail|quasi-judicial body/.test(t)) { main = "GS2: Governance"; sub = "Tribunal"; }
+      else if (/gati-shakti|aadhaar.*npr|pura/.test(t)) { main = "GS2: Governance"; sub = "Govt. Programs"; }
+      else if (/decision-making|cooperation among various|multi-level planning|policy contradictions|lpg.*respond|fdi in news/.test(t)) { main = "GS2: Governance"; sub = "Structural reforms and Actions"; }
+      else if (/civil society organizations|civil society groups|alternative model|non-state actors|fcr|role of ngos|public charitable trusts/.test(t)) { main = "GS2: Governance"; sub = "Civil Society"; }
+      else if (/donor agencies/.test(t)) { main = "GS2: Governance"; sub = "Donor Agencies"; }
+      else if (/microfinancing|micro-finance|self help groups|shg.*linkage|shgs penetration|legitimacy.*shg/.test(t)) { main = "GS2: Governance"; sub = "SHGs"; }
+      else if (/citizens charter/.test(t)) { main = "GS2: Governance"; sub = "Citizens Charter"; }
+      else if (/e-governance|digital illiteracy|fourth industrial revolution|ict.*projects|electronic cash transfer/.test(t)) { main = "GS2: Governance"; sub = "E-governance"; }
+      else if (/public examination act|direct benefit transfer|rti act.*amendments|government system|integrity index|satyam scandal|whistleblowers act/.test(t)) { main = "GS2: Governance"; sub = "Transparency and Accountability"; }
+      else if (/integrity.*civil servants|institutional quality|neutrality.*civil services|bureaucratic structure|cadre based/.test(t)) { main = "GS2: Governance"; sub = "Civil Services"; }
+
+      // GS2: Social Justice
+      else if (/national child policy/.test(t)) { main = "GS2: Social Justice"; sub = "Children"; }
+      else if (/disability/.test(t)) { main = "GS2: Social Justice"; sub = "Disabled"; }
+      else if (/welfare schemes|performance of welfare|government's schemes|centrally sponsored schemes/.test(t)) { main = "GS2: Social Justice"; sub = "Efficacy of Welfare and Development Schemes"; }
+      else if (/women.*social capital|women in post-independent/.test(t)) { main = "GS2: Social Justice"; sub = "Women"; }
+      else if (/right to free and compulsory education|earn while you learn|national education policy|higher education|premier institutes/.test(t)) { main = "GS2: Social Justice"; sub = "Education"; }
+      else if (/public healthcare|primary health structure|geriatric|maternal healthcare|community-level healthcare|wash|public health system|millennium development goals.*health/.test(t)) { main = "GS2: Social Justice"; sub = "Health"; }
+      else if (/skill development programs|human resource development|human development|amartya sen|demographic dividend|olympics/.test(t)) { main = "GS2: Social Justice"; sub = "Human Resources"; }
+      else if (/poverty and hunger|food budget|lack of availability of food/.test(t)) { main = "GS2: Social Justice"; sub = "Hunger"; }
+      else if (/inequality.*poverty|poverty and malnutrition|inflation and unemployment|multidimensional poverty|poverty alleviation|estimates of poverty/.test(t)) { main = "GS2: Social Justice"; sub = "Poverty"; }
+
+      // GS2: International Relations
+      else if (/maldives|sri lanka|pakistan|project mausam|bangladesh|gujral doctrine/.test(t)) { main = "GS2: International Relations"; sub = "Bilateral Relations"; }
+      else if (/india-africa|maldives.*geopolitical|indo-us|india-japan|india-usa|israel|increasing interest.*africa|south china sea|economic ties.*japan/.test(t)) { main = "GS2: International Relations"; sub = "Bilateral x Neighbourhood"; }
+      else if (/central asian republics|sco|bimstec|look east policy|saarc|i2u2|africa's|aukus|quad/.test(t)) { main = "GS2: International Relations"; sub = "Groupings x Neighbourhood"; }
+      else if (/energy security|clean energy.*diplomacy/.test(t)) { main = "GS2: International Relations"; sub = "Energy Security"; }
+      else if (/sovereign nationalism|west.*supply chain|long-sustained image|central asia.*zones|us-iran|china.*economic relations|isaf/.test(t)) { main = "GS2: International Relations"; sub = "Geo-politics affecting India's Interest"; }
+      else if (/string of pearls/.test(t)) { main = "GS2: International Relations"; sub = "Groupings x Neighbourhood"; }
+      else if (/nato/.test(t)) { main = "GS2: International Relations"; sub = "Groupings x Regional"; }
+      else if (/indian diaspora.*west|diaspora.*america|diaspora.*south-east asia/.test(t)) { main = "GS2: International Relations"; sub = "Indian Diaspora"; }
+      else if (/usa.*existential threat.*china/.test(t)) { main = "GS2: International Relations"; sub = "Miscellaneous"; }
+      else if (/un reforms|unsc.*ctc|imo|who|unesco|ecosoc|mcbride|un security council|ndb|aiib|bretton woods/.test(t)) { main = "GS2: International Relations"; sub = "United Nations, Agencies, Adjacent Bodies"; }
+      else if (/wto reforms|doha round|information technology agreements|wto.*mandate/.test(t)) { main = "GS2: International Relations"; sub = "WTO"; }
+
+      // GS3: Economic Development
+      else if (/care economy|monetized economy/.test(t)) { main = "GS3: Economic Development"; sub = "Care x Monetized Economy"; }
+      else if (/demographic dividend/.test(t)) { main = "GS3: Economic Development"; sub = "Demographic Dividend"; }
+      else if (/digitalization|digital payments/.test(t)) { main = "GS3: Economic Development"; sub = "Digital Payments, Digital Infrastructure"; }
+      else if (/labour productivity|v- shapes recovery|savings rate/.test(t)) { main = "GS3: Economic Development"; sub = "Economic Growth, LPG, Planning"; }
+      else if (/gst compensation|gst.*indirect taxes|rationale for introducing.*gst/.test(t)) { main = "GS3: Economic Development"; sub = "GST"; }
+      else if (/life expectancy.*health challenges/.test(t)) { main = "GS3: Economic Development"; sub = "Inclusive Growth"; }
+      else if (/production linked incentive|semiconductor|msme|make in india/.test(t)) { main = "GS3: Economic Development"; sub = "Manufacturing Sector"; }
+      else if (/gdp methodology|potential gdp|steady gdp growth/.test(t)) { main = "GS3: Economic Development"; sub = "National Income Accounting(GDP)"; }
+      else if (/niti aayog|planning commission/.test(t)) { main = "GS3: Economic Development"; sub = "Non-Constitutional/Statutory Bodies"; }
+      else if (/food inflation.*monetary policy/.test(t)) { main = "GS3: Economic Development"; sub = "RBI x Functions"; }
+      else if (/unemployment.*methodology|jobless growth/.test(t)) { main = "GS3: Economic Development"; sub = "Unemployment"; }
+      else if (/companies bill.*csr/.test(t)) { main = "GS3: Economic Development"; sub = "Corporate Social Responsibility"; }
+      else if (/financial inclusion.*market economy|pmjdy/.test(t)) { main = "GS3: Economic Development"; sub = "Financial Inclusion, PSL"; }
+      else if (/hdi.*ihdi|salient features.*inclusive growth|challenges.*inclusive growth/.test(t)) { main = "GS3: Economic Development"; sub = "Inclusive Growth"; }
+      else if (/capitalism.*inclusive growth/.test(t)) { main = "GS3: Economic Development"; sub = "Inclusive Growth x Capitalism"; }
+      else if (/investment in infrastructure|smart cities.*rurban/.test(t)) { main = "GS3: Economic Development"; sub = "Inclusive Growth x Infrastructure"; }
+      else if (/public expenditure.*social services/.test(t)) { main = "GS3: Economic Development"; sub = "Inclusive Growth x Public Expenditure"; }
+      else if (/intra-generational|inter-generational.*inclusive.*sustainable/.test(t)) { main = "GS3: Economic Development"; sub = "Inclusive Growth x Sustainable Development"; }
+      else if (/fiscal health index|capital budget|revenue budget|public expenditure management|lcgt|ddt|union budget|tax expenditure|fiscal responsibility|frbm/.test(t)) { main = "GS3: Economic Development"; sub = "Budget, Fiscal Policy"; }
+      else if (/gender budgeting/.test(t)) { main = "GS3: Economic Development"; sub = "Gender Budgeting"; }
+      else if (/pink revolution/.test(t)) { main = "GS3: Economic Development"; sub = "Revolutions and Missions"; }
+      else if (/food processing.*scope|challenges.*food processing|policy.*food processing|poor acceptance|impediments.*food processing/.test(t)) { main = "GS3: Economic Development"; sub = "Food Processing Sector"; }
+      else if (/gold monetization|protectionism.*currency|labour codes|industrial growth rate|globalization.*formal sector|sector shift|liberalization.*companies|manufacturing sector.*labour intensive|sez|protectionism.*bilateralism/.test(t)) { main = "GS3: Economic Development"; sub = "LPG Reforms / BoP / FDI / SEZ / Trade"; }
+      else if (/labour codes/.test(t)) { main = "GS3: Economic Development"; sub = "Labour Reform"; }
+      else if (/fdi.*defence|fdi.*multi-trade|fdi.*not picked|investment in an economy.*capital formation|concession agreement/.test(t)) { main = "GS3: Economic Development"; sub = "BoP, FDI, FPI, External Financing / Investment Funds"; }
+      else if (/regional air connectivity|airspace|urban transport policy|public private partnership.*railway|airports.*joint ventures|ppp.*long gestation|ppp model|renewable energy|solar energy|sdgs.*energy|renewable targets|equipment cost.*solar|green energy corridor|run of the river/.test(t)) { main = "GS3: Economic Development"; sub = "Infrastructure & Investment Models / Renewable Energy"; }
+
+      // GS3: Agriculture
+      else if (/high value crops|changes in cropping pattern|crop diversification|rice-wheat|emphasis on certain crops|declining rice and wheat|allelopathy|integrated farming system|millets|organic state/.test(t)) { main = "GS3: Agriculture"; sub = "Crops, Cropping Pattern, IFS, Millets, Organic"; }
+      else if (/major challenges.*irrigation|water storage.*irrigation|micro-irrigation|water-use efficiency|jal shakti abhiyan|national watershed/.test(t)) { main = "GS3: Agriculture"; sub = "Irrigation & Water Storage"; }
+      else if (/supply chain.*agricultural|bottlenecks.*marketing|constraints.*transport.*marketing|supermarkets|apmc/.test(t)) { main = "GS3: Agriculture"; sub = "Agri-Marketing"; }
+      else if (/e-technology.*farmers|rural credit|nanotechnology.*agriculture|digital india.*farmers/.test(t)) { main = "GS3: Agriculture"; sub = "Tech in Agri Production, Credit, Productivity"; }
+      else if (/national horticulture mission/.test(t)) { main = "GS3: Agriculture"; sub = "Allied Sector x Horticulture"; }
+      else if (/buffer stocks|food security bill|crop insurance|pds|national food security|reformative steps.*food grain|revolutions.*agriculture|direct and indirect subsidies|msp|subsidies affect.*cropping|price subsidy.*dbt|different types.*subsidies/.test(t)) { main = "GS3: Agriculture"; sub = "Subsidies, MSP, PDS, Crop Insurance, Buffer Stocks"; }
+      else if (/livestock rearing/.test(t)) { main = "GS3: Agriculture"; sub = "Allied Sector x Livestock"; }
+      else if (/contract farming|land leasing|land reforms|land ceiling|successful implementation.*land reforms|land acquisition.*act/.test(t)) { main = "GS3: Agriculture"; sub = "Land Reforms"; }
+
+      // GS3: Science & Technology
+      else if (/digital signature|3d printing|cellulose|stem cell|antibiotics|fdc|blue leds|umpire decision|frp composite|water purification|electronic toll|science interwoven|vaccine development/.test(t)) { main = "GS3: S&T"; sub = "Developments and Applications"; }
+      else if (/visvesvaraya|bose-einstein|scientific research in indian universities|iter|nuclear energy|fast breeder/.test(t)) { main = "GS3: S&T"; sub = "Achievements & Nuclear Energy"; }
+      else if (/artificial intelligence.*health|s-400|cloud hosting|clean technology.*biotech|microorganisms.*fuel|biotechnology.*standards|biotechnology.*farmers|intellectual property rights|traditional knowledge.*patent|tkdl|copyrights.*patents|section 3(d)|nanotechnology.*health|nano mission|robotics.*prohibitive labour/.test(t)) { main = "GS3: S&T"; sub = "AI, Biotech, IPR, Nano, Robotics"; }
+      else if (/third moon mission|space station|unmanned space missions|achievements.*space science|irnss|james webb|asteroids/.test(t)) { main = "GS3: S&T"; sub = "Space Programs"; }
+      else if (/covid.*technology/.test(t)) { main = "GS3: S&T"; sub = "Tech in Crisis Management"; }
+
+      // GS3: Environment
+      else if (/carbon capture|photochemical smog|global air quality|national clean air|biodiversity.*act|climate change.*india|eia.*ngo|draft eia|rehabilitation.*human settlements|environmental impact.*coal|electric vehicles|carrying capacity.*ecosystem|mining.*environmental hazard|coastal erosion|sand mining|illegal mining|paris agreement|ipcc.*sea level|global warming.*greenhouse|green grid|cop26|carbon credit|river linking|solid wastes|seawater intrusion|groundwater.*depleting|industrial pollution.*river|oil pollution|namami gange|national water policy|wetland.*conservation/.test(t)) { main = "GS3: Environment"; sub = "Environment & Pollution"; }
+
+      // GS3: Disaster Management
+      else if (/cloudburst.*context|ndma guidelines.*cloudburst|dam failures|disaster resilience|hazard zonation|drr.*sendai|hyogo|drought.*el nino|vulnerability.*india|earthquake.*hazards|earthquakes.*indian subcontinent|landslides.*strategy|tsunami.*ndma|urban floods.*emerging|urban floods.*frequency|vulnerability.*disaster|risk assessment.*disaster/.test(t)) { main = "GS3: Disaster Management"; sub = "Disasters & Management"; }
+
+      // GS3: Internal Security
+      else if (/lwe|naxalism|left wing extremism|insurgency.*north-east|peace process.*north-east|armed insurgency/.test(t)) { main = "GS3: Internal Security"; sub = "LWE & North East Insurgency"; }
+      else if (/multidimensional challenges.*external state|china-pakistan economic corridor|internet.*social media.*non-state|radicalism|china and pakistan.*agreement/.test(t)) { main = "GS3: Internal Security"; sub = "Threats from external state and non-state actors"; }
+      else if (/cyber elements|cross-border cyber|types of cyber|cyberdome|cyber attack|digital armed force|cyber warfare|digital personal data protection|srikrishna committee|mob violence|social media.*security|religious indoctrination|social networking sites|drug trafficking|money laundering|emerging technologies.*money laundering|money laundering poses/.test(t)) { main = "GS3: Internal Security"; sub = "Cyber, Data, Mob Violence, Drug & Money Laundering"; }
+      else if (/border area development|uavs|deny local support|cross-border movement|border management|transborder migration|porous borders|maritime security|sea trade|piracy|terrorism.*global scourge|narco-terrorism|terror funding|no money for terror|hearts and minds|organised crimes|complexity and intensity.*terrorism|jamaat-e|over-ground workers|scourge of terrorism|hot pursuit.*surgical|terrorism.*competitive industry|uapa|afspa|internal security challenges.*role|transborder crimes.*myanmar/.test(t)) { main = "GS3: Internal Security"; sub = "Border, Maritime, Terrorism, Organised Crime & Forces"; }
+
+      // GS4: Ethics & Probity
+      else if (/national security.*dilemmas|global warming.*greed|dam in a mountain valley|environmental ethics/.test(t)) { main = "GS4: Ethics"; sub = "Applied Ethics x Environment"; }
+      else if (/social media.*ethical|artificial intelligence.*ethical|online methodology|digital technology.*reliable|internet expansion/.test(t)) { main = "GS4: Ethics"; sub = "Applied Ethics x Tech"; }
+      else if (/just and unjust|ethics encompasses|commonly shared.*moral values|values keep changing|laws and rules|politics.*ethics|patriotism|ethics seek to promote|values.*ethics|good of an individual|adherence to ethics.*human actions|role of ethics and values.*comprehensive|increased national wealth|ethics contributes.*social|trust-deficit|means.*ends|moral intuition|short notes.*constitutional morality|relevance of the following|civil service|terms.*public service/.test(t)) { main = "GS4: Ethics"; sub = "Essence, Determinants & Consequences of Ethics"; }
+      else if (/corruption.*core values|crisis of ethical values|sexual violence|social values.*economic|happiness|education.*not an injunction|teachings of mahavir|teachings of guru nanak|gender inequality|teachings of buddha|great ambition.*napoleon|seven sins|eminent personality/.test(t)) { main = "GS4: Ethics"; sub = "Human Values & Teachings of Great Leaders"; }
+      else if (/attitude.*public servant|positive attitude|undesirable values|hatred.*destructive|factors affect.*attitude|mindless addiction|rules and regulations.*positive|two different kinds|ethical conduct.*politics|coercion.*undue influence|discipline.*subordination|social re-engineering|swachh bharat/.test(t)) { main = "GS4: Ethics"; sub = "Attitude & Social Influence"; }
+      else if (/emotional intelligence.*administrative|components of emotional|emotional intelligence.*ability|anger.*negative emotion|emotional intelligence.*developed|crisis of conscience.*emotional|eq vs iq/.test(t)) { main = "GS4: Ethics"; sub = "Emotional Intelligence"; }
+      else if (/kalam|lincoln|aristotle|dalai lama|erik erikson|kant|jawaharlal nehru|john rawls|kautilya|gandhi.*kindness|gandhi.*service|gandhi.*thoughts|gandhi.*anger|forgiveness.*strong|greed|plato|potter stewart|sardar patel|socrates|vivekananda|tirukkural|william james/.test(t)) { main = "GS4: Ethics"; sub = "Contributions of Moral Thinkers & Philosophers"; }
+      else if (/empathy and compassion|ten essential values|five ethical traits|public servant.*expected role|basic principles of public life|three basic values|impartial and non-partisan|impartiality.*foundational|integrity.*value|tests of integrity|integrity without knowledge|three qualities|trustworthiness.*fortitude/.test(t)) { main = "GS4: Ethics"; sub = "Aptitude & Foundational Values for Civil Service"; }
+      else if (/social capital|good governance|social audit|governance.*good governance|accountability.*public service|conflict of interest|constitutional morality.*public servant|moral integrity.*professional efficiency|csr.*climate|corporate social responsibility|innovative and creativity|resolving ethical dilemmas|clausewitz|peace.*believe|international aid|russia.*ukraine|refugees|will to power|pillars of international|bilateral relations.*ethics|bharatiya nyaya sanhita|conscience.*reliable|crisis of conscience|law and ethics|mere compliance|voice of conscience|voice of conscience.*prepare|non-performance of duty|good thing.*permitted|public interest|max weber/.test(t)) { main = "GS4: Ethics"; sub = "Public/Civil Service Values & Ethics in Public Administration"; }
+      else if (/citizen's charter|code of conduct.*code of ethics|whistle blower|poverty leads to corruption|gender specific challenges|probity|effective system of governance|probity in governance|probity in public life|mission karmayogi|wisdom lies|official secrets|rti act.*accountability|corrupt practices.*not coming|negative impacts.*rti|allocated funds.*misutilised|utilization of public funds|ethical competence.*public funds|code of ethics.*work culture/.test(t)) { main = "GS4: Ethics"; sub = "Probity in Governance"; }
+      else if (/case study|mgnrega|refugee|profession vs|vijay|ashok|pawan|subhash|sneha|rohit|raman|rajesh|srinivasan|brib|dilemma|public servant/.test(t)) { main = "GS4: Ethics"; sub = "Case Studies"; }
+
+      // Essay
+      else if (/self-discovery|perception of me|wantlessness|rational.*real|hand that rocks|blind date with knowledge|history repeats itself|best practices|forests.*economic|poets|scientific man|ship in harbour|repair the roof|step twice in the same river|smile.*ambiguities|just because you have a choice|thinking.*opposite team|visionary decision-making|not all who wander|inspiration for creativity|girls are weighed|mathematics.*music|society.*more justice|education is what remains|forests precede|cradle rules the world|empires of the future|path to happiness|doubter|fear of missing out|nearly all men|all ideas having large consequences|cost of being wrong|truth knows no colour|supreme art of war|thought finds a world|bitter experiences|muddy water|years teach much|journey.*destination|contentment is natural wealth|having vs wanting/.test(t)) { main = "Essay"; sub = "Think in Tensions"; }
+
+      // 2026 additions that might not fit previous themes
+      else if (/2026/.test(q.year)) { main = "New Themes (2026)"; sub = "2026 Emerging Themes"; }
+
+      return { main: main, sub: sub };
+    }
+
+    // ==========================================
+    // LOAD AND BUILD
+    // ==========================================
     async function loadAndBuild() {
       const files = ['./gs1_pyq.json', './gs2_pyq.json', './gs3_pyq.json', './gs4_pyq.json'];
       const results = await Promise.all(files.map(f => fetch(f).then(r => r.json()).catch(() => [])));
       const allData = results.flat();
 
       if (allData.length === 0) {
-        document.getElementById('sidebar-container').innerHTML = '<div class="section-title">⚠️ JSON files not found. Please ensure they are in the same folder and you are viewing this via GitHub Pages.</div>';
+        document.getElementById('sidebar-container').innerHTML = '<div class="section-title">⚠️ Please ensure GS1-GS4 JSON files are in the same folder and you are on GitHub Pages.</div>';
         return;
       }
 
-      // Group by Major (Papers) and Sub (Explicit Topics)
+      // Group by Major (Main) and Sub (Microtheme)
       const categories = {};
       allData.forEach(q => {
-        const { main, sub } = getExplicitTheme(q);
+        const { main, sub } = getMicrotheme(q);
         if (!categories[main]) categories[main] = {};
         if (!categories[main][sub]) categories[main][sub] = [];
         categories[main][sub].push(q);
       });
 
-      // Build Sidebar and Panels
-      const sidebarContainer = document.getElementById('sidebar-container');
-      const contentArea = document.getElementById('content-area');
-      sidebarContainer.innerHTML = '';
-      contentArea.innerHTML = '<div id="welcome-panel" class="welcome-msg">👉 Select any explicit micro-theme tag on the left to inspect categorized Mains question cards.</div>';
+      const sidebar = document.getElementById('sidebar-container');
+      const content = document.getElementById('content-area');
+      sidebar.innerHTML = '';
+      content.innerHTML = '<div id="welcome-panel" class="welcome-msg">👉 Select an explicit micro-theme to see its questions.</div>';
 
-      const chartLabels = [];
-      const chartData = [];
-      const gradClasses = ['grad-1', 'grad-2', 'grad-3', 'grad-4', 'grad-5', 'grad-6', 'grad-7', 'grad-8', 'grad-9', 'grad-10', 'grad-11', 'grad-12', 'grad-13', 'grad-14'];
-      let globalCount = 0;
+      const chartLabels = [], chartData = [], gradClasses = ['grad-1','grad-2','grad-3','grad-4','grad-5','grad-6','grad-7','grad-8','grad-9','grad-10','grad-11','grad-12','grad-13','grad-14'];
+      let cnt = 0;
 
-      for (const [mainCat, subs] of Object.entries(categories)) {
-        const catHeader = document.createElement('div');
-        catHeader.className = 'section-title';
-        catHeader.innerText = mainCat;
-        sidebarContainer.appendChild(catHeader);
+      for (const [main, subs] of Object.entries(categories).sort()) {
+        const h = document.createElement('div'); h.className = 'section-title'; h.innerText = main; sidebar.appendChild(h);
+        const wrap = document.createElement('div'); wrap.className = 'tags-wrapper';
+        for (const [sub, questions] of Object.entries(subs).sort()) {
+          const id = 't-' + (cnt++);
+          const cls = gradClasses[cnt % gradClasses.length];
+          const btn = document.createElement('button'); btn.className = 'tag-btn ' + cls; btn.onclick = () => showTheme(id, btn);
+          btn.innerHTML = `<span>${sub}</span><span class="badge">${questions.length}</span>`;
+          wrap.appendChild(btn);
 
-        const wrapper = document.createElement('div');
-        wrapper.className = 'tags-wrapper';
+          const panel = document.createElement('div'); panel.id = id; panel.className = 'theme-panel';
+          let ph = `<div class="panel-header" style="color:#fff;"><span>${sub}</span><span class="badge">${questions.length}</span></div><div class="questions-list">`;
+          questions.forEach(q => { ph += `<div class="q-card"><div class="q-meta"><span>Year: ${q.year}</span><span>Marks: ${q.marks}</span></div><div class="q-text">${q.question}</div></div>`; });
+          ph += `</div>`; panel.innerHTML = ph; content.appendChild(panel);
 
-        for (const [sub, questions] of Object.entries(subs)) {
-          const themeId = 't-' + (globalCount++);
-          const colorClass = gradClasses[globalCount % gradClasses.length];
-
-          // Create Sidebar Button
-          const tagBtn = document.createElement('button');
-          tagBtn.className = `tag-btn ${colorClass}`;
-          tagBtn.onclick = () => showTheme(themeId, tagBtn);
-          tagBtn.innerHTML = `<span>${sub}</span><span class="badge">${questions.length}</span>`;
-          wrapper.appendChild(tagBtn);
-
-          // Create Content Panel
-          const panel = document.createElement('div');
-          panel.id = themeId;
-          panel.className = 'theme-panel';
-          
-          let panelHTML = `
-            <div class="panel-header" style="color: #ffffff;">
-              <span>${sub}</span>
-              <span class="badge" style="background: #444;">${questions.length} Questions</span>
-            </div>
-            <div class="questions-list">`;
-          
-          questions.forEach(q => {
-            panelHTML += `
-              <div class="q-card">
-                <div class="q-meta"><span>Year: ${q.year}</span> <span>Marks: ${q.marks}</span></div>
-                <div class="q-text">${q.question}</div>
-              </div>`;
-          });
-
-          panelHTML += `</div>`;
-          panel.innerHTML = panelHTML;
-          contentArea.appendChild(panel);
-
-          // Chart data
-          chartLabels.push(sub);
-          chartData.push(questions.length);
+          chartLabels.push(sub); chartData.push(questions.length);
         }
-        sidebarContainer.appendChild(wrapper);
+        sidebar.appendChild(wrap);
       }
-
-      // Render Chart
       renderChart(chartLabels, chartData);
-    }
-
-    function showTheme(themeId, btnElement) {
-      document.querySelectorAll('.theme-panel').forEach(panel => panel.classList.remove('active'));
-      const welcome = document.getElementById('welcome-panel');
-      if (welcome) welcome.style.display = 'none';
-      document.getElementById(themeId).classList.add('active');
-      document.querySelectorAll('.tag-btn').forEach(btn => btn.classList.remove('active'));
-      btnElement.classList.add('active');
     }
 
     function renderChart(labels, data) {
       const ctx = document.getElementById('exhaustivePieChart').getContext('2d');
-      const colors = [
-        "#FF5E62", "#FF9966", "#F12711", "#EB3349", "#1D976C", "#373B44", "#005C97", "#8A2387",
-        "#B24592", "#7F00FF", "#56CCF2", "#0072FF", "#F2994A", "#F953C6"
-      ];
-
+      const colors = ["#FF5E62","#FF9966","#F12711","#EB3349","#1D976C","#373B44","#005C97","#8A2387","#B24592","#7F00FF","#56CCF2","#0072FF","#F2994A","#F953C6"];
       new Chart(ctx, {
         type: 'doughnut',
-        data: {
-          labels: labels,
-          datasets: [{
-            data: data,
-            backgroundColor: colors,
-            borderWidth: 2,
-            borderColor: getComputedStyle(document.documentElement).getPropertyValue('--card-bg')
-          }]
-        },
-        options: {
-          responsive: true,
-          plugins: {
-            legend: {
-              position: 'bottom',
-              labels: {
-                color: getComputedStyle(document.documentElement).getPropertyValue('--text-main'),
-                font: { size: 10 },
-                boxWidth: 10,
-                padding: 8
-              }
-            }
-          }
-        }
+        data: { labels, datasets: [{ data, backgroundColor: colors, borderWidth: 2, borderColor: getComputedStyle(document.documentElement).getPropertyValue('--card-bg') }] },
+        options: { responsive: true, plugins: { legend: { position: 'bottom', labels: { color: getComputedStyle(document.documentElement).getPropertyValue('--text-main'), font: { size: 10 }, boxWidth: 10, padding: 8 } } } }
       });
     }
 
-    // Load on start
     loadAndBuild();
   </script>
 </body>
