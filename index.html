@@ -51,7 +51,22 @@
       <span>View Syllabus</span>
     </button>
     
-    <div class="sidebar-bottom"></div>
+    <!-- Sidebar Progress Stats (added) -->
+    <div class="sidebar-progress" id="sidebar-progress" style="display:none; margin-top:20px; padding:10px; background:var(--surface-2); border-radius:12px;">
+      <div style="font-size:11px; font-weight:800; color:var(--muted); margin-bottom:8px;">YOUR STUDY PROGRESS</div>
+      <div style="display:flex; gap:10px; justify-content:space-around;">
+        <span>⭐ <span id="sidebar-bookmarked">0</span></span>
+        <span>✅ <span id="sidebar-revised">0</span></span>
+        <span>📝 <span id="sidebar-notes">0</span></span>
+      </div>
+    </div>
+
+    <div class="sidebar-bottom">
+      <!-- Login button (added) -->
+      <button type="button" class="nav-btn" id="sidebar-login-btn" style="margin-top:auto; border-top:1px solid var(--border); border-radius:0; padding-top:16px;">
+        <span class="nav-icon">🔑</span> Login / Logout
+      </button>
+    </div>
   </aside>
 
   <div class="content">
@@ -71,6 +86,8 @@
       </div>
       <div class="topbar-actions">
         <button type="button" class="theme-toggle" id="theme-toggle"><span id="theme-icon">🌙</span><span id="theme-text">Dark Mode</span></button>
+        <!-- Login button (added) -->
+        <button type="button" class="theme-toggle" id="topbar-login-btn" style="margin-left:10px;">🔑 Login</button>
       </div>
     </header>
 
@@ -187,20 +204,58 @@
   </div>
 </div>
 
-<!-- SYLLABUS MODAL -->
-<div class="syllabus-modal-overlay" id="syllabus-modal-overlay">
-  <div class="syllabus-modal-content">
-    <div class="syllabus-modal-header"><h2>UPSC Syllabus</h2><button class="syllabus-modal-close" onclick="closeSyllabusModal()">✕</button></div>
-    <div class="syllabus-modal-body">
-      <div id="syllabus-main-menu"><div class="syllabus-grid" id="syllabus-cards-holder"></div></div>
-      <div id="syllabus-detail-view"><button class="back-btn" onclick="backToSyllabusMenu()">← Back to Papers</button><div id="syllabus-detail-content"></div></div>
+<!-- ====== MODALS ====== -->
+
+<!-- Custom Modal (Alert/Confirm/Prompt) -->
+<div class="modal-overlay" id="customModal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h2 id="modalTitle">Notice</h2>
+      <button class="modal-close" onclick="document.getElementById('customModal').classList.remove('active')">✕</button>
+    </div>
+    <div class="modal-body">
+      <p id="modalMessage"></p>
+      <div id="modalInputContainer" style="display:none; margin-top:12px;">
+        <input type="text" id="modalInput" placeholder="Enter value..." style="width:100%; padding:10px; border:1px solid var(--border); border-radius:8px;">
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" id="modalCancelBtn" style="display:none;">Cancel</button>
+      <button class="btn btn-primary" id="modalConfirmBtn">OK</button>
     </div>
   </div>
 </div>
 
+<!-- AI Model Selection Modal -->
+<div class="modal-overlay" id="ai-model-modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h2>🤖 Choose AI Assistant</h2>
+      <button class="modal-close" id="ai-model-close">✕</button>
+    </div>
+    <div class="modal-body">
+      <p style="margin-bottom:15px;">Select where to generate the answer for the selected question.</p>
+      <div style="display:grid; gap:10px;">
+        <button class="model-option" data-model="secret" style="background:linear-gradient(135deg,#6366f1,#06b6d4); color:#fff; border:none; padding:14px; border-radius:12px; font-weight:800;">✨ Secret AI (Fast & Private)</button>
+        <button class="model-option" data-model="chatgpt" style="background:#10a37f; color:#fff; border:none; padding:14px; border-radius:12px; font-weight:800;">💬 ChatGPT (Copy Prompt)</button>
+        <button class="model-option" data-model="deepseek" style="background:#1e293b; color:#fff; border:none; padding:14px; border-radius:12px; font-weight:800;">🔬 DeepSeek (Copy Prompt)</button>
+        <button class="model-option" data-model="perplexity" style="background:#8b5cf6; color:#fff; border:none; padding:14px; border-radius:12px; font-weight:800;">🌀 Perplexity (Search)</button>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" id="cancel-ai-modal">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- Back to Top Button -->
+<button id="back-to-top" style="position:fixed; bottom:24px; right:24px; background:var(--primary); color:#fff; border:none; border-radius:50%; width:50px; height:50px; font-size:24px; box-shadow:0 6px 20px rgba(99,102,241,0.4); display:none; align-items:center; justify-content:center; z-index:999; cursor:pointer;">↑</button>
+
+<!-- Note Modal (already exists) -->
 <div class="study-modal" id="note-modal"><div class="study-modal-content"><h3>📝 Add Note</h3><textarea id="note-textarea"></textarea><div class="btn-row"><button class="btn btn-secondary-sm" id="note-save-btn">Save</button><button class="btn btn-secondary-sm btn-danger" id="note-cancel-btn">Cancel</button></div></div></div>
 <div class="toast" id="toast"><span class="toast-icon" id="toastIcon">✅</span><span id="toastMessage">Copied!</span></div>
 
+<!-- Scripts -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.6.2"></script>
 <script src="js/config.js?v=10000"></script>
@@ -208,10 +263,10 @@
 <script src="js/app.js?v=10000"></script>
 <script src="js/features.js?v=10000"></script>
 
+<!-- (Optional) Auth script – if exists, it will be loaded; if not, app handles fallback -->
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-  lucide.createIcons();
-});
+// Remove lucide call – we don't use it
+// document.addEventListener('DOMContentLoaded', function() { lucide.createIcons(); }); // removed
 
 /* NAVIGATION LOGIC */
 document.querySelectorAll('[data-scroll]').forEach(btn => {
