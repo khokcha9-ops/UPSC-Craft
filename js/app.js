@@ -21,7 +21,7 @@ async function showAlert(message, title = 'Notice') {
     }
     if (cancelBtn) cancelBtn.style.display = 'none';
     overlay.classList.add('active');
-    confirmBtn?.focus();
+    if (confirmBtn) confirmBtn.focus();
   });
 }
 
@@ -49,7 +49,7 @@ async function showConfirm(message, title = 'Confirm') {
       cancelBtn.onclick = function() { overlay.classList.remove('active'); resolve(false); };
     }
     overlay.classList.add('active');
-    confirmBtn?.focus();
+    if (confirmBtn) confirmBtn.focus();
   });
 }
 
@@ -79,8 +79,7 @@ async function showPrompt(message, title = 'Enter Value', defaultValue = '') {
       cancelBtn.onclick = function() { overlay.classList.remove('active'); resolve(null); };
     }
     overlay.classList.add('active');
-    inputEl?.focus();
-    inputEl?.select();
+    if (inputEl) { inputEl.focus(); inputEl.select(); }
   });
 }
 
@@ -94,7 +93,7 @@ document.addEventListener('keydown', function(e) {
   }
 });
 
-// Close modal on backdrop click (Placed outside DOMContentLoaded so it runs early)
+// Close modal on backdrop click
 document.getElementById('customModal')?.addEventListener('click', function(e) {
   if (e.target === this) this.classList.remove('active');
 });
@@ -1066,6 +1065,7 @@ document.addEventListener('DOMContentLoaded', function() {
   console.log('📋 Subtopics count:', Object.keys(SYLLABUS).length);
   console.log('📚 Bank size:', presetBank.length);
 });
+// Additional DOMContentLoaded for the breakdown – merged into the main one above, but keep this for safety
 document.addEventListener('DOMContentLoaded', function() {
   const qbEl = document.getElementById('question-breakdown');
   if (qbEl) {
