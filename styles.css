@@ -320,3 +320,17 @@ body.modal-open { overflow: hidden; }
     color: var(--muted);
     box-shadow: none;
 }
+/* ==========================================================
+   FIXED FILTER LOGIC (OVERIDES ALL OLD CSS)
+   ========================================================== */
+#filter-topic { display: none; } /* Default hidden if somehow loaded */
+body.subtopic-mode #filter-topic { display: block !important; }
+#filter-year { display: block !important; visibility: visible !important; }
+
+/* Ensure buttons look perfect */
+.pill-btn { outline: none; }
+.pill-btn.active {
+    background: linear-gradient(135deg, var(--primary), var(--accent)) !important;
+    color: #ffffff !important;
+    border: 2px solid transparent !important;
+}
