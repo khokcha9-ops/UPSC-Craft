@@ -441,27 +441,18 @@
     function switchFilterMode(mode, btn) {
     var yearBtn = document.getElementById('btn-filter-year');
     var subBtn = document.getElementById('btn-filter-subtopic');
-    var yearSel = document.getElementById('filter-year');
-    var topicSel = document.getElementById('filter-topic');
     
     yearBtn.classList.remove('active');
     subBtn.classList.remove('active');
     btn.classList.add('active');
     
-    if (mode === 'year') {
-      // Show Year, Hide Topic (Always 2 dropdowns: Paper + Year)
-      yearSel.style.display = 'block';
-      topicSel.style.display = 'none';
-      topicSel.value = 'ALL';
-    } else {
-      // Show Topic, Hide Year (Always 2 dropdowns: Paper + Topic)
-      // OR Show Topic AND Year (3 dropdowns) - Let's make it 3 for flexibility!
-      topicSel.style.display = 'block';
-      yearSel.style.display = 'block';
-    }
+    // ALWAYS SHOW BOTH YEAR AND SUBTOPIC FILTERS! No hiding!
+    document.getElementById('filter-year').style.display = 'block';
+    document.getElementById('filter-topic').style.display = 'block';
     
+    // Trigger search
     document.getElementById('search-bank-btn').click();
-  }
+  }  
 </script>
 
 </body>
