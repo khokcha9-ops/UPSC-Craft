@@ -414,11 +414,9 @@
     }
 
     // ================================================================
-    // FETCH ANSWER (LOGIN CHECK REMOVED)
+    // FETCH ANSWER
     // ================================================================
     async function fetchAnswer() {
-      // LOGIN CHECK HAS BEEN REMOVED. No userToken needed, no redirects.
-
       try {
         const res = await fetch(AI_PROXY_URL, {
           method: 'POST',
@@ -431,12 +429,21 @@
         const data = await res.json();
 
         if (!res.ok) {
-          throw new Error(data.error || `Server error (${res.status})`);
+          // Try to get error message from the response body
+          const errorMsg = data.error || data.message || `Server error (${res.status})`;
+          throw new Error(errorMsg);
         }
 
         statusEl.style.display = 'none';
 
-        let answerMarkdown = data.text || data.candidates?.[0]?.content?.parts?.[0]?.text || 'No answer text returned.';
+        // Extract answer text – try multiple possible response structures
+        let answerMarkdown = data.text || data.answer || data.candidates?.[0]?.content?.parts?.[0]?.text || null;
+        
+        if (!answerMarkdown) {
+          // If no answer found, show raw data for debugging (but hide in production)
+          console.warn('No answer text found in response:', data);
+          throw new Error('The AI returned an empty response. Please try again.');
+        }
 
         // --- Render Markdown ---
         if (window.marked) {
