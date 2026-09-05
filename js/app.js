@@ -475,7 +475,7 @@ document.addEventListener('DOMContentLoaded', function() {
     if (sbRevised) sbRevised.textContent = revised;
     if (sbNotes) sbNotes.textContent = withNotes;
 
-    // Show sidebar progress only if there is data (we always show it since we have guest user)
+    // Show sidebar progress always (guest enabled)
     if (sbProgress) sbProgress.style.display = 'block';
 
     if (items.length === 0) {
@@ -993,7 +993,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   });
 
-  // ========== AI MODAL HANDLING (NO LOGIN, NO BACKEND) ==========
+  // ========== AI MODAL HANDLING (Secret AI opens answer.html) ==========
   const aiModal = document.getElementById('ai-model-modal');
   const aiModalClose = document.getElementById('ai-model-close');
   const cancelAiModal = document.getElementById('cancel-ai-modal');
@@ -1021,14 +1021,10 @@ document.addEventListener('DOMContentLoaded', function() {
       const year = pendingQuestion.year || '';
       const marks = pendingQuestion.marks || '';
 
-      // For all models, generate the prompt
-      const fullPrompt = generateFullPrompt(question);
-
       if (model === 'secret') {
-        // No backend: copy prompt and open ChatGPT
-        await copyText(fullPrompt);
-        window.open('https://chat.openai.com/', '_blank');
-        showToast('✅ Prompt copied! Paste in ChatGPT and press Enter.', '💬');
+        // Open answer.html with query parameters
+        const params = new URLSearchParams({ q: question, y: year, m: marks, model: 'secret' });
+        window.open(`answer.html?${params.toString()}`, '_blank');
         closeAIModal();
         return;
       }
@@ -1042,7 +1038,8 @@ document.addEventListener('DOMContentLoaded', function() {
         return;
       }
 
-      // ChatGPT or DeepSeek
+      // ChatGPT or DeepSeek – copy prompt and open site
+      const fullPrompt = generateFullPrompt(question);
       const siteUrl = model === 'chatgpt' ? 'https://chat.openai.com/' : 'https://chat.deepseek.com/';
       const modelName = model === 'chatgpt' ? 'ChatGPT' : 'DeepSeek';
       const icon = model === 'chatgpt' ? '💬' : '🔬';
