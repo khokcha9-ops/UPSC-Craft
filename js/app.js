@@ -142,7 +142,7 @@ console.log('✅ Custom modal + toast system loaded');
 document.addEventListener('DOMContentLoaded', function() {
   console.log('🚀 App.js loaded');
   
-  // FILTER TAB SWITCHER (Fix for Subtopic)
+  // FILTER TAB SWITCHER
   const filterByYearBtn = document.getElementById('btn-filter-year');
   const filterBySubtopicBtn = document.getElementById('btn-filter-subtopic');
   const filterYearSelect = document.getElementById('filter-year');
@@ -225,12 +225,12 @@ document.addEventListener('DOMContentLoaded', function() {
     function openMenu() {
       sidebar.classList.add('mobile-open');
       if (backdrop) backdrop.classList.add('active');
-      document.body.classList.add('menu-open'); // This locks main scroll
+      document.body.classList.add('menu-open');
     }
     function closeMenu() {
       sidebar.classList.remove('mobile-open');
       if (backdrop) backdrop.classList.remove('active');
-      document.body.classList.remove('menu-open'); // This unlocks main scroll
+      document.body.classList.remove('menu-open');
     }
     toggleBtn.addEventListener('click', openMenu);
     closeBtn?.addEventListener('click', closeMenu);
@@ -568,7 +568,7 @@ document.addEventListener('DOMContentLoaded', function() {
   function savePresets() { localStorage.setItem(PRESET_STORAGE_KEY, JSON.stringify(presetBank)); updateBankStatus(); }
   function updateBankStatus() { if (bankStatusText) bankStatusText.textContent = `Current Bank Size: ${presetBank.length} question(s) loaded.`; syncDashboard(); }
 
-  // 16. RENDER BANK RESULTS
+  // 16. RENDER BANK RESULTS (UPDATED FOR DUPLICATE YEAR DETECTION)
   let renderRequestId = 0;
   async function renderBankResults() {
     if (!bankResultsContainer) return;
@@ -579,6 +579,14 @@ document.addEventListener('DOMContentLoaded', function() {
     const query = searchInput ? searchInput.value.toLowerCase().trim() : '';
     if (requestId !== renderRequestId) return;
     bankResultsContainer.innerHTML = '';
+
+    // BUILD YEAR HISTORY MAP
+    const yearMap = {};
+    presetBank.forEach(q => {
+      const key = q.question.trim().toLowerCase();
+      if (!yearMap[key]) yearMap[key] = [];
+      if (q.year && q.year !== 'Other') yearMap[key].push(q.year);
+    });
 
     const filtered = presetBank.filter((q) => {
       const qText = `${q.question || ''} ${q.topic || ''} ${q.paper || ''} ${q.year || ''}`.toLowerCase();
@@ -617,13 +625,19 @@ document.addEventListener('DOMContentLoaded', function() {
       const revised = rec.revised;
       const numberedQuestion = `<strong>${index + 1}.</strong> ${escapeHtml(q.question)}`;
 
+      // DUPLICATE YEAR DETECTION LOGIC
+      const yearHistory = yearMap[q.question.trim().toLowerCase()] || [];
+      const uniqueYears = [...new Set(yearHistory)].sort();
+      const isRepeated = uniqueYears.length > 1;
+      const yearTagText = isRepeated ? `Repeated in: ${uniqueYears.join(', ')}` : (q.year || '');
+
       div.innerHTML = `
         <div class="bank-question">${numberedQuestion}</div>
         <div class="bank-bottom">
           <div class="tags">
             <span class="tag ${paperClass}">${escapeHtml(q.paper || 'GS1')}</span>
             <span class="tag tag-topic">${escapeHtml(q.topic || 'General')}</span>
-            <span class="tag">${q.marks} M ${q.year ? '/ ' + escapeHtml(q.year) : ''}</span>
+            <span class="tag ${isRepeated ? 'tag-repeat' : ''}">${q.marks} M ${yearTagText ? '/ ' + escapeHtml(yearTagText) : ''}</span>
           </div>
           <div class="bank-actions" style="flex-wrap:wrap; gap:6px;">
             <button class="btn-study ${bookmarked ? 'active-bookmark' : ''}" data-action="bookmark" data-id="${q.id}">⭐ ${bookmarked ? 'Bookmarked' : 'Bookmark'}</button>
