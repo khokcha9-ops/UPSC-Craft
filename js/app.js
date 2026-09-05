@@ -1066,3 +1066,18 @@ document.addEventListener('DOMContentLoaded', function() {
   console.log('📋 Subtopics count:', Object.keys(SYLLABUS).length);
   console.log('📚 Bank size:', presetBank.length);
 });
+document.addEventListener('DOMContentLoaded', function() {
+  const qbEl = document.getElementById('question-breakdown');
+  if (qbEl) {
+    qbEl.addEventListener('click', function() {
+      const bank = JSON.parse(localStorage.getItem('qcab_preset_bank') || '[]');
+      let stats = {};
+      bank.forEach(q => { stats[q.paper] = (stats[q.paper] || 0) + 1; });
+      let text = '📊 Question Breakdown:\n\n';
+      text += 'GS1: ' + (stats['GS1'] || 0) + '\nGS2: ' + (stats['GS2'] || 0) + '\nGS3: ' + (stats['GS3'] || 0) + '\nGS4: ' + (stats['GS4'] || 0);
+      if(stats['OPT1']) text += '\nOPT1: ' + stats['OPT1'];
+      if(stats['OPT2']) text += '\nOPT2: ' + stats['OPT2'];
+      alert(text);
+    });
+  }
+});
