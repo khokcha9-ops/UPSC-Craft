@@ -1004,7 +1004,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
   function openAIModal(questionItem) {
     pendingQuestion = questionItem;
-    if (aiModal) aiModal.classList.add('active'); // FIXED: use 'active' not 'open'
+    if (aiModal) aiModal.classList.add('active');
   }
   function closeAIModal() {
     if (aiModal) aiModal.classList.remove('active');
@@ -1079,14 +1079,4 @@ document.addEventListener('DOMContentLoaded', function() {
   console.log('✅ QCAB Generator loaded successfully!');
   console.log('📋 Subtopics count:', Object.keys(SYLLABUS).length);
   console.log('📚 Bank size:', presetBank.length);
-});
-
-// Additional DOMContentLoaded for the breakdown – merged into the main one above, but keep this for safety
-document.addEventListener('DOMContentLoaded', function() {
-  const qbEl = document.getElementById('question-breakdown');
-  if (qbEl) {
-    qbEl.addEventListener('click', function() {
-      showStatsBreakdown();
-    });
-  }
 });
