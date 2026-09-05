@@ -47,12 +47,12 @@
       <span>View Syllabus</span>
     </button>
     
-    <div class="sidebar-progress" id="sidebar-progress" style="display:none; margin-top:20px; padding:10px; background:var(--surface-2); border-radius:12px;">
-      <div style="font-size:11px; font-weight:800; color:var(--muted); margin-bottom:8px;">YOUR STUDY PROGRESS</div>
-      <div style="display:flex; gap:10px; justify-content:space-around;">
-        <span>⭐ <span id="sidebar-bookmarked">0</span></span>
-        <span>✅ <span id="sidebar-revised">0</span></span>
-        <span>📝 <span id="sidebar-notes">0</span></span>
+    <div class="sidebar-progress" id="sidebar-progress" style="display:none; margin-top:20px; padding:12px; background:var(--surface-2); border-radius:14px;">
+      <div style="font-size:10px; font-weight:800; color:var(--muted); text-transform:uppercase; letter-spacing:0.5px; margin-bottom:8px;">Your Study Progress</div>
+      <div style="display:flex; gap:12px; justify-content:space-around;">
+        <span style="font-size:13px; font-weight:700;">⭐ <span id="sidebar-bookmarked" style="color:var(--primary);">0</span></span>
+        <span style="font-size:13px; font-weight:700;">✅ <span id="sidebar-revised" style="color:var(--accent);">0</span></span>
+        <span style="font-size:13px; font-weight:700;">📝 <span id="sidebar-notes" style="color:var(--gs3);">0</span></span>
       </div>
     </div>
 
@@ -82,7 +82,7 @@
     <main class="page">
       <section class="hero" id="dashboard">
         <div>
-          <p class="eyebrow">An Initiative to success</p>
+          <p class="eyebrow">✨ An Initiative to success</p>
           <h1>UPSC Craft<br>PYQ cum QCAB Generator</h1>
           <p>Find previous year questions, build your custom practice set and generate a print-ready answer booklet.</p>
         </div>
@@ -90,12 +90,12 @@
       
       <section class="stats">
         <div class="stat stat-bank" id="stat-bank-click">
-          <div class="stat-label">QUESTION BANK</div>
+          <div class="stat-label">📚 QUESTION BANK</div>
           <div class="stat-value" id="dashboard-bank-count">—</div>
           <div class="stat-note" id="question-breakdown" style="cursor:pointer; text-decoration:underline;">📊 Click for detailed breakdown</div>
         </div>
-        <div class="stat"><div class="stat-label">ACTIVE QCAB</div><div class="stat-value" id="dashboard-q-count">0</div><div class="stat-note">Questions selected</div></div>
-        <div class="stat"><div class="stat-label">ANSWER PAGES</div><div class="stat-value" id="dashboard-pages">0</div><div class="stat-note">Based on marks selected</div></div>
+        <div class="stat"><div class="stat-label">📋 ACTIVE QCAB</div><div class="stat-value" id="dashboard-q-count">0</div><div class="stat-note">Questions selected</div></div>
+        <div class="stat"><div class="stat-label">📄 ANSWER PAGES</div><div class="stat-value" id="dashboard-pages">0</div><div class="stat-note">Based on marks selected</div></div>
       </section>
 
       <div class="folder-wrap">
@@ -107,7 +107,7 @@
         <section>
           <div class="card" id="create-question">
             <div class="card-header">
-              <div><h2 class="card-title" id="add-heading">Create Custom Question</h2><p class="card-sub">Add your own question directly to the active booklet.</p></div>
+              <div><h2 class="card-title" id="add-heading">✏️ Create Custom Question</h2><p class="card-sub">Add your own question directly to the active booklet.</p></div>
               <button type="button" class="btn btn-secondary-sm" id="toggle-create-section-btn">Hide Form ▾</button>
             </div>
             <div id="create-form-body">
@@ -118,42 +118,43 @@
               <div class="field"><label for="q-year">Year <span style="font-weight:500">(optional)</span></label><input type="text" id="q-year" placeholder="e.g. 2025"></div>
               <div class="field checkbox-row"><input type="checkbox" id="include-index" checked><label for="include-index">Include index page in PDF</label></div>
               <div class="form-actions">
-                <button type="button" class="btn btn-primary btn-wide" id="add-btn">Add to Active Folder</button>
-                <button type="button" class="btn btn-wide" id="add-preset-btn">Save as Preset Bank Question</button>
-                <button type="button" class="btn btn-wide btn-danger" id="cancel-edit-btn" style="display:none;">Cancel Edit</button>
+                <button type="button" class="btn btn-primary btn-wide" id="add-btn">➕ Add to Active Folder</button>
+                <button type="button" class="btn btn-wide" id="add-preset-btn">📥 Save as Preset Bank Question</button>
+                <button type="button" class="btn btn-wide btn-danger" id="cancel-edit-btn" style="display:none;">✖ Cancel Edit</button>
               </div>
             </div>
           </div>
 
           <div class="card" id="pyq-bank">
             <div class="card-header">
-              <div><h2 class="card-title">PYQ Bank</h2><p class="card-sub">Search by question, topic, paper or year. Results update as you type.</p></div>
+              <div><h2 class="card-title">📖 PYQ Bank</h2><p class="card-sub">Search by question, topic, paper or year. Results update as you type.</p></div>
               <div class="bank-top-actions">
                 <button type="button" class="btn-bank-action" id="toggle-bank-btn"><span class="action-arrow" id="toggle-bank-icon">▼</span><span id="toggle-bank-text">Hide<br>Bank</span></button>
-                <button type="button" class="btn-bank-action reset-btn" id="clear-bank-btn"><span>Reset<br>Bank</span></button>
+                <button type="button" class="btn-bank-action reset-btn" id="clear-bank-btn"><span>⟳ Reset<br>Bank</span></button>
               </div>
             </div>
             
             <div id="pyq-bank-body">
-              <!-- SINGLE LINE FILTER BAR - fixed -->
-              <div class="filter-bar-single-line">
+              <!-- FILTER BAR - Horizontal -->
+              <div class="filter-bar">
                 <div class="filter-group">
-                  <label>Paper</label>
+                  <label>📂 Paper</label>
                   <select id="filter-paper"><option value="ALL">All Papers</option><option value="GS1">GS Paper 1</option><option value="GS2">GS Paper 2</option><option value="GS3">GS Paper 3</option><option value="GS4">GS Paper 4</option><option value="OPT1">Anthro Paper 1</option><option value="OPT2">Anthro Paper 2</option></select>
                 </div>
                 <div class="filter-group">
-                  <label>Subtopic</label>
+                  <label>🏷️ Subtopic</label>
                   <select id="filter-topic"><option value="ALL">All Subtopics</option></select>
                 </div>
                 <div class="filter-group">
-                  <label>Year</label>
+                  <label>📅 Year</label>
                   <select id="filter-year"><option value="ALL">All Years</option></select>
                 </div>
                 <div class="filter-group filter-search">
-                  <input type="text" id="search-input" placeholder="🔍 Search questions...">
+                  <label>🔍 Search</label>
+                  <input type="text" id="search-input" placeholder="Search questions...">
                 </div>
-                <button type="button" class="btn btn-filter-search" id="search-bank-btn">Search</button>
-                <button type="button" class="btn btn-clear-filter" id="clear-results-btn">Clear</button>
+                <button type="button" class="btn btn-filter-search" id="search-bank-btn">🔍 Search</button>
+                <button type="button" class="btn btn-clear-filter" id="clear-results-btn">✖ Clear</button>
               </div>
 
               <div id="bank-status-text">Loading question bank...</div>
@@ -164,16 +165,16 @@
       </div>
 
       <aside class="card sticky-card" id="my-qcab">
-        <div class="card-header"><div><h2 class="card-title">My QCAB</h2><p class="card-sub">Questions in your active booklet.</p></div><span class="tag" id="count-tag">0 questions</span></div>
+        <div class="card-header"><div><h2 class="card-title">📋 My QCAB</h2><p class="card-sub">Questions in your active booklet.</p></div><span class="tag" id="count-tag">0 questions</span></div>
         <div style="display:flex;justify-content:flex-end;gap:6px;margin-bottom:14px;">
-          <button type="button" class="btn btn-secondary-sm" id="rename-folder-btn">Rename</button>
-          <button type="button" class="btn btn-secondary-sm btn-danger" id="delete-folder-btn">Delete</button>
-          <button type="button" class="btn btn-secondary-sm" id="clear-q-btn">Clear</button>
+          <button type="button" class="btn btn-secondary-sm" id="rename-folder-btn">✏️ Rename</button>
+          <button type="button" class="btn btn-secondary-sm btn-danger" id="delete-folder-btn">🗑️ Delete</button>
+          <button type="button" class="btn btn-secondary-sm" id="clear-q-btn">🧹 Clear</button>
         </div>
         <div id="empty-state" class="empty-state"><div style="font-size:28px;margin-bottom:8px;">▣</div><strong style="display:block;color:var(--text);margin-bottom:4px;">Your booklet is empty</strong>Add questions from the PYQ Bank or create a custom question.</div>
         <ol class="q-list" id="q-list"></ol>
         <div class="summary-bar" id="summary-bar" style="display:none;"><div class="summary-stat"><span>TOTAL MARKS</span><strong id="total-marks">0</strong></div><div class="summary-stat"><span>ANSWER PAGES</span><strong id="total-pages">0</strong></div></div>
-        <button type="button" class="btn-generate" id="generate-btn" disabled>⇩ Generate &amp; Download PDF</button>
+        <button type="button" class="btn-generate" id="generate-btn" disabled>⬇ Generate &amp; Download PDF</button>
       </aside>
 
       <section id="my-study" style="margin-top:30px;">
@@ -267,16 +268,16 @@
 </div>
 
 <!-- Back to Top Button -->
-<button id="back-to-top" style="position:fixed; bottom:24px; right:24px; background:var(--primary); color:#fff; border:none; border-radius:50%; width:50px; height:50px; font-size:24px; box-shadow:0 6px 20px rgba(99,102,241,0.4); display:none; align-items:center; justify-content:center; z-index:999; cursor:pointer;">↑</button>
+<button id="back-to-top">↑</button>
 
-<!-- Note Modal - REMOVED extra ✕ button -->
+<!-- Note Modal -->
 <div class="study-modal" id="note-modal">
   <div class="study-modal-content">
     <h3>📝 Add Note</h3>
     <textarea id="note-textarea" placeholder="Write your note here..."></textarea>
     <div class="btn-row">
-      <button class="btn btn-secondary-sm" id="note-save-btn">Save</button>
-      <button class="btn btn-secondary-sm btn-danger" id="note-cancel-btn">Cancel</button>
+      <button class="btn btn-secondary-sm" id="note-save-btn">💾 Save</button>
+      <button class="btn btn-secondary-sm btn-danger" id="note-cancel-btn">✖ Cancel</button>
     </div>
   </div>
 </div>
