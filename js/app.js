@@ -87,30 +87,18 @@ async function showPrompt(message, title = 'Enter Value', defaultValue = '') {
 document.addEventListener('keydown', function(e) {
   if (e.key === 'Escape') {
     const overlay = document.getElementById('customModal');
-    if (overlay?.classList.contains('active')) {
-      overlay.classList.remove('active');
-    }
+    if (overlay?.classList.contains('active')) { overlay.classList.remove('active'); }
     const aiOverlay = document.getElementById('ai-model-modal');
-    if (aiOverlay?.classList.contains('active')) {
-      aiOverlay.classList.remove('active');
-    }
+    if (aiOverlay?.classList.contains('active')) { aiOverlay.classList.remove('active'); }
     const statsOverlay = document.getElementById('stats-modal');
-    if (statsOverlay?.classList.contains('active')) {
-      statsOverlay.classList.remove('active');
-    }
+    if (statsOverlay?.classList.contains('active')) { statsOverlay.classList.remove('active'); }
   }
 });
 
 // Close modals on backdrop click
-document.getElementById('customModal')?.addEventListener('click', function(e) {
-  if (e.target === this) this.classList.remove('active');
-});
-document.getElementById('ai-model-modal')?.addEventListener('click', function(e) {
-  if (e.target === this) this.classList.remove('active');
-});
-document.getElementById('stats-modal')?.addEventListener('click', function(e) {
-  if (e.target === this) this.classList.remove('active');
-});
+document.getElementById('customModal')?.addEventListener('click', function(e) { if (e.target === this) this.classList.remove('active'); });
+document.getElementById('ai-model-modal')?.addEventListener('click', function(e) { if (e.target === this) this.classList.remove('active'); });
+document.getElementById('stats-modal')?.addEventListener('click', function(e) { if (e.target === this) this.classList.remove('active'); });
 
 // ============================================================
 // TOAST & UTILITIES
@@ -144,9 +132,7 @@ function generateFullPrompt(question) {
   return `You are an expert UPSC Civil Services model answer writer. Generate a high-quality answer of about 500 words for the following question with introduction, body, and conclusion. Use recent facts and examples. Question: "${question}"`;
 }
 
-function generatePerplexityQuery(question) {
-  return generateFullPrompt(question);
-}
+function generatePerplexityQuery(question) { return generateFullPrompt(question); }
 
 console.log('✅ Custom modal + toast system loaded');
 
@@ -184,7 +170,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   }
 
-  // Safely define fallbacks for external global variables if missing
+  // Safely define fallbacks
   window.SYLLABUS = window.SYLLABUS || { 'GS1': ['General'], 'GS2': ['General'], 'GS3': ['General'], 'GS4': ['General'], 'OPT1': ['General'], 'OPT2': ['General'] };
   window.MARK_RULES = window.MARK_RULES || { 10: 2, 15: 3, 20: 4 };
   window.WORKER_URL = window.WORKER_URL || '';
@@ -228,7 +214,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   });
 
-  // 3. MOBILE MENU
+  // 3. MOBILE MENU (SIDEBAR SCROLL LOCK LOGIC)
   (function() {
     const sidebar = document.getElementById('main-sidebar');
     const toggleBtn = document.getElementById('mobile-menu-toggle');
@@ -239,12 +225,12 @@ document.addEventListener('DOMContentLoaded', function() {
     function openMenu() {
       sidebar.classList.add('mobile-open');
       if (backdrop) backdrop.classList.add('active');
-      document.body.classList.add('menu-open');
+      document.body.classList.add('menu-open'); // This locks main scroll
     }
     function closeMenu() {
       sidebar.classList.remove('mobile-open');
       if (backdrop) backdrop.classList.remove('active');
-      document.body.classList.remove('menu-open');
+      document.body.classList.remove('menu-open'); // This unlocks main scroll
     }
     toggleBtn.addEventListener('click', openMenu);
     closeBtn?.addEventListener('click', closeMenu);
@@ -319,11 +305,8 @@ document.addEventListener('DOMContentLoaded', function() {
   // 8. SCROLL TO TOP
   const backToTopBtn = document.getElementById('back-to-top');
   window.addEventListener('scroll', () => {
-    if (window.scrollY > 300) {
-      backToTopBtn?.classList.add('visible');
-    } else {
-      backToTopBtn?.classList.remove('visible');
-    }
+    if (window.scrollY > 300) backToTopBtn?.classList.add('visible');
+    else backToTopBtn?.classList.remove('visible');
   });
   backToTopBtn?.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
 
@@ -331,9 +314,7 @@ document.addEventListener('DOMContentLoaded', function() {
   function normalizePaperCode(paperVal) {
     if (!paperVal) return 'GS1';
     let cleaned = String(paperVal).toUpperCase().replace(/[\s\-\.]/g, ''); 
-    if (cleaned.includes('OPT')) {
-      return cleaned.includes('2') ? 'OPT2' : 'OPT1';
-    }
+    if (cleaned.includes('OPT')) return cleaned.includes('2') ? 'OPT2' : 'OPT1';
     if (cleaned.includes('GS')) {
       if (cleaned.includes('2')) return 'GS2';
       if (cleaned.includes('3')) return 'GS3';
@@ -398,9 +379,7 @@ document.addEventListener('DOMContentLoaded', function() {
     localStorage.setItem('qcab_active_nested_folder', activeFolderId);
   }
 
-  function getActiveFolder() {
-    return folderMap[activeFolderId] || folderMap['root'];
-  }
+  function getActiveFolder() { return folderMap[activeFolderId] || folderMap['root']; }
 
   // 12. DOM REFERENCES
   const qPaper = document.getElementById('q-paper');
@@ -466,7 +445,6 @@ document.addEventListener('DOMContentLoaded', function() {
     const bmEl = document.getElementById('study-bookmarked');
     const revEl = document.getElementById('study-revised');
     const notesEl = document.getElementById('study-notes');
-
     if (bmEl) bmEl.textContent = bookmarked;
     if (revEl) revEl.textContent = revised;
     if (notesEl) notesEl.textContent = withNotes;
@@ -475,7 +453,6 @@ document.addEventListener('DOMContentLoaded', function() {
     const sbRevised = document.getElementById('sidebar-revised');
     const sbNotes = document.getElementById('sidebar-notes');
     const sbProgress = document.getElementById('sidebar-progress');
-
     if (sbBookmarked) sbBookmarked.textContent = bookmarked;
     if (sbRevised) sbRevised.textContent = revised;
     if (sbNotes) sbNotes.textContent = withNotes;
@@ -514,12 +491,8 @@ document.addEventListener('DOMContentLoaded', function() {
     filterTopic.innerHTML = '<option value="ALL">All Subtopics</option>';
     const paper = filterPaper.value;
     let list = [];
-    if (paper === 'ALL') {
-      Object.values(SYLLABUS).forEach(arr => list.push(...arr));
-      list = [...new Set(list)];
-    } else {
-      list = SYLLABUS[paper] || [];
-    }
+    if (paper === 'ALL') { Object.values(SYLLABUS).forEach(arr => list.push(...arr)); list = [...new Set(list)]; }
+    else { list = SYLLABUS[paper] || []; }
     list.forEach(t => {
       const opt = document.createElement('option');
       opt.value = t; opt.textContent = t; filterTopic.appendChild(opt);
@@ -531,10 +504,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const prevSelected = filterYear.value;
     filterYear.innerHTML = '<option value="ALL">All Years</option>';
     const years = new Set();
-    presetBank.forEach(q => {
-      const yg = getYearGroup(q);
-      if (yg !== 'Other') years.add(yg);
-    });
+    presetBank.forEach(q => { const yg = getYearGroup(q); if (yg !== 'Other') years.add(yg); });
     for (let year = 2026; year >= 2013; year--) {
       const yr = String(year);
       if (years.has(yr)) {
@@ -1024,7 +994,7 @@ document.addEventListener('DOMContentLoaded', function() {
       const year = pendingQuestion.year || '';
       const marks = pendingQuestion.marks || '';
 
-      if (model === 'secret') {
+      if (model === 'secret') { // My AI Answer
         const params = new URLSearchParams({ q: question, y: year, m: marks, model: 'secret' });
         window.open(`answer.html?${params.toString()}`, '_blank');
         closeAIModal();
