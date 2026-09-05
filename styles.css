@@ -358,3 +358,16 @@ body.modal-open { overflow: hidden; }
     flex-direction: column !important;
     gap: 10px !important;
 }
+/* ==========================================================
+   FORCE PYQ BANK & MY QCAB INTO A SINGLE COLUMN
+   ========================================================== */
+.workspace {
+    grid-template-columns: 1fr !important; /* Takes full width */
+    gap: 20px;
+}
+
+/* Push My QCAB below the PYQ Bank */
+.sticky-card {
+    position: static !important;
+    margin-top: 20px;
+}
