@@ -1,218 +1,311 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>UPSC Mains - Official Syllabus Analyzer</title>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <style>
-        :root { --bg: #f4f7f6; --sidebar-bg: #ffffff; --text: #333; --text-light: #666; --border: #ddd; --primary: #2563eb; --accent: #06b6d4; --card-bg: #ffffff; --shadow: 0 4px 12px rgba(0,0,0,0.1); }
-        body.dark-mode { --bg: #0f172a; --sidebar-bg: #1e293b; --text: #f1f5f9; --text-light: #94a3b8; --border: #334155; --card-bg: #1e293b; --shadow: 0 4px 12px rgba(0,0,0,0.3); }
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; }
-        body { background: var(--bg); color: var(--text); transition: all 0.3s; }
-        .header { background: var(--sidebar-bg); padding: 20px 30px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); box-shadow: var(--shadow); position: sticky; top: 0; z-index: 100; }
-        .header h1 { font-size: 24px; font-weight: 800; }
-        .toggle-btn { background: var(--primary); color: white; border: none; padding: 8px 16px; border-radius: 8px; cursor: pointer; font-weight: 600; }
-        .status-msg { background: var(--accent); color: white; padding: 10px; margin-bottom: 20px; border-radius: 8px; display: none; font-weight: bold; }
-        .container { display: flex; gap: 20px; padding: 20px; height: calc(100vh - 80px); }
-        .sidebar { width: 350px; background: var(--sidebar-bg); border-radius: 12px; box-shadow: var(--shadow); overflow-y: auto; padding: 20px; border: 1px solid var(--border); }
-        .sidebar h2 { font-size: 16px; margin-bottom: 15px; border-bottom: 2px solid var(--primary); padding-bottom: 10px; }
-        .theme-group { margin-bottom: 20px; }
-        .theme-title { font-size: 14px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--primary); margin-bottom: 8px; }
-        .topic-tag { background: var(--bg); border: 1px solid var(--border); padding: 8px 12px; margin: 4px; border-radius: 6px; cursor: pointer; font-size: 13px; display: flex; justify-content: space-between; align-items: center; transition: all 0.2s; }
-        .topic-tag:hover { border-color: var(--primary); transform: translateX(3px); }
-        .topic-tag.active { background: var(--primary); color: white; }
-        .count-badge { background: var(--accent); color: white; border-radius: 10px; padding: 2px 8px; font-size: 11px; font-weight: bold; }
-        .main-content { flex: 1; display: flex; flex-direction: column; gap: 20px; overflow-y: hidden; }
-        .chart-section { background: var(--sidebar-bg); border-radius: 12px; padding: 20px; box-shadow: var(--shadow); border: 1px solid var(--border); }
-        .chart-title { font-weight: 700; margin-bottom: 10px; }
-        #pieChart { max-height: 250px; }
-        .questions-section { flex: 1; background: var(--sidebar-bg); border-radius: 12px; padding: 20px; box-shadow: var(--shadow); border: 1px solid var(--border); overflow-y: auto; }
-        .welcome-msg { text-align: center; color: var(--text-light); margin-top: 50px; }
-        .q-card { background: var(--bg); border: 1px solid var(--border); padding: 15px; margin-bottom: 12px; border-radius: 8px; }
-        .q-meta { display: flex; gap: 15px; font-size: 12px; color: var(--text-light); margin-bottom: 6px; font-weight: bold; }
-        .q-text { font-size: 14.5px; line-height: 1.6; }
-    </style>
+<meta charset="utf-8">
+<title>UPSC Mains - Exhaustive Micro-Themes Dashboard</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+  :root {
+    --bg-1: #090d16; --bg-2: #0f172a; --bg-3: #1e1b4b;
+    --card-bg: rgba(30, 41, 59, 0.85); --card-border: rgba(255, 255, 255, 0.12);
+    --text-main: #f8fafc; --text-sub: #94a3b8; --q-bg: rgba(15, 23, 42, 0.75); --q-border: rgba(255, 255, 255, 0.08);
+  }
+  body.light-mode {
+    --bg-1: #f1f5f9; --bg-2: #e2e8f0; --bg-3: #cbd5e1;
+    --card-bg: rgba(255, 255, 255, 0.95); --card-border: rgba(0, 0, 0, 0.1);
+    --text-main: #0f172a; --text-sub: #475569; --q-bg: rgba(241, 245, 249, 1); --q-border: rgba(0, 0, 0, 0.08);
+  }
+  * { box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    padding: 30px; margin: 0; min-height: 100vh;
+    background: linear-gradient(-45deg, var(--bg-1), var(--bg-2), var(--bg-3), var(--bg-2));
+    background-size: 400% 400%; animation: gradientBG 15s ease infinite;
+    color: var(--text-main); transition: background 0.3s ease, color 0.3s ease;
+  }
+  @keyframes gradientBG { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+
+  .header-container { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; }
+  h1 { margin: 0 0 5px 0; font-size: 28px; font-weight: 800; letter-spacing: -0.5px; }
+  .subtitle { color: var(--text-sub); font-size: 14px; }
+
+  .theme-toggle { background: var(--card-bg); border: 1px solid var(--card-border); color: var(--text-main); padding: 10px 18px; border-radius: 25px; cursor: pointer; font-weight: 600; font-size: 14px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); transition: transform 0.2s, background 0.2s; }
+  .theme-toggle:hover { transform: translateY(-2px); }
+
+  .dashboard-container { display: flex; gap: 25px; flex-wrap: wrap; align-items: flex-start; }
+
+  .sidebar { flex: 1.2; min-width: 320px; background: var(--card-bg); backdrop-filter: blur(12px); border-radius: 20px; padding: 24px; border: 1px solid var(--card-border); box-shadow: 0 20px 40px rgba(0,0,0,0.2); max-height: 82vh; overflow-y: auto; }
+  .sidebar::-webkit-scrollbar { width: 6px; }
+  .sidebar::-webkit-scrollbar-thumb { background: rgba(148, 163, 184, 0.4); border-radius: 3px; }
+
+  .section-title { font-size: 12px; text-transform: uppercase; letter-spacing: 1px; color: var(--text-sub); font-weight: 700; margin: 18px 0 10px 4px; }
+  .section-title:first-child { margin-top: 0; }
+  .tags-wrapper { display: flex; flex-direction: column; gap: 8px; }
+
+  .tag-btn { border: none; padding: 11px 16px; border-radius: 12px; cursor: pointer; font-weight: 600; font-size: 13.5px; color: white; display: flex; justify-content: space-between; align-items: center; transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1); box-shadow: 0 3px 10px rgba(0,0,0,0.15); text-align: left; }
+  .tag-btn:hover { transform: translateX(4px); filter: brightness(1.12); }
+  .tag-btn.active { outline: 2.5px solid #fff; box-shadow: 0 0 15px rgba(255,255,255,0.4); }
+  .badge { background: rgba(0, 0, 0, 0.3); padding: 3px 9px; border-radius: 20px; font-size: 12px; font-weight: 700; color: #fff; }
+
+  .content-area { flex: 2; min-width: 350px; max-height: 82vh; overflow-y: auto; }
+  .content-area::-webkit-scrollbar { width: 6px; }
+  .content-area::-webkit-scrollbar-thumb { background: rgba(148, 163, 184, 0.4); border-radius: 3px; }
+
+  .theme-panel { display: none; background: var(--card-bg); backdrop-filter: blur(12px); border-radius: 20px; padding: 25px; border: 1px solid var(--card-border); box-shadow: 0 20px 40px rgba(0,0,0,0.2); animation: fadeIn 0.3s ease-in-out; }
+  .theme-panel.active { display: block; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+  .panel-header { font-size: 20px; font-weight: 800; margin-bottom: 20px; padding-bottom: 12px; border-bottom: 2px solid var(--card-border); display: flex; justify-content: space-between; align-items: center; }
+  .questions-list { display: flex; flex-direction: column; gap: 14px; }
+  .q-card { background: var(--q-bg); padding: 16px 18px; border-radius: 12px; border: 1px solid var(--q-border); transition: transform 0.2s; }
+  .q-card:hover { transform: translateY(-2px); }
+  .q-meta { font-size: 11.5px; color: var(--text-sub); margin-bottom: 6px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; display: flex; gap: 12px; }
+  .q-text { font-size: 14.5px; line-height: 1.55; color: var(--text-main); }
+
+  .welcome-msg { background: var(--card-bg); backdrop-filter: blur(12px); border-radius: 20px; padding: 50px 30px; text-align: center; color: var(--text-sub); font-size: 16px; border: 1px solid var(--card-border); }
+
+  .chart-box { flex: 1.1; min-width: 320px; background: var(--card-bg); backdrop-filter: blur(12px); border-radius: 20px; padding: 24px; border: 1px solid var(--card-border); box-shadow: 0 20px 40px rgba(0,0,0,0.2); display: flex; flex-direction: column; align-items: center; max-height: 82vh; }
+  .chart-title { font-size: 16px; font-weight: 700; margin-bottom: 15px; color: var(--text-main); }
+
+  /* Colors for dynamic gradients */
+  .grad-1 { background: linear-gradient(135deg, #FF5E62, #FF9966); }
+  .grad-2 { background: linear-gradient(135deg, #FF9966, #FFCC33); }
+  .grad-3 { background: linear-gradient(135deg, #F12711, #F5AF19); }
+  .grad-4 { background: linear-gradient(135deg, #EB3349, #F45C43); }
+  .grad-5 { background: linear-gradient(135deg, #1D976C, #93F9B9); }
+  .grad-6 { background: linear-gradient(135deg, #373B44, #4286f4); }
+  .grad-7 { background: linear-gradient(135deg, #005C97, #363795); }
+  .grad-8 { background: linear-gradient(135deg, #8A2387, #E94057); }
+  .grad-9 { background: linear-gradient(135deg, #B24592, #F15F79); }
+  .grad-10 { background: linear-gradient(135deg, #7F00FF, #E100FF); }
+  .grad-11 { background: linear-gradient(135deg, #56CCF2, #2F80ED); }
+  .grad-12 { background: linear-gradient(135deg, #0072FF, #00C6FF); }
+  .grad-13 { background: linear-gradient(135deg, #F2994A, #F2C94C); }
+  .grad-14 { background: linear-gradient(135deg, #F953C6, #B91D73); }
+</style>
 </head>
 <body>
-    <div class="header">
-        <h1>📊 UPSC Mains - Official Syllabus Analyzer</h1>
-        <button class="toggle-btn" onclick="toggleTheme()">🌓 Toggle Dark Mode</button>
+
+  <div class="header-container">
+    <div>
+      <h1>UPSC Mains: Exhaustive Micro-Theme Matrix</h1>
+      <div class="subtitle">Auto-generated from your GS1, GS2, GS3 & GS4 JSON files</div>
+    </div>
+    <button class="theme-toggle" onclick="toggleTheme()">🌓 Toggle Theme</button>
+  </div>
+
+  <div class="dashboard-container">
+    <!-- Sidebar -->
+    <div class="sidebar" id="sidebar-container">
+      <div class="section-title">Loading...</div>
     </div>
 
-    <div class="container">
-        <div class="sidebar">
-            <h2>Major Themes &amp; Topics</h2>
-            <div id="theme-list"></div>
-        </div>
-        <div class="main-content">
-            <div class="chart-section">
-                <div class="chart-title">📈 Topic Distribution</div>
-                <div id="status-msg" class="status-msg"></div>
-                <canvas id="pieChart"></canvas>
-            </div>
-            <div class="questions-section">
-                <div id="question-viewer" class="welcome-msg">
-                    <h2>Select a topic from the left</h2>
-                    <p>This dashboard maps all questions to the official UPSC Syllabus themes.</p>
-                </div>
-            </div>
-        </div>
+    <!-- Content Display Panel -->
+    <div class="content-area" id="content-area">
+      <div id="welcome-panel" class="welcome-msg">
+        👉 Select any explicit micro-theme tag on the left to inspect categorized Mains question cards.
+      </div>
     </div>
 
-    <script>
-        // ==========================================
-        // OFFICIAL SYLLABUS-BASED MULTI-THEME CLASSIFIER
-        // ==========================================
-        function getThemes(q) {
-            const t = q.question.toLowerCase();
-            const subtopic = (q.subtopic || q.paper || '').toLowerCase();
-            let themes = [];
+    <!-- Analytics Chart Box -->
+    <div class="chart-box">
+      <div class="chart-title">Exhaustive Topic Weightage</div>
+      <div style="width: 100%; max-width: 280px; position: relative;">
+        <canvas id="exhaustivePieChart"></canvas>
+      </div>
+    </div>
+  </div>
 
-            // --- GS1: Heritage, History, Society, Geography ---
-            if (subtopic.includes("heritage") || subtopic.includes("history") || subtopic.includes("society") || subtopic.includes("geography")) {
-                if (t.includes("temple") || t.includes("architecture") || t.includes("sculpture") || t.includes("art forms")) themes.push({ major: "GS1: Indian Heritage & Culture", topic: "Art, Architecture & Literature" });
-                if (t.includes("freedom") || t.includes("struggle") || t.includes("gandhi") || t.includes("dalhousie")) themes.push({ major: "GS1: Modern History", topic: "Freedom Struggle & British Rule" });
-                if (t.includes("independence") || t.includes("princely") || t.includes("consolidation")) themes.push({ major: "GS1: Modern History", topic: "Post-Independence Consolidation" });
-                if (t.includes("industrial revolution") || t.includes("world wars") || t.includes("decolonization")) themes.push({ major: "GS1: World History", topic: "World Events & Philosophies" });
-                if (t.includes("caste") || t.includes("tribal") || t.includes("women") || t.includes("secularism")) themes.push({ major: "GS1: Indian Society", topic: "Social Empowerment & Diversity" });
-                if (t.includes("urban") || t.includes("migration") || t.includes("globalization")) themes.push({ major: "GS1: Indian Society", topic: "Urbanization & Globalization" });
-                if (t.includes("cyclone") || t.includes("earthquake") || t.includes("monsoon") || t.includes("tsunami")) themes.push({ major: "GS1: Geography", topic: "Geophysical Phenomena" });
-                if (t.includes("resources") || t.includes("industry") || t.includes("mineral")) themes.push({ major: "GS1: Geography", topic: "Natural Resources & Industries" });
-                themes.push({ major: "GS1: Heritage", topic: "General History & Culture" });
-            }
+  <script>
+    function toggleTheme() {
+      document.body.classList.toggle('light-mode');
+    }
 
-            // --- GS2: Polity, Governance, Social Justice, IR ---
-            if (subtopic.includes("polity") || subtopic.includes("governance") || subtopic.includes("international")) {
-                if (t.includes("constitution") || t.includes("amendment") || t.includes("basic structure") || t.includes("parliament")) themes.push({ major: "GS2: Polity & Constitution", topic: "Constitution & Parliament" });
-                if (t.includes("federal") || t.includes("centre") || t.includes("state") || t.includes("devolution")) themes.push({ major: "GS2: Polity & Constitution", topic: "Federalism & Centre-State" });
-                if (t.includes("judiciary") || t.includes("court") || t.includes("tribunal") || t.includes("rti")) themes.push({ major: "GS2: Polity & Constitution", topic: "Judiciary, Tribunals & RTI" });
-                if (t.includes("election") || t.includes("evm") || t.includes("voter")) themes.push({ major: "GS2: Polity & Constitution", topic: "Elections & RPA" });
-                if (t.includes("statutory") || t.includes("regulatory") || t.includes("commission")) themes.push({ major: "GS2: Polity & Constitution", topic: "Constitutional & Statutory Bodies" });
-                if (t.includes("welfare") || t.includes("schemes") || t.includes("health") || t.includes("education")) themes.push({ major: "GS2: Social Justice", topic: "Welfare Schemes & Social Sector" });
-                if (t.includes("poverty") || t.includes("hunger") || t.includes("malnutrition")) themes.push({ major: "GS2: Social Justice", topic: "Poverty & Hunger" });
-                if (t.includes("ngo") || t.includes("shg") || t.includes("civil society")) themes.push({ major: "GS2: Governance", topic: "NGOs, SHGs & Civil Society" });
-                if (t.includes("e-governance") || t.includes("transparency") || t.includes("accountability") || t.includes("charter")) themes.push({ major: "GS2: Governance", topic: "E-Governance & Accountability" });
-                if (t.includes("china") || t.includes("pakistan") || t.includes("usa") || t.includes("bilateral")) themes.push({ major: "GS2: International Relations", topic: "Bilateral & Regional Relations" });
-                if (t.includes("un") || t.includes("wto") || t.includes("quad") || t.includes("brics") || t.includes("sco")) themes.push({ major: "GS2: International Relations", topic: "Global Groupings & Institutions" });
-                themes.push({ major: "GS2: Governance", topic: "Governance & Civil Services" });
-            }
+    function showTheme(themeId, btnElement) {
+      document.querySelectorAll('.theme-panel').forEach(panel => { panel.classList.remove('active'); });
+      const welcome = document.getElementById('welcome-panel');
+      if (welcome) welcome.style.display = 'none';
 
-            // --- GS3: Economy, Agriculture, Environment, Security ---
-            if (subtopic.includes("economy") || subtopic.includes("agriculture") || subtopic.includes("environment") || subtopic.includes("security")) {
-                if (t.includes("gdp") || t.includes("growth") || t.includes("inflation") || t.includes("budget") || t.includes("tax")) themes.push({ major: "GS3: Indian Economy", topic: "Growth, Budget & Taxation" });
-                if (t.includes("planning") || t.includes("inclusive") || t.includes("employment")) themes.push({ major: "GS3: Indian Economy", topic: "Planning & Inclusive Growth" });
-                if (t.includes("crop") || t.includes("irrigation") || t.includes("msp") || t.includes("subsidy")) themes.push({ major: "GS3: Agriculture", topic: "Crops, Irrigation & Subsidies" });
-                if (t.includes("food processing") || t.includes("supply chain") || t.includes("market")) themes.push({ major: "GS3: Agriculture", topic: "Food Processing & Marketing" });
-                if (t.includes("land") || t.includes("reform")) themes.push({ major: "GS3: Agriculture", topic: "Land Reforms" });
-                if (t.includes("science") || t.includes("technology") || t.includes("space") || t.includes("ai") || t.includes("biotech")) themes.push({ major: "GS3: Science & Technology", topic: "S&T Developments & Applications" });
-                if (t.includes("environment") || t.includes("climate") || t.includes("pollution")) themes.push({ major: "GS3: Environment", topic: "Environment & Climate Change" });
-                if (t.includes("disaster") || t.includes("flood") || t.includes("cyclone")) themes.push({ major: "GS3: Disaster Management", topic: "Disasters & Management" });
-                if (t.includes("terror") || t.includes("naxal") || t.includes("border") || t.includes("cyber") || t.includes("money laundering")) themes.push({ major: "GS3: Internal Security", topic: "Internal Security & Extremism" });
-                themes.push({ major: "GS3: Indian Economy", topic: "General Economy & Infrastructure" });
-            }
+      const targetPanel = document.getElementById(themeId);
+      if (targetPanel) { targetPanel.classList.add('active'); }
 
-            // --- GS4: Ethics & Probity ---
-            if (subtopic.includes("ethics") || q.marks === "20" || q.marks === "25") {
-                themes.push({ major: "GS4: Ethics & Human Interface", topic: "Case Studies on Ethics" });
-                if (t.includes("integrity") || t.includes("probity") || t.includes("transparency") || t.includes("corruption")) themes.push({ major: "GS4: Probity in Governance", topic: "Probity & Anti-Corruption" });
-                if (t.includes("emotion") || t.includes("intelligence") || t.includes("anger")) themes.push({ major: "GS4: Ethics & Human Interface", topic: "Emotional Intelligence" });
-                if (t.includes("gandhi") || t.includes("buddha") || t.includes("kant") || t.includes("philosopher")) themes.push({ major: "GS4: Ethics & Human Interface", topic: "Moral Thinkers" });
-                themes.push({ major: "GS4: Ethics & Human Interface", topic: "Core Values & Attitude" });
-            }
+      document.querySelectorAll('.tag-btn').forEach(btn => { btn.classList.remove('active'); });
+      btnElement.classList.add('active');
+    }
 
-            // Fallback
-            if (themes.length === 0) themes.push({ major: "Other / Cross-Cutting", topic: "General / Misc" });
+    // --- EXPLICIT MICRO-THEME ENGINE (Based on your PDF topics) ---
+    function getExplicitTheme(q) {
+      const t = q.question.toLowerCase();
 
-            // Deduplicate (remove exact same Major+Topic pairs)
-            let uniqueThemes = [];
-            themes.forEach(theme => {
-                if (!uniqueThemes.some(t => t.major === theme.major && t.topic === theme.topic)) {
-                    uniqueThemes.push(theme);
-                }
-            });
+      // GS1 - Art & Culture
+      if (t.includes('chola') || t.includes('temple') || t.includes('nagara') || t.includes('vesara')) return { main: "GS1: Art & Architecture", sub: "Temple & Chola Architecture" };
+      if (t.includes('gandhara') || t.includes('sculpture') || t.includes('amravati')) return { main: "GS1: Art & Architecture", sub: "Gandhara & Sculpture Schools" };
+      if (t.includes('bhakti') || t.includes('sufi') || t.includes('sangam') || t.includes('literature')) return { main: "GS1: Art & Architecture", sub: "Bhakti, Sufi & Literature" };
+      
+      // GS1 - Modern History
+      if (t.includes('dalhousie') || t.includes('curzon') || t.includes('british') || t.includes('famine')) return { main: "GS1: Modern History", sub: "Colonial Policies & British Rule" };
+      if (t.includes('freedom') || t.includes('gandhi') || t.includes('1857') || t.includes('quit india')) return { main: "GS1: Modern History", sub: "Freedom Struggle & Nationalism" };
+      if (t.includes('bhoodan') || t.includes('tashkent') || t.includes('princely')) return { main: "GS1: Modern History", sub: "Post-Independence Consolidation" };
+      
+      // GS1 - Society & Geography
+      if (t.includes('caste') || t.includes('tribal') || t.includes('secularism') || t.includes('urbanization')) return { main: "GS1: Society", sub: "Social Diversity & Urbanization" };
+      if (t.includes('globalization') || t.includes('women')) return { main: "GS1: Society", sub: "Globalization & Women" };
+      if (t.includes('cyclone') || t.includes('earthquake') || t.includes('monsoon') || t.includes('tsunami')) return { main: "GS1: Geography", sub: "Geophysical Phenomena" };
+      if (t.includes('resources') || t.includes('industry') || t.includes('mineral')) return { main: "GS1: Geography", sub: "Resources & Industries" };
 
-            return uniqueThemes;
+      // GS2 - Polity & Governance
+      if (t.includes('federal') || t.includes('centre-state') || t.includes('gst') || t.includes('101st')) return { main: "GS2: Polity", sub: "Federalism & GST" };
+      if (t.includes('constitution') || t.includes('amendment') || t.includes('parliament') || t.includes('rajya sabha')) return { main: "GS2: Polity", sub: "Constitution & Parliament" };
+      if (t.includes('judiciary') || t.includes('court') || t.includes('rti') || t.includes('cbi')) return { main: "GS2: Polity", sub: "Judiciary & RTI" };
+      if (t.includes('election') || t.includes('evm') || t.includes('representation')) return { main: "GS2: Polity", sub: "Elections & RPA" };
+      if (t.includes('welfare') || t.includes('scheme') || t.includes('health') || t.includes('education')) return { main: "GS2: Social Justice", sub: "Welfare Schemes & Health" };
+      if (t.includes('poverty') || t.includes('hunger') || t.includes('malnutrition')) return { main: "GS2: Social Justice", sub: "Poverty & Hunger" };
+      if (t.includes('china') || t.includes('pakistan') || t.includes('un') || t.includes('quad') || t.includes('brics')) return { main: "GS2: IR", sub: "Bilateral & Global Groupings" };
+
+      // GS3 - Economy & Agriculture
+      if (t.includes('gdp') || t.includes('growth') || t.includes('tax') || t.includes('budget') || t.includes('startup')) return { main: "GS3: Economy", sub: "Growth, Budget & Startups" };
+      if (t.includes('crop') || t.includes('irrigation') || t.includes('msp') || t.includes('subsidy')) return { main: "GS3: Agriculture", sub: "Cropping, Irrigation & MSP" };
+      if (t.includes('food processing') || t.includes('supply chain') || t.includes('apmc')) return { main: "GS3: Agriculture", sub: "Food Processing & Marketing" };
+      if (t.includes('land') || t.includes('reform')) return { main: "GS3: Agriculture", sub: "Land Reforms" };
+      
+      // GS3 - Environment & Security
+      if (t.includes('climate') || t.includes('pollution') || t.includes('environment')) return { main: "GS3: Environment", sub: "Climate & Environment" };
+      if (t.includes('disaster') || t.includes('flood') || t.includes('cyclone')) return { main: "GS3: Environment", sub: "Disaster Management" };
+      if (t.includes('cyber') || t.includes('terrorism') || t.includes('naxal') || t.includes('money laundering')) return { main: "GS3: Security", sub: "Cyber, Terrorism & Internal Security" };
+      if (t.includes('space') || t.includes('isro') || t.includes('ai') || t.includes('science')) return { main: "GS3: S&T", sub: "Space, AI & Science" };
+
+      // GS4 - Ethics
+      if (t.includes('integrity') || t.includes('probity') || t.includes('transparency') || t.includes('corruption')) return { main: "GS4: Probity", sub: "Probity & Transparency" };
+      if (t.includes('emotion') || t.includes('anger') || t.includes('intelligence')) return { main: "GS4: Ethics", sub: "Emotional Intelligence" };
+      if (t.includes('gandhi') || t.includes('buddha') || t.includes('kant') || t.includes('philosopher')) return { main: "GS4: Ethics", sub: "Moral Thinkers" };
+      if (q.marks === "20" || q.marks === "25") return { main: "GS4: Ethics", sub: "Case Studies" };
+
+      return { main: "General / Other", sub: "Miscellaneous" };
+    }
+
+    // --- LOAD AND BUILD ---
+    async function loadAndBuild() {
+      const files = ['./gs1_pyq.json', './gs2_pyq.json', './gs3_pyq.json', './gs4_pyq.json'];
+      const results = await Promise.all(files.map(f => fetch(f).then(r => r.json()).catch(() => [])));
+      const allData = results.flat();
+
+      if (allData.length === 0) {
+        document.getElementById('sidebar-container').innerHTML = '<div class="section-title">Please place your gs1-4 JSON files in the same folder & use GitHub Pages.</div>';
+        return;
+      }
+
+      // Group by Major (Papers) and Sub (Explicit Topics)
+      const categories = {};
+      allData.forEach(q => {
+        const { main, sub } = getExplicitTheme(q);
+        if (!categories[main]) categories[main] = {};
+        if (!categories[main][sub]) categories[main][sub] = [];
+        categories[main][sub].push(q);
+      });
+
+      // Build Sidebar and Panels
+      const sidebarContainer = document.getElementById('sidebar-container');
+      const contentArea = document.getElementById('content-area');
+      sidebarContainer.innerHTML = '';
+      contentArea.innerHTML = '<div id="welcome-panel" class="welcome-msg">👉 Select any explicit micro-theme tag on the left to inspect categorized Mains question cards.</div>';
+
+      const chartLabels = [];
+      const chartData = [];
+      const gradClasses = ['grad-1', 'grad-2', 'grad-3', 'grad-4', 'grad-5', 'grad-6', 'grad-7', 'grad-8', 'grad-9', 'grad-10', 'grad-11', 'grad-12', 'grad-13', 'grad-14'];
+      let globalCount = 0;
+
+      for (const [mainCat, subs] of Object.entries(categories)) {
+        const catHeader = document.createElement('div');
+        catHeader.className = 'section-title';
+        catHeader.innerText = mainCat;
+        sidebarContainer.appendChild(catHeader);
+
+        const wrapper = document.createElement('div');
+        wrapper.className = 'tags-wrapper';
+
+        for (const [sub, questions] of Object.entries(subs)) {
+          const themeId = 't-' + (globalCount++);
+          const colorClass = gradClasses[globalCount % gradClasses.length];
+
+          // Create Sidebar Button
+          const tagBtn = document.createElement('button');
+          tagBtn.className = `tag-btn ${colorClass}`;
+          tagBtn.onclick = () => showTheme(themeId, tagBtn);
+          tagBtn.innerHTML = `<span>${sub}</span><span class="badge">${questions.length}</span>`;
+          wrapper.appendChild(tagBtn);
+
+          // Create Content Panel
+          const panel = document.createElement('div');
+          panel.id = themeId;
+          panel.className = 'theme-panel';
+          
+          let panelHTML = `
+            <div class="panel-header" style="color: #ffffff;">
+              <span>${sub}</span>
+              <span class="badge" style="background: #444;">${questions.length} Questions</span>
+            </div>
+            <div class="questions-list">`;
+          
+          questions.forEach(q => {
+            panelHTML += `
+              <div class="q-card">
+                <div class="q-meta"><span>Year: ${q.year}</span> <span>Marks: ${q.marks}</span></div>
+                <div class="q-text">${q.question}</div>
+              </div>`;
+          });
+
+          panelHTML += `</div>`;
+          panel.innerHTML = panelHTML;
+          contentArea.appendChild(panel);
+
+          // Chart data
+          chartLabels.push(sub);
+          chartData.push(questions.length);
         }
+        sidebarContainer.appendChild(wrapper);
+      }
 
-        // ==========================================
-        // FETCH DATA
-        // ==========================================
-        async function loadData() {
-            const files = ['./gs1_pyq.json', './gs2_pyq.json', './gs3_pyq.json', './gs4_pyq.json'];
-            let allQuestions = [];
+      // Render Chart
+      renderChart(chartLabels, chartData);
+    }
 
-            await Promise.all(files.map(f => fetch(f).then(r => r.json()).then(data => {
-                if (Array.isArray(data)) allQuestions = allQuestions.concat(data);
-            }).catch(() => {})));
+    function renderChart(labels, data) {
+      const ctx = document.getElementById('exhaustivePieChart').getContext('2d');
+      const colors = [
+        "#FF5E62", "#FF9966", "#F12711", "#EB3349", "#1D976C", "#373B44", "#005C97", "#8A2387",
+        "#B24592", "#7F00FF", "#56CCF2", "#0072FF", "#F2994A", "#F953C6"
+      ];
 
-            if (allQuestions.length === 0) {
-                document.getElementById('status-msg').innerText = '⚠️ Could not load JSON files. Please ensure they are in the same folder and you are running this on GitHub Pages.';
-                document.getElementById('status-msg').style.display = 'block';
-            } else {
-                document.getElementById('status-msg').innerText = `✅ Loaded ${allQuestions.length} questions. Multi-theme assignment active!`;
-                document.getElementById('status-msg').style.display = 'block';
+      new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+          labels: labels,
+          datasets: [{
+            data: data,
+            backgroundColor: colors,
+            borderWidth: 2,
+            borderColor: getComputedStyle(document.documentElement).getPropertyValue('--card-bg')
+          }]
+        },
+        options: {
+          responsive: true,
+          plugins: {
+            legend: {
+              position: 'bottom',
+              labels: {
+                color: getComputedStyle(document.documentElement).getPropertyValue('--text-main'),
+                font: { size: 10 },
+                boxWidth: 10,
+                padding: 8
+              }
             }
-            buildDashboard(allQuestions);
+          }
         }
+      });
+    }
 
-        function buildDashboard(data) {
-            const categories = {};
-            data.forEach(q => {
-                getThemes(q).forEach(theme => {
-                    if (!categories[theme.major]) categories[theme.major] = {};
-                    if (!categories[theme.major][theme.topic]) categories[theme.major][theme.topic] = [];
-                    categories[theme.major][theme.topic].push({ question: q.question, year: q.year, marks: q.marks });
-                });
-            });
-            
-            const themesContainer = document.getElementById('theme-list');
-            themesContainer.innerHTML = '';
-            let chartLabels = [], chartData = [];
-
-            Object.keys(categories).sort().forEach(majorTheme => {
-                const group = document.createElement('div');
-                group.className = 'theme-group';
-                group.innerHTML = `<div class="theme-title">${majorTheme}</div>`;
-                Object.keys(categories[majorTheme]).forEach(topic => {
-                    const count = categories[majorTheme][topic].length;
-                    const tag = document.createElement('div');
-                    tag.className = 'topic-tag';
-                    tag.innerHTML = `<span>${topic}</span> <span class="count-badge">${count}</span>`;
-                    tag.onclick = () => showQuestions(majorTheme, topic, tag, data);
-                    group.appendChild(tag);
-                    chartLabels.push(topic);
-                    chartData.push(count);
-                });
-                themesContainer.appendChild(group);
-            });
-
-            const ctx = document.getElementById('pieChart').getContext('2d');
-            const colors = ["#FF5E62", "#FF9966", "#F12711", "#EB3349", "#1D976C", "#373B44", "#005C97", "#8A2387", "#B24592", "#7F00FF", "#56CCF2", "#0072FF", "#F2994A", "#F953C6", "#9932CC"];
-            new Chart(ctx, {
-                type: 'doughnut',
-                data: { labels: chartLabels, datasets: [{ data: chartData, backgroundColor: colors, borderWidth: 1 }] },
-                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: { font: { size: 10 }, boxWidth: 12 } } } }
-            });
-        }
-
-        function showQuestions(major, topic, element, data) {
-            document.querySelectorAll('.topic-tag').forEach(t => t.classList.remove('active'));
-            element.classList.add('active');
-            const questions = data.filter(q => getThemes(q).some(t => t.major === major && t.topic === topic));
-            
-            let html = `<h2 style="border-bottom:2px solid #2563eb; padding-bottom:10px;">${major} - ${topic} (${questions.length} Qs)</h2>`;
-            html += `<div style="margin-top:15px;">`;
-            questions.forEach((q, i) => {
-                html += `<div class="q-card"><div class="q-meta"><span>Year: ${q.year}</span> <span>Marks: ${q.marks}</span></div><div class="q-text">${i+1}. ${q.question}</div></div>`;
-            });
-            html += `</div>`;
-            document.getElementById('question-viewer').innerHTML = html;
-            document.getElementById('question-viewer').scrollTop = 0;
-        }
-
-        function toggleTheme() { document.body.classList.toggle('dark-mode'); }
-        loadData();
-    </script>
+    // Load on start
+    loadAndBuild();
+  </script>
 </body>
 </html>
