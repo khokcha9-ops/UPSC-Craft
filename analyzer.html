@@ -89,25 +89,22 @@
   <div class="header-container">
     <div>
       <h1>UPSC Mains: Exhaustive Micro-Theme Matrix</h1>
-      <div class="subtitle">Auto-generated from your GS1, GS2, GS3 & GS4 JSON files</div>
+      <div class="subtitle">Auto-analyzed from your question text (No themes required in JSON)</div>
     </div>
     <button class="theme-toggle" onclick="toggleTheme()">🌓 Toggle Theme</button>
   </div>
 
   <div class="dashboard-container">
-    <!-- Sidebar -->
     <div class="sidebar" id="sidebar-container">
       <div class="section-title">Loading...</div>
     </div>
 
-    <!-- Content Display Panel -->
     <div class="content-area" id="content-area">
       <div id="welcome-panel" class="welcome-msg">
         👉 Select any explicit micro-theme tag on the left to inspect categorized Mains question cards.
       </div>
     </div>
 
-    <!-- Analytics Chart Box -->
     <div class="chart-box">
       <div class="chart-title">Exhaustive Topic Weightage</div>
       <div style="width: 100%; max-width: 280px; position: relative;">
@@ -117,23 +114,9 @@
   </div>
 
   <script>
-    function toggleTheme() {
-      document.body.classList.toggle('light-mode');
-    }
+    function toggleTheme() { document.body.classList.toggle('light-mode'); }
 
-    function showTheme(themeId, btnElement) {
-      document.querySelectorAll('.theme-panel').forEach(panel => { panel.classList.remove('active'); });
-      const welcome = document.getElementById('welcome-panel');
-      if (welcome) welcome.style.display = 'none';
-
-      const targetPanel = document.getElementById(themeId);
-      if (targetPanel) { targetPanel.classList.add('active'); }
-
-      document.querySelectorAll('.tag-btn').forEach(btn => { btn.classList.remove('active'); });
-      btnElement.classList.add('active');
-    }
-
-    // --- EXPLICIT MICRO-THEME ENGINE (Based on your PDF topics) ---
+    // --- AUTO-THEME GENERATOR BASED ON QUESTION TEXT ---
     function getExplicitTheme(q) {
       const t = q.question.toLowerCase();
 
@@ -190,7 +173,7 @@
       const allData = results.flat();
 
       if (allData.length === 0) {
-        document.getElementById('sidebar-container').innerHTML = '<div class="section-title">Please place your gs1-4 JSON files in the same folder & use GitHub Pages.</div>';
+        document.getElementById('sidebar-container').innerHTML = '<div class="section-title">⚠️ JSON files not found. Please ensure they are in the same folder and you are viewing this via GitHub Pages.</div>';
         return;
       }
 
@@ -267,6 +250,15 @@
 
       // Render Chart
       renderChart(chartLabels, chartData);
+    }
+
+    function showTheme(themeId, btnElement) {
+      document.querySelectorAll('.theme-panel').forEach(panel => panel.classList.remove('active'));
+      const welcome = document.getElementById('welcome-panel');
+      if (welcome) welcome.style.display = 'none';
+      document.getElementById(themeId).classList.add('active');
+      document.querySelectorAll('.tag-btn').forEach(btn => btn.classList.remove('active'));
+      btnElement.classList.add('active');
     }
 
     function renderChart(labels, data) {
