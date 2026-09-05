@@ -90,11 +90,25 @@ document.addEventListener('keydown', function(e) {
     if (overlay?.classList.contains('active')) {
       overlay.classList.remove('active');
     }
+    const aiOverlay = document.getElementById('ai-model-modal');
+    if (aiOverlay?.classList.contains('active')) {
+      aiOverlay.classList.remove('active');
+    }
+    const statsOverlay = document.getElementById('stats-modal');
+    if (statsOverlay?.classList.contains('active')) {
+      statsOverlay.classList.remove('active');
+    }
   }
 });
 
-// Close modal on backdrop click
+// Close modals on backdrop click
 document.getElementById('customModal')?.addEventListener('click', function(e) {
+  if (e.target === this) this.classList.remove('active');
+});
+document.getElementById('ai-model-modal')?.addEventListener('click', function(e) {
+  if (e.target === this) this.classList.remove('active');
+});
+document.getElementById('stats-modal')?.addEventListener('click', function(e) {
   if (e.target === this) this.classList.remove('active');
 });
 
@@ -141,7 +155,8 @@ console.log('✅ Custom modal + toast system loaded');
 // ============================================================
 document.addEventListener('DOMContentLoaded', function() {
   console.log('🚀 App.js loaded');
-    // FILTER TAB SWITCHER (Fix for Subtopic)
+  
+  // FILTER TAB SWITCHER (Fix for Subtopic)
   const filterByYearBtn = document.getElementById('btn-filter-year');
   const filterBySubtopicBtn = document.getElementById('btn-filter-subtopic');
   const filterYearSelect = document.getElementById('filter-year');
@@ -313,27 +328,18 @@ document.addEventListener('DOMContentLoaded', function() {
   backToTopBtn?.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
 
   // 9. HELPER FUNCTIONS
-    function normalizePaperCode(paperVal) {
+  function normalizePaperCode(paperVal) {
     if (!paperVal) return 'GS1';
-    
-    // 1. Convert to uppercase, remove spaces, hyphens, and dots.
-    // "OPT 1" becomes "OPT1", "GS Paper 2" becomes "GSPAPER2"
     let cleaned = String(paperVal).toUpperCase().replace(/[\s\-\.]/g, ''); 
-    
-    // 2. Check for Optional Papers FIRST (doesn't matter if it says "OPT1", "OPT 1", "OPTIONAL 1")
     if (cleaned.includes('OPT')) {
       return cleaned.includes('2') ? 'OPT2' : 'OPT1';
     }
-    
-    // 3. Check for General Studies Papers
     if (cleaned.includes('GS')) {
       if (cleaned.includes('2')) return 'GS2';
       if (cleaned.includes('3')) return 'GS3';
       if (cleaned.includes('4')) return 'GS4';
       return 'GS1';
     }
-    
-    // 4. Fallback if no paper is found
     return 'GS1';
   }
 
@@ -465,7 +471,6 @@ document.addEventListener('DOMContentLoaded', function() {
     if (revEl) revEl.textContent = revised;
     if (notesEl) notesEl.textContent = withNotes;
 
-    // SIDEBAR PROGRESS TRACKER
     const sbBookmarked = document.getElementById('sidebar-bookmarked');
     const sbRevised = document.getElementById('sidebar-revised');
     const sbNotes = document.getElementById('sidebar-notes');
@@ -474,8 +479,6 @@ document.addEventListener('DOMContentLoaded', function() {
     if (sbBookmarked) sbBookmarked.textContent = bookmarked;
     if (sbRevised) sbRevised.textContent = revised;
     if (sbNotes) sbNotes.textContent = withNotes;
-
-    // Show sidebar progress always (guest enabled)
     if (sbProgress) sbProgress.style.display = 'block';
 
     if (items.length === 0) {
@@ -715,7 +718,7 @@ document.addEventListener('DOMContentLoaded', function() {
   });
   document.getElementById('note-modal')?.addEventListener('click', function(e) { if (e.target === this) closeNoteModal(); });
 
-  // 18. STUDY SAVE/LOAD (skip if no token)
+  // 18. STUDY SAVE/LOAD
   async function saveStudyData() {
     const USER_TOKEN = localStorage.getItem('userToken') || localStorage.getItem('qcab_owner_key');
     if (!USER_TOKEN || !WORKER_URL) return;
@@ -993,7 +996,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   });
 
-  // ========== AI MODAL HANDLING (Secret AI opens answer.html) ==========
+  // ========== AI MODAL HANDLING ==========
   const aiModal = document.getElementById('ai-model-modal');
   const aiModalClose = document.getElementById('ai-model-close');
   const cancelAiModal = document.getElementById('cancel-ai-modal');
@@ -1001,10 +1004,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
   function openAIModal(questionItem) {
     pendingQuestion = questionItem;
-    if (aiModal) aiModal.classList.add('open');
+    if (aiModal) aiModal.classList.add('active'); // FIXED: use 'active' not 'open'
   }
   function closeAIModal() {
-    if (aiModal) aiModal.classList.remove('open');
+    if (aiModal) aiModal.classList.remove('active');
     pendingQuestion = null;
   }
   aiModalClose?.addEventListener('click', closeAIModal);
@@ -1022,7 +1025,6 @@ document.addEventListener('DOMContentLoaded', function() {
       const marks = pendingQuestion.marks || '';
 
       if (model === 'secret') {
-        // Open answer.html with query parameters
         const params = new URLSearchParams({ q: question, y: year, m: marks, model: 'secret' });
         window.open(`answer.html?${params.toString()}`, '_blank');
         closeAIModal();
@@ -1038,7 +1040,6 @@ document.addEventListener('DOMContentLoaded', function() {
         return;
       }
 
-      // ChatGPT or DeepSeek – copy prompt and open site
       const fullPrompt = generateFullPrompt(question);
       const siteUrl = model === 'chatgpt' ? 'https://chat.openai.com/' : 'https://chat.deepseek.com/';
       const modelName = model === 'chatgpt' ? 'ChatGPT' : 'DeepSeek';
@@ -1050,7 +1051,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   });
 
-  // ========== FETCH AI ANSWER (triggered by "✨ AI" button) ==========
+  // ========== FETCH AI ANSWER ==========
   window.fetchAIAnswer = function(buttonElement) {
     const card = buttonElement.closest('.bank-item');
     if (!card) return;
@@ -1074,7 +1075,7 @@ document.addEventListener('DOMContentLoaded', function() {
   // ========== INITIALIZATION ==========
   renderAll();
   loadRepositoryJSON();
-  loadCloudStudy(); // harmless if no token
+  loadCloudStudy();
   console.log('✅ QCAB Generator loaded successfully!');
   console.log('📋 Subtopics count:', Object.keys(SYLLABUS).length);
   console.log('📚 Bank size:', presetBank.length);
@@ -1085,14 +1086,7 @@ document.addEventListener('DOMContentLoaded', function() {
   const qbEl = document.getElementById('question-breakdown');
   if (qbEl) {
     qbEl.addEventListener('click', function() {
-      const bank = JSON.parse(localStorage.getItem('qcab_preset_bank') || '[]');
-      let stats = {};
-      bank.forEach(q => { stats[q.paper] = (stats[q.paper] || 0) + 1; });
-      let text = '📊 Question Breakdown:\n\n';
-      text += 'GS1: ' + (stats['GS1'] || 0) + '\nGS2: ' + (stats['GS2'] || 0) + '\nGS3: ' + (stats['GS3'] || 0) + '\nGS4: ' + (stats['GS4'] || 0);
-      if(stats['OPT1']) text += '\nOPT1: ' + stats['OPT1'];
-      if(stats['OPT2']) text += '\nOPT2: ' + stats['OPT2'];
-      alert(text);
+      showStatsBreakdown();
     });
   }
 });
