@@ -135,7 +135,7 @@
             </div>
             
             <div id="pyq-bank-body">
-              <!-- SINGLE LINE FILTER BAR -->
+              <!-- SINGLE LINE FILTER BAR - fixed -->
               <div class="filter-bar-single-line">
                 <div class="filter-group">
                   <label>Paper</label>
@@ -269,8 +269,18 @@
 <!-- Back to Top Button -->
 <button id="back-to-top" style="position:fixed; bottom:24px; right:24px; background:var(--primary); color:#fff; border:none; border-radius:50%; width:50px; height:50px; font-size:24px; box-shadow:0 6px 20px rgba(99,102,241,0.4); display:none; align-items:center; justify-content:center; z-index:999; cursor:pointer;">↑</button>
 
-<!-- Note Modal -->
-<div class="study-modal" id="note-modal"><div class="study-modal-content"><h3>📝 Add Note</h3><textarea id="note-textarea"></textarea><div class="btn-row"><button class="btn btn-secondary-sm" id="note-save-btn">Save</button><button class="btn btn-secondary-sm btn-danger" id="note-cancel-btn">Cancel</button></div></div></div>
+<!-- Note Modal - REMOVED extra ✕ button -->
+<div class="study-modal" id="note-modal">
+  <div class="study-modal-content">
+    <h3>📝 Add Note</h3>
+    <textarea id="note-textarea" placeholder="Write your note here..."></textarea>
+    <div class="btn-row">
+      <button class="btn btn-secondary-sm" id="note-save-btn">Save</button>
+      <button class="btn btn-secondary-sm btn-danger" id="note-cancel-btn">Cancel</button>
+    </div>
+  </div>
+</div>
+
 <div class="toast" id="toast"><span class="toast-icon" id="toastIcon">✅</span><span id="toastMessage">Copied!</span></div>
 
 <!-- Scripts -->
