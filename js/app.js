@@ -475,12 +475,8 @@ document.addEventListener('DOMContentLoaded', function() {
     if (sbRevised) sbRevised.textContent = revised;
     if (sbNotes) sbNotes.textContent = withNotes;
 
-    const user = window.getUser ? window.getUser() : null;
-    if (sbProgress && user) {
-        sbProgress.style.display = 'block';
-    } else if (sbProgress) {
-        sbProgress.style.display = 'none';
-    }
+    // Show sidebar progress only if there is data (we always show it since we have guest user)
+    if (sbProgress) sbProgress.style.display = 'block';
 
     if (items.length === 0) {
       listContainer.innerHTML = '<p style="color:var(--muted);font-style:italic;">You haven\'t bookmarked any questions yet. Use the ⭐ button on any question to start.</p>';
@@ -719,7 +715,7 @@ document.addEventListener('DOMContentLoaded', function() {
   });
   document.getElementById('note-modal')?.addEventListener('click', function(e) { if (e.target === this) closeNoteModal(); });
 
-  // 18. STUDY SAVE/LOAD
+  // 18. STUDY SAVE/LOAD (skip if no token)
   async function saveStudyData() {
     const USER_TOKEN = localStorage.getItem('userToken') || localStorage.getItem('qcab_owner_key');
     if (!USER_TOKEN || !WORKER_URL) return;
@@ -997,74 +993,96 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   });
 
-  // 26. AUTH BUTTON LISTENERS
-  async function handleAuthToggle() {
-    if (typeof getUser !== 'function' || typeof setUser !== 'function') {
-      showToast('Authentication module not loaded.', '⚠️'); return;
-    }
-    const user = getUser();
-    if (user) {
-      if (await showConfirm('Logout?', 'Confirm Logout')) { setUser(null); showToast('Logged out.', '👋'); studyData = {}; renderBankResults(); updateStudyDashboard(); }
-    } else { window.location.href = 'login.html'; }
-  }
-  document.getElementById('topbar-login-btn')?.addEventListener('click', handleAuthToggle);
-  document.getElementById('sidebar-login-btn')?.addEventListener('click', handleAuthToggle);
-
-  // 27. AI MODEL SELECTION MODAL
+  // ========== AI MODAL HANDLING (NO LOGIN, NO BACKEND) ==========
   const aiModal = document.getElementById('ai-model-modal');
   const aiModalClose = document.getElementById('ai-model-close');
   const cancelAiModal = document.getElementById('cancel-ai-modal');
   let pendingQuestion = null;
-  function openAIModal(questionItem) { pendingQuestion = questionItem; if (aiModal) aiModal.classList.add('open'); }
-  function closeAIModal() { if (aiModal) aiModal.classList.remove('open'); pendingQuestion = null; }
+
+  function openAIModal(questionItem) {
+    pendingQuestion = questionItem;
+    if (aiModal) aiModal.classList.add('open');
+  }
+  function closeAIModal() {
+    if (aiModal) aiModal.classList.remove('open');
+    pendingQuestion = null;
+  }
   aiModalClose?.addEventListener('click', closeAIModal);
   cancelAiModal?.addEventListener('click', closeAIModal);
-  aiModal?.addEventListener('click', function(e) { if (e.target === this) closeAIModal(); });
+  aiModal?.addEventListener('click', function(e) {
+    if (e.target === this) closeAIModal();
+  });
+
   document.querySelectorAll('.model-option').forEach(btn => {
     btn.addEventListener('click', async function() {
-      const model = this.dataset.model; if (!pendingQuestion) return;
-      const question = pendingQuestion.question; const year = pendingQuestion.year || ''; const marks = pendingQuestion.marks || '';
+      const model = this.dataset.model;
+      if (!pendingQuestion) return;
+      const question = pendingQuestion.question;
+      const year = pendingQuestion.year || '';
+      const marks = pendingQuestion.marks || '';
+
+      // For all models, generate the prompt
+      const fullPrompt = generateFullPrompt(question);
+
       if (model === 'secret') {
-        const params = new URLSearchParams({ q: question, y: year, m: marks, model: 'secret' });
-        window.open(`answer.html?${params.toString()}`, '_blank'); closeAIModal(); return;
+        // No backend: copy prompt and open ChatGPT
+        await copyText(fullPrompt);
+        window.open('https://chat.openai.com/', '_blank');
+        showToast('✅ Prompt copied! Paste in ChatGPT and press Enter.', '💬');
+        closeAIModal();
+        return;
       }
+
       if (model === 'perplexity') {
         const query = generatePerplexityQuery(question);
         const searchUrl = `https://www.perplexity.ai/search?q=${encodeURIComponent(query)}`;
-        window.open(searchUrl, '_blank'); showToast('🌀 Opening Perplexity...', '🌀'); closeAIModal(); return;
+        window.open(searchUrl, '_blank');
+        showToast('🌀 Opening Perplexity...', '🌀');
+        closeAIModal();
+        return;
       }
-      const fullPrompt = generateFullPrompt(question);
+
+      // ChatGPT or DeepSeek
       const siteUrl = model === 'chatgpt' ? 'https://chat.openai.com/' : 'https://chat.deepseek.com/';
       const modelName = model === 'chatgpt' ? 'ChatGPT' : 'DeepSeek';
       const icon = model === 'chatgpt' ? '💬' : '🔬';
       await copyText(fullPrompt);
-      window.open(siteUrl, '_blank'); showToast(`✅ Prompt copied! Paste in ${modelName} and press Enter.`, icon);
+      window.open(siteUrl, '_blank');
+      showToast(`✅ Prompt copied! Paste in ${modelName} and press Enter.`, icon);
       closeAIModal();
     });
   });
 
-  // 28. FETCH AI ANSWER
+  // ========== FETCH AI ANSWER (triggered by "✨ AI" button) ==========
   window.fetchAIAnswer = function(buttonElement) {
-    const card = buttonElement.closest('.bank-item'); if (!card) return;
+    const card = buttonElement.closest('.bank-item');
+    if (!card) return;
     const questionEl = card.querySelector('.bank-question');
     let questionText = questionEl ? questionEl.innerText.trim() : '';
     questionText = questionText.replace(/^\d+\.\s*/, '');
     const tags = card.querySelectorAll('.tag');
     let marks = '', year = '';
-    tags.forEach(tag => { const text = tag.innerText; if (text.includes('M')) { const parts = text.split('/'); marks = parts[0].trim(); if (parts[1]) year = parts[1].trim(); } });
+    tags.forEach(tag => {
+      const text = tag.innerText;
+      if (text.includes('M')) {
+        const parts = text.split('/');
+        marks = parts[0].trim();
+        if (parts[1]) year = parts[1].trim();
+      }
+    });
     const questionItem = { question: questionText, marks, year };
     openAIModal(questionItem);
   };
 
-  // 29. INITIALIZATION
+  // ========== INITIALIZATION ==========
   renderAll();
   loadRepositoryJSON();
-  loadCloudStudy();
-  if (typeof initAuth === 'function') initAuth();
+  loadCloudStudy(); // harmless if no token
   console.log('✅ QCAB Generator loaded successfully!');
   console.log('📋 Subtopics count:', Object.keys(SYLLABUS).length);
   console.log('📚 Bank size:', presetBank.length);
 });
+
 // Additional DOMContentLoaded for the breakdown – merged into the main one above, but keep this for safety
 document.addEventListener('DOMContentLoaded', function() {
   const qbEl = document.getElementById('question-breakdown');
