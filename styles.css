@@ -334,3 +334,85 @@ body.subtopic-mode #filter-topic { display: block !important; }
     color: #ffffff !important;
     border: 2px solid transparent !important;
 }
+/* ==========================================================
+   PREMIUM BUTTON STYLING (RESTORED!)
+   ========================================================== */
+
+/* Main Action Buttons (Add, Search, Browse) */
+.btn-primary {
+    background: linear-gradient(135deg, var(--primary), var(--accent)) !important;
+    border: none !important;
+    color: #ffffff !important;
+    box-shadow: 0 6px 18px rgba(99, 102, 241, 0.3) !important;
+    transition: all 0.2s ease !important;
+}
+.btn-primary:hover {
+    background: linear-gradient(135deg, var(--primary-dark), var(--primary)) !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 0 8px 22px rgba(99, 102, 241, 0.4) !important;
+}
+
+/* Secondary Buttons (Rename, Delete, Clear, Hide, Reset) */
+.btn-secondary-sm, .btn-bank-action, .btn {
+    background: linear-gradient(135deg, var(--surface), var(--surface-2)) !important;
+    border: 1px solid var(--border-strong) !important;
+    color: var(--text-soft) !important;
+    font-weight: 750 !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05) !important;
+    transition: all 0.2s ease !important;
+}
+.btn-secondary-sm:hover, .btn-bank-action:hover, .btn:hover {
+    border-color: var(--primary) !important;
+    color: var(--primary) !important;
+    background: linear-gradient(135deg, var(--primary-soft), var(--accent-soft)) !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 0 8px 18px rgba(99, 102, 241, 0.15) !important;
+}
+.btn-bank-action.reset-btn:hover {
+    border-color: var(--danger) !important;
+    color: var(--danger) !important;
+    background: var(--danger-soft) !important;
+}
+
+/* Folder Buttons (General Booklet, New Folder) */
+.folder-tab, .btn-new-folder {
+    background: linear-gradient(135deg, var(--primary-soft), var(--accent-soft)) !important;
+    border: 1px solid var(--primary-soft) !important;
+    color: var(--primary-dark) !important;
+    font-weight: 800 !important;
+    box-shadow: 0 2px 6px rgba(99, 102, 241, 0.1) !important;
+}
+.folder-tab:hover, .btn-new-folder:hover {
+    background: linear-gradient(135deg, var(--primary), var(--accent)) !important;
+    color: #ffffff !important;
+    border-color: transparent !important;
+}
+
+/* Filter Pill Buttons (Filter by Year / Subtopic) */
+.pill-btn {
+    border-radius: 999px !important;
+    font-weight: 750 !important;
+}
+.pill-btn.active {
+    background: linear-gradient(135deg, var(--primary), var(--accent)) !important;
+    color: #ffffff !important;
+    box-shadow: 0 6px 14px rgba(99, 102, 241, 0.4) !important;
+}
+
+/* Generate & Download PDF Button */
+.btn-generate {
+    background: linear-gradient(135deg, var(--primary), var(--accent)) !important;
+    color: #ffffff !important;
+    font-weight: 850 !important;
+    box-shadow: 0 6px 18px rgba(99, 102, 241, 0.3) !important;
+    transition: all 0.2s ease !important;
+}
+.btn-generate:hover {
+    background: linear-gradient(135deg, var(--primary-dark), var(--primary)) !important;
+    transform: translateY(-2px) !important;
+}
+.btn-generate:disabled {
+    background: var(--border) !important;
+    color: var(--muted) !important;
+    box-shadow: none !important;
+}
