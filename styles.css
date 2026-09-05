@@ -538,3 +538,38 @@ textarea:focus, input[type="text"]:focus, select:focus {
     box-shadow: 0 0 0 3px var(--primary-soft), inset 0 1px 2px rgba(0,0,0,0.03) !important;
     background: #fff !important;
 }
+/* ==========================================================
+   FINAL LOCK: PREVENT SCROLL CHAINING & FIX MOBILE 
+   ========================================================== */
+
+/* Stop main page from scrolling when you scroll the Sidebar */
+.sidebar,
+.syllabus-modal-body,
+.custom-modal,
+.ai-model-modal-content,
+.study-modal-content {
+    overscroll-behavior: contain !important;
+}
+
+/* Lock the body when a modal is open */
+body.modal-open { overflow: hidden !important; }
+
+/* Ultimate Mobile Alignment Lock - Overrides everything */
+@media(max-width: 820px) {
+  .app { grid-template-columns: 1fr !important; max-width: 100vw !important; overflow-x: hidden !important; }
+  
+  .content { width: 100% !important; min-width: 0 !important; padding-top: 60px !important; }
+  
+  .sidebar { width: 280px !important; max-width: 85vw !important; }
+  
+  /* Force main content to take full width and align left */
+  .page { padding: 20px 16px 40px !important; margin: 0 !important; width: 100% !important; }
+  .workspace { grid-template-columns: 1fr !important; }
+  
+  /* Stack hero elements perfectly */
+  .hero { flex-direction: column !important; align-items: flex-start !important; }
+  .hero-actions { margin-top: 20px !important; }
+
+  /* Force buttons to fill width so they don't break alignment */
+  .btn, .btn-primary, .btn-secondary-sm, .btn-bank-action { width: 100% !important; box-sizing: border-box !important; }
+}
