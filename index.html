@@ -10,6 +10,7 @@
 </head>
 <body>
 <script>
+  // Force clear old data if version mismatches
   var APP_VERSION = '10.0'; 
   if (localStorage.getItem('qcab_app_version') !== APP_VERSION) {
     localStorage.removeItem('qcab_user'); localStorage.removeItem('userToken');
@@ -18,6 +19,7 @@
   }
 </script>
 <script>
+  // INSTANT GUEST BYPASS FOR TESTING (no login required)
   if (!localStorage.getItem('qcab_user')) {
     localStorage.setItem('qcab_user', JSON.stringify({ email: 'guest@test.com', name: 'Guest', token: 'guest-token' }));
   }
@@ -33,6 +35,7 @@
       <img src="logo.png" alt="UPSC Craft Logo" class="brand-logo">
     </div>
 
+    <!-- PURE NAVIGATION SIDEBAR -->
     <div class="nav-title">Workspace</div>
     <nav class="nav">
       <button type="button" class="nav-btn active" data-scroll="dashboard"><span class="nav-icon">⌂</span>Dashboard</button>
@@ -42,6 +45,7 @@
       <button type="button" class="nav-btn" data-scroll="my-study"><span class="nav-icon">📘</span>My Study</button>
     </nav>
 
+    <!-- SYLLABUS BUTTON -->
     <button type="button" class="nav-btn syllabus-btn" onclick="openSyllabusModal()">
       <span class="nav-icon">📚</span>
       <span>View Syllabus</span>
@@ -82,16 +86,121 @@
     </header>
 
     <main class="page">
-      <!-- your existing sections: hero, stats, folder, create, pyq, my-qcab, my-study, footer -->
-      <!-- They remain exactly as before – I'm not repeating them for brevity -->
-      <!-- ... -->
-      <!-- just make sure the modals are included as before -->
+      <section class="hero" id="dashboard">
+        <div>
+          <p class="eyebrow">An Initiative to success</p>
+          <h1>UPSC Craft<br>PYQ cum QCAB Generator</h1>
+          <p>Find previous year questions, build your custom practice set and generate a print-ready answer booklet.</p>
+        </div>
+      </section>
+      
+      <section class="stats">
+        <div class="stat">
+          <div class="stat-label">QUESTION BANK</div>
+          <div class="stat-value" id="dashboard-bank-count">—</div>
+          <div class="stat-note" id="question-breakdown" style="cursor:pointer; text-decoration:underline;">Click for paper breakdown</div>
+        </div>
+        <div class="stat"><div class="stat-label">ACTIVE QCAB</div><div class="stat-value" id="dashboard-q-count">0</div><div class="stat-note">Questions selected</div></div>
+        <div class="stat"><div class="stat-label">ANSWER PAGES</div><div class="stat-value" id="dashboard-pages">0</div><div class="stat-note">Based on marks selected</div></div>
+      </section>
+
+      <div class="folder-wrap">
+        <div class="breadcrumbs" id="breadcrumbs"></div>
+        <div class="folder-bar" id="folder-bar"></div>
+      </div>
+
+      <div class="workspace">
+        <section>
+          <div class="card" id="create-question">
+            <div class="card-header">
+              <div><h2 class="card-title" id="add-heading">Create Custom Question</h2><p class="card-sub">Add your own question directly to the active booklet.</p></div>
+              <button type="button" class="btn btn-secondary-sm" id="toggle-create-section-btn">Hide Form ▾</button>
+            </div>
+            <div id="create-form-body">
+              <div class="field"><label for="q-paper">Paper</label><select id="q-paper"><option value="GS1">GS Paper 1</option><option value="GS2">GS Paper 2</option><option value="GS3">GS Paper 3</option><option value="GS4">GS Paper 4</option><option value="OPT1">Anthropology Optional Paper 1</option><option value="OPT2">Anthropology Optional Paper 2</option></select></div>
+              <div class="field"><label for="q-topic">Subtopic</label><select id="q-topic"></select></div>
+              <div class="field"><label for="q-text">Question Text</label><textarea id="q-text" placeholder="Paste or type your question here..."></textarea></div>
+              <div class="field"><label>Marks</label><div class="marks-row"><button type="button" class="marks-btn" data-marks="10" aria-pressed="true">10 Marks</button><button type="button" class="marks-btn" data-marks="15" aria-pressed="false">15 Marks</button><button type="button" class="marks-btn" data-marks="20" aria-pressed="false">20 Marks</button></div></div>
+              <div class="field"><label for="q-year">Year <span style="font-weight:500">(optional)</span></label><input type="text" id="q-year" placeholder="e.g. 2025"></div>
+              <div class="field checkbox-row"><input type="checkbox" id="include-index" checked><label for="include-index">Include index page in PDF</label></div>
+              <div class="form-actions">
+                <button type="button" class="btn btn-primary btn-wide" id="add-btn">Add to Active Folder</button>
+                <button type="button" class="btn btn-wide" id="add-preset-btn">Save as Preset Bank Question</button>
+                <button type="button" class="btn btn-wide btn-danger" id="cancel-edit-btn" style="display:none;">Cancel Edit</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="card" id="pyq-bank">
+            <div class="card-header">
+              <div><h2 class="card-title">PYQ Bank</h2><p class="card-sub">Search by question, topic, paper or year. Results update as you type.</p></div>
+              <div class="bank-top-actions">
+                <button type="button" class="btn-bank-action" id="toggle-bank-btn"><span class="action-arrow" id="toggle-bank-icon">▼</span><span id="toggle-bank-text">Hide<br>Bank</span></button>
+                <button type="button" class="btn-bank-action reset-btn" id="clear-bank-btn"><span>Reset<br>Bank</span></button>
+              </div>
+            </div>
+            
+            <div id="pyq-bank-body">
+              <div class="pill-switcher-container">
+                <div class="pill-switcher" id="search-mode-switcher">
+                  <button type="button" class="pill-btn active" id="btn-filter-year" onclick="switchFilterMode('year', this)">Filter by Year</button>
+                  <button type="button" class="pill-btn" id="btn-filter-subtopic" onclick="switchFilterMode('subtopic', this)">Filter by Subtopic</button>
+                </div>
+              </div>
+
+              <div class="search-main"><span class="search-icon">🔍</span><input type="text" id="search-input" placeholder="Search Constitution, Monsoon, Federalism, 2024..."></div>
+
+              <div class="filter-box">
+                <div class="filter-controls-stack">
+                  <select id="filter-paper"><option value="ALL">All Papers</option><option value="GS1">GS Paper 1</option><option value="GS2">GS Paper 2</option><option value="GS3">GS Paper 3</option><option value="GS4">GS Paper 4</option><option value="OPT1">Anthropology Optional Paper 1</option><option value="OPT2">Anthropology Optional Paper 2</option></select>
+                  <select id="filter-topic"><option value="ALL">All Subtopics</option></select>
+                  <select id="filter-year"><option value="ALL">All Years</option></select>
+                  <button type="button" class="btn btn-primary btn-wide" id="search-bank-btn">Search</button>
+                  <button type="button" class="btn btn-wide" id="clear-results-btn">Clear</button>
+                </div>
+              </div>
+              <div id="bank-status-text">Loading question bank...</div>
+              <div id="bank-results-container"></div>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <aside class="card sticky-card" id="my-qcab">
+        <div class="card-header"><div><h2 class="card-title">My QCAB</h2><p class="card-sub">Questions in your active booklet.</p></div><span class="tag" id="count-tag">0 questions</span></div>
+        <div style="display:flex;justify-content:flex-end;gap:6px;margin-bottom:14px;">
+          <button type="button" class="btn btn-secondary-sm" id="rename-folder-btn">Rename</button>
+          <button type="button" class="btn btn-secondary-sm btn-danger" id="delete-folder-btn">Delete</button>
+          <button type="button" class="btn btn-secondary-sm" id="clear-q-btn">Clear</button>
+        </div>
+        <div id="empty-state" class="empty-state"><div style="font-size:28px;margin-bottom:8px;">▣</div><strong style="display:block;color:var(--text);margin-bottom:4px;">Your booklet is empty</strong>Add questions from the PYQ Bank or create a custom question.</div>
+        <ol class="q-list" id="q-list"></ol>
+        <div class="summary-bar" id="summary-bar" style="display:none;"><div class="summary-stat"><span>TOTAL MARKS</span><strong id="total-marks">0</strong></div><div class="summary-stat"><span>ANSWER PAGES</span><strong id="total-pages">0</strong></div></div>
+        <button type="button" class="btn-generate" id="generate-btn" disabled>⇩ Generate &amp; Download PDF</button>
+      </aside>
+
+      <section id="my-study" style="margin-top:30px;">
+        <div class="card">
+          <div class="card-header"><div><h2 class="card-title">📘 My Study</h2><p class="card-sub">Bookmark questions, mark as revised, add notes, and track your progress.</p></div></div>
+          <div id="study-dashboard">
+            <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin-bottom:16px;">
+              <div class="stat" style="padding:14px;"><div class="stat-label">📌 Bookmarked</div><div class="stat-value" id="study-bookmarked">0</div></div>
+              <div class="stat" style="padding:14px;"><div class="stat-label">✅ Revised</div><div class="stat-value" id="study-revised">0</div></div>
+              <div class="stat" style="padding:14px;"><div class="stat-label">📝 With Notes</div><div class="stat-value" id="study-notes">0</div></div>
+            </div>
+            <div id="study-list-container"><p style="color:var(--muted);">Your bookmarked questions will appear here.</p></div>
+          </div>
+        </div>
+      </section>
+
+      <footer>UPSC Craft · Project by Biswajit Nahak</footer>
     </main>
   </div>
 </div>
 
 <!-- ====== MODALS ====== -->
-<!-- Custom Modal -->
+
+<!-- Custom Modal (Alert/Confirm/Prompt) -->
 <div class="modal-overlay" id="customModal">
   <div class="modal-content">
     <div class="modal-header">
@@ -121,7 +230,7 @@
     <div class="modal-body">
       <p style="margin-bottom:15px;">Select where to generate the answer for the selected question.</p>
       <div style="display:grid; gap:10px;">
-        <!-- Secret AI: now copies prompt and opens ChatGPT (since answer.html may be missing) -->
+        <!-- Secret AI now copies prompt and opens ChatGPT (no backend needed) -->
         <button class="model-option" data-model="secret" style="background:linear-gradient(135deg,#6366f1,#06b6d4); color:#fff; border:none; padding:14px; border-radius:12px; font-weight:800;">✨ Copy Prompt & Open ChatGPT</button>
         <button class="model-option" data-model="chatgpt" style="background:#10a37f; color:#fff; border:none; padding:14px; border-radius:12px; font-weight:800;">💬 ChatGPT (Copy Prompt)</button>
         <button class="model-option" data-model="deepseek" style="background:#1e293b; color:#fff; border:none; padding:14px; border-radius:12px; font-weight:800;">🔬 DeepSeek (Copy Prompt)</button>
@@ -134,10 +243,10 @@
   </div>
 </div>
 
-<!-- Back to Top -->
+<!-- Back to Top Button -->
 <button id="back-to-top" style="position:fixed; bottom:24px; right:24px; background:var(--primary); color:#fff; border:none; border-radius:50%; width:50px; height:50px; font-size:24px; box-shadow:0 6px 20px rgba(99,102,241,0.4); display:none; align-items:center; justify-content:center; z-index:999; cursor:pointer;">↑</button>
 
-<!-- Note Modal -->
+<!-- Note Modal (already exists) -->
 <div class="study-modal" id="note-modal"><div class="study-modal-content"><h3>📝 Add Note</h3><textarea id="note-textarea"></textarea><div class="btn-row"><button class="btn btn-secondary-sm" id="note-save-btn">Save</button><button class="btn btn-secondary-sm btn-danger" id="note-cancel-btn">Cancel</button></div></div></div>
 <div class="toast" id="toast"><span class="toast-icon" id="toastIcon">✅</span><span id="toastMessage">Copied!</span></div>
 
@@ -148,5 +257,94 @@
 <script src="js/syllabus-data.js?v=10000"></script>
 <script src="js/app.js?v=10000"></script>
 <script src="js/features.js?v=10000"></script>
+
+<!-- No login scripts -->
+
+<script>
+/* NAVIGATION LOGIC */
+document.querySelectorAll('[data-scroll]').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const id = btn.dataset.scroll;
+    const target = document.getElementById(id);
+    if (target) {
+      const offset = window.innerWidth <= 820 ? 70 : 10;
+      target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      window.scrollBy(0, -offset);
+    }
+    document.querySelectorAll('.nav-btn[data-scroll]').forEach(n => n.classList.remove('active'));
+    const match = document.querySelector(`.nav-btn[data-scroll="${id}"]`);
+    if (match) match.classList.add('active');
+  });
+});
+
+/* QUESTION BANK BREAKDOWN CLICK */
+document.addEventListener('DOMContentLoaded', function() {
+  const qbEl = document.getElementById('question-breakdown');
+  if (qbEl) {
+    qbEl.addEventListener('click', function() {
+      const bank = JSON.parse(localStorage.getItem('qcab_preset_bank') || '[]');
+      let stats = {};
+      bank.forEach(q => { stats[q.paper] = (stats[q.paper] || 0) + 1; });
+      let text = '📊 Question Breakdown:\n\n';
+      text += 'GS1: ' + (stats['GS1'] || 0) + '\nGS2: ' + (stats['GS2'] || 0) + '\nGS3: ' + (stats['GS3'] || 0) + '\nGS4: ' + (stats['GS4'] || 0);
+      if(stats['OPT1']) text += '\nOPT1: ' + stats['OPT1'];
+      if(stats['OPT2']) text += '\nOPT2: ' + stats['OPT2'];
+      alert(text);
+    });
+  }
+});
+
+/* SYLLABUS FUNCTIONS */
+function openSyllabusModal() {
+  var cardsHolder = document.getElementById('syllabus-cards-holder');
+  var menu = document.getElementById('syllabus-main-menu');
+  var detail = document.getElementById('syllabus-detail-view');
+  menu.style.display = 'block'; detail.style.display = 'none';
+  if (cardsHolder.children.length === 0) {
+    cardsHolder.innerHTML = '';
+    for (var key in SYLLABUS_DATA) {
+      var item = SYLLABUS_DATA[key];
+      var card = document.createElement('div');
+      card.className = 'syllabus-menu-card';
+      card.style.borderTop = '5px solid ' + item.color;
+      card.innerHTML = '<span class="syllabus-menu-card-icon">' + item.icon + '</span><div class="syllabus-menu-card-title" style="color:' + item.color + ';">' + item.title + '</div>';
+      card.setAttribute('data-key', key);
+      card.onclick = function() { openSyllabusTopic(this.getAttribute('data-key')); };
+      cardsHolder.appendChild(card);
+    }
+  }
+  document.getElementById('syllabus-modal-overlay').classList.add('active');
+  document.body.classList.add('modal-open');
+}
+
+function closeSyllabusModal() {
+  document.getElementById('syllabus-modal-overlay').classList.remove('active');
+  document.body.classList.remove('modal-open');
+}
+
+function openSyllabusTopic(key) {
+  var item = SYLLABUS_DATA[key]; if (!item) return;
+  document.getElementById('syllabus-main-menu').style.display = 'none';
+  document.getElementById('syllabus-detail-view').style.display = 'block';
+  var detailContent = document.getElementById('syllabus-detail-content');
+  detailContent.style.borderTop = '5px solid ' + item.color;
+  detailContent.innerHTML = '<h3 style="color:' + item.color + '; margin-bottom: 15px;">' + item.title + '</h3>' + item.html;
+}
+
+function backToSyllabusMenu() {
+  document.getElementById('syllabus-detail-view').style.display = 'none';
+  document.getElementById('syllabus-main-menu').style.display = 'block';
+}
+
+/* FILTER MODE (Always shows both Year and Topic) */
+function switchFilterMode(mode, btn) {
+  document.getElementById('btn-filter-year').classList.remove('active');
+  document.getElementById('btn-filter-subtopic').classList.remove('active');
+  btn.classList.add('active');
+  document.getElementById('filter-year').style.display = 'block';
+  document.getElementById('filter-topic').style.display = 'block';
+  document.getElementById('search-bank-btn').click();
+}
+</script>
 </body>
 </html>
