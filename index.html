@@ -25,7 +25,8 @@
 
 <div class="app">
   <aside class="sidebar" id="main-sidebar">
-    <div class="sidebar-header-mobile">
+    <!-- Mobile close button (hidden on desktop) -->
+    <div class="sidebar-header-mobile" id="sidebar-header-mobile">
       <span style="font-weight:750; font-size:13px; color:var(--muted);">Navigation Menu</span>
       <button type="button" class="mobile-menu-close" id="mobile-menu-close">✕</button>
     </div>
@@ -100,14 +101,16 @@
 
       <div class="folder-wrap">
         <div class="breadcrumbs" id="breadcrumbs"></div>
-        <div class="folder-bar" id="folder-bar"></div>
+        <div class="folder-bar" id="folder-bar">
+          <!-- New Folder button will be injected by JS, but we style it -->
+        </div>
       </div>
 
       <div class="workspace">
         <section>
           <div class="card" id="create-question">
             <div class="card-header">
-              <div><h2 class="card-title" id="add-heading">✏️ Create Custom Question</h2><p class="card-sub">Add your own question directly to the active booklet.</p></div>
+              <div><h2 class="card-title">✏️ Create Custom Question</h2><p class="card-sub">Add your own question directly to the active booklet.</p></div>
               <button type="button" class="btn btn-secondary-sm" id="toggle-create-section-btn">Hide Form ▾</button>
             </div>
             <div id="create-form-body">
@@ -129,14 +132,14 @@
             <div class="card-header">
               <div><h2 class="card-title">📖 PYQ Bank</h2><p class="card-sub">Search by question, topic, paper or year. Results update as you type.</p></div>
               <div class="bank-top-actions">
-                <button type="button" class="btn-bank-action" id="toggle-bank-btn"><span class="action-arrow" id="toggle-bank-icon">▼</span><span id="toggle-bank-text">Hide<br>Bank</span></button>
-                <button type="button" class="btn-bank-action reset-btn" id="clear-bank-btn"><span>⟳ Reset<br>Bank</span></button>
+                <button type="button" class="btn btn-secondary-sm" id="toggle-bank-btn"><span class="action-arrow" id="toggle-bank-icon">▼</span><span id="toggle-bank-text">Hide Bank</span></button>
+                <button type="button" class="btn btn-secondary-sm reset-btn" id="clear-bank-btn">⟳ Reset Bank</button>
               </div>
             </div>
             
             <div id="pyq-bank-body">
-              <!-- FILTER BAR - Horizontal -->
-              <div class="filter-bar">
+              <!-- VERTICAL FILTER BAR -->
+              <div class="filter-bar-vertical">
                 <div class="filter-group">
                   <label>📂 Paper</label>
                   <select id="filter-paper"><option value="ALL">All Papers</option><option value="GS1">GS Paper 1</option><option value="GS2">GS Paper 2</option><option value="GS3">GS Paper 3</option><option value="GS4">GS Paper 4</option><option value="OPT1">Anthro Paper 1</option><option value="OPT2">Anthro Paper 2</option></select>
@@ -153,8 +156,10 @@
                   <label>🔍 Search</label>
                   <input type="text" id="search-input" placeholder="Search questions...">
                 </div>
-                <button type="button" class="btn btn-filter-search" id="search-bank-btn">🔍 Search</button>
-                <button type="button" class="btn btn-clear-filter" id="clear-results-btn">✖ Clear</button>
+                <div class="filter-actions">
+                  <button type="button" class="btn btn-filter-search" id="search-bank-btn">🔍 Search</button>
+                  <button type="button" class="btn btn-clear-filter" id="clear-results-btn">✖ Clear</button>
+                </div>
               </div>
 
               <div id="bank-status-text">Loading question bank...</div>
@@ -166,7 +171,7 @@
 
       <aside class="card sticky-card" id="my-qcab">
         <div class="card-header"><div><h2 class="card-title">📋 My QCAB</h2><p class="card-sub">Questions in your active booklet.</p></div><span class="tag" id="count-tag">0 questions</span></div>
-        <div style="display:flex;justify-content:flex-end;gap:6px;margin-bottom:14px;">
+        <div style="display:flex;justify-content:flex-end;gap:6px;margin-bottom:14px;flex-wrap:wrap;">
           <button type="button" class="btn btn-secondary-sm" id="rename-folder-btn">✏️ Rename</button>
           <button type="button" class="btn btn-secondary-sm btn-danger" id="delete-folder-btn">🗑️ Delete</button>
           <button type="button" class="btn btn-secondary-sm" id="clear-q-btn">🧹 Clear</button>
