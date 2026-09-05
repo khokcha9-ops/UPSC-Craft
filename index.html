@@ -6,30 +6,10 @@
   <link rel="icon" type="image/png" href="favicon.png">
   <title>UPSC Craft | Mains PYQ cum QCAB Generator</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=10000">
-</head>
-<body>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dark Mode Toggle</title>
-
-    <!-- Step 3 goes here! -->
-
+  <link rel="stylesheet" href="styles.css?v=10001">
 </head>
 <body>
 
-    <button id="theme-toggle" class="theme-btn">
-        <span class="icon">🌙</span>
-        <span class="text">Dark Mode</span>
-    </button>
-
-    <!-- Step 4 goes here! -->
-
-</body>
-</html>
 <script>
   var APP_VERSION = '10.0'; 
   if (localStorage.getItem('qcab_app_version') !== APP_VERSION) {
@@ -110,10 +90,10 @@
       </section>
       
       <section class="stats">
-        <div class="stat stat-bank" id="stat-bank-click">
+        <!-- UPDATED ENTIRE CARD IS CLICKABLE - NO "Click for breakdown" TEXT -->
+        <div class="stat stat-bank" id="stat-bank-click" role="button" tabindex="0" aria-label="View detailed breakdown">
           <div class="stat-label">📚 QUESTION BANK</div>
           <div class="stat-value" id="dashboard-bank-count">—</div>
-          <div class="stat-note" id="question-breakdown" style="cursor:pointer; text-decoration:underline;">📊 Click for detailed breakdown</div>
         </div>
         <div class="stat"><div class="stat-label">📋 ACTIVE QCAB</div><div class="stat-value" id="dashboard-q-count">0</div><div class="stat-note">Questions selected</div></div>
         <div class="stat"><div class="stat-label">📄 ANSWER PAGES</div><div class="stat-value" id="dashboard-pages">0</div><div class="stat-note">Based on marks selected</div></div>
@@ -310,10 +290,10 @@
 <!-- Scripts -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.6.2"></script>
-<script src="js/config.js?v=10000"></script>
-<script src="js/syllabus-data.js?v=10000"></script>
-<script src="js/app.js?v=10000"></script>
-<script src="js/features.js?v=10000"></script>
+<script src="js/config.js?v=10001"></script>
+<script src="js/syllabus-data.js?v=10001"></script>
+<script src="js/app.js?v=10001"></script>
+<script src="js/features.js?v=10001"></script>
 
 <script>
 /* ========== SYLLABUS FUNCTIONS ========== */
@@ -384,6 +364,13 @@ document.addEventListener('DOMContentLoaded', function() {
     statBank.addEventListener('click', function() {
       showStatsBreakdown();
     });
+    // Added Keyboard Accessibility (Enter Key)
+    statBank.addEventListener('keydown', function(e) {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        showStatsBreakdown();
+      }
+    });
   }
 });
 
@@ -430,7 +417,7 @@ function showStatsBreakdown() {
     html += `
       <div style="background:var(--surface-2); border-radius:12px; padding:16px; border-left: 5px solid ${color};">
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
-          <strong style="font-size:16px; color:${color};">${paper}</strong>
+          <strong style="font-size:18px; font-weight:900; color:${color};">${paper}</strong>
           <span style="background:${color}; color:#fff; padding:4px 12px; border-radius:999px; font-weight:800; font-size:13px;">${data.total} questions</span>
         </div>
         <div style="display:flex; flex-wrap:wrap; gap:6px; margin-top:8px;">
@@ -439,7 +426,7 @@ function showStatsBreakdown() {
     sortedTopics.forEach(topic => {
       const count = data.subtopics[topic];
       html += `
-        <span style="background:var(--surface); border:1px solid var(--border); border-radius:999px; padding:4px 12px; font-size:12px; font-weight:600; color:var(--text-soft);">
+        <span style="background:var(--surface); border:1px solid var(--border); border-radius:999px; padding:4px 12px; font-size:13px; font-weight:700; color:var(--text-soft);">
           ${topic} <span style="background:${color}; color:#fff; border-radius:999px; padding:1px 8px; margin-left:4px; font-size:11px;">${count}</span>
         </span>
       `;
