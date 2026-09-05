@@ -15,7 +15,7 @@
   --shadow: 0 10px 30px -10px rgba(0,0,0,0.1);
   --sans: 'Inter', sans-serif;
 
-  /* Paper colours (also used for gradients) */
+  /* Paper colours – also used for gradients and tags */
   --gs1: #2563eb;
   --gs2: #059669;
   --gs3: #d97706;
@@ -35,7 +35,7 @@ body.dark-mode {
   --muted: #94A3B8;
   --border: #334155;
 
-  /* Dark mode paper colours (slightly brighter) */
+  /* Dark mode paper colours – brighter for visibility */
   --gs1: #60a5fa;
   --gs2: #34d399;
   --gs3: #fbbf24;
@@ -224,6 +224,16 @@ body.dark-mode .tag-paper-opt { background: #831843; }
 .syllabus-menu-card-title { font-weight: 800; margin-top: 10px; }
 .back-btn { background: transparent; border: 1px solid var(--border); padding: 8px 16px; border-radius: 999px; margin-bottom: 15px; color: var(--text); cursor: pointer; }
 .back-btn:hover { border-color: var(--primary); color: var(--primary); }
+
+/* Syllabus title colours – adapt to dark mode via CSS variables */
+.syllabus-title-gs1 { color: var(--gs1); }
+.syllabus-title-gs2 { color: var(--gs2); }
+.syllabus-title-gs3 { color: var(--gs3); }
+.syllabus-title-gs4 { color: var(--gs4); }
+.syllabus-title-anthro1 { color: var(--opt1); }
+.syllabus-title-anthro2 { color: var(--opt2); }
+.syllabus-title-prelims { color: var(--muted); }
+.syllabus-title-essay { color: var(--accent); }
 
 /* MODALS (Alert, Confirm, Prompt, AI, Stats) */
 .modal-overlay {
