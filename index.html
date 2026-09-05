@@ -25,8 +25,7 @@
 
 <div class="app">
   <aside class="sidebar" id="main-sidebar">
-    <!-- Mobile close button (hidden on desktop) -->
-    <div class="sidebar-header-mobile" id="sidebar-header-mobile">
+    <div class="sidebar-header-mobile">
       <span style="font-weight:750; font-size:13px; color:var(--muted);">Navigation Menu</span>
       <button type="button" class="mobile-menu-close" id="mobile-menu-close">✕</button>
     </div>
@@ -101,9 +100,7 @@
 
       <div class="folder-wrap">
         <div class="breadcrumbs" id="breadcrumbs"></div>
-        <div class="folder-bar" id="folder-bar">
-          <!-- New Folder button will be injected by JS, but we style it -->
-        </div>
+        <div class="folder-bar" id="folder-bar"></div>
       </div>
 
       <div class="workspace">
@@ -203,7 +200,7 @@
 
 <!-- ====== MODALS ====== -->
 
-<!-- Custom Modal (Alert/Confirm/Prompt) -->
+<!-- Custom Modal -->
 <div class="modal-overlay" id="customModal">
   <div class="modal-content">
     <div class="modal-header">
@@ -223,7 +220,7 @@
   </div>
 </div>
 
-<!-- AI Model Selection Modal -->
+<!-- AI Modal -->
 <div class="modal-overlay" id="ai-model-modal">
   <div class="modal-content">
     <div class="modal-header">
@@ -245,7 +242,7 @@
   </div>
 </div>
 
-<!-- Stats Breakdown Modal -->
+<!-- Stats Modal -->
 <div class="modal-overlay" id="stats-modal">
   <div class="modal-content" style="max-width: 700px;">
     <div class="modal-header">
@@ -272,7 +269,7 @@
   </div>
 </div>
 
-<!-- Back to Top Button -->
+<!-- Back to Top -->
 <button id="back-to-top">↑</button>
 
 <!-- Note Modal -->
@@ -341,7 +338,6 @@ function backToSyllabusMenu() {
   document.getElementById('syllabus-main-menu').style.display = 'block';
 }
 
-/* ========== SIDEBAR SYLLABUS BUTTON ========== */
 document.getElementById('syllabus-sidebar-btn').addEventListener('click', openSyllabusModal);
 
 /* ========== NAVIGATION ========== */
@@ -360,7 +356,7 @@ document.querySelectorAll('[data-scroll]').forEach(btn => {
   });
 });
 
-/* ========== QUESTION BANK BREAKDOWN CLICK ========== */
+/* ========== QUESTION BANK BREAKDOWN ========== */
 document.addEventListener('DOMContentLoaded', function() {
   const statBank = document.getElementById('stat-bank-click');
   if (statBank) {
@@ -435,7 +431,6 @@ function showStatsBreakdown() {
   modal.classList.add('active');
 }
 
-/* ========== FILTER MODE ========== */
 function switchFilterMode(mode, btn) {
   document.getElementById('btn-filter-year').classList.remove('active');
   document.getElementById('btn-filter-subtopic').classList.remove('active');
