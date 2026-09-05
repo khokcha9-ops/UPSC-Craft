@@ -152,7 +152,7 @@
                 <div class="filter-group filter-search">
                   <input type="text" id="search-input" placeholder="🔍 Search questions...">
                 </div>
-                <button type="button" class="btn btn-primary btn-filter-search" id="search-bank-btn">Search</button>
+                <button type="button" class="btn btn-filter-search" id="search-bank-btn">Search</button>
                 <button type="button" class="btn btn-clear-filter" id="clear-results-btn">Clear</button>
               </div>
 
@@ -294,8 +294,9 @@ function openSyllabusModal() {
       var item = SYLLABUS_DATA[key];
       var card = document.createElement('div');
       card.className = 'syllabus-menu-card';
+      card.setAttribute('data-paper', key);
       card.style.borderTop = '5px solid ' + item.color;
-      card.innerHTML = '<span class="syllabus-menu-card-icon">' + item.icon + '</span><div class="syllabus-menu-card-title" style="color:' + item.color + ';">' + item.title + '</div>';
+      card.innerHTML = '<span class="syllabus-menu-card-icon">' + item.icon + '</span><div class="syllabus-menu-card-title syllabus-title-' + key + '">' + item.title + '</div>';
       card.setAttribute('data-key', key);
       card.onclick = function() { openSyllabusTopic(this.getAttribute('data-key')); };
       cardsHolder.appendChild(card);
@@ -360,7 +361,6 @@ function showStatsBreakdown() {
 
   const bank = JSON.parse(localStorage.getItem('qcab_preset_bank') || '[]');
   
-  // Group by paper
   let paperStats = {};
   bank.forEach(q => {
     const paper = q.paper || 'Unknown';
@@ -371,15 +371,14 @@ function showStatsBreakdown() {
     paperStats[paper].subtopics[topic]++;
   });
 
-  // Define colours for each paper
   const paperColors = {
-    'GS1': 'linear-gradient(135deg, #2563eb, #3b82f6)',
-    'GS2': 'linear-gradient(135deg, #059669, #10b981)',
-    'GS3': 'linear-gradient(135deg, #d97706, #f59e0b)',
-    'GS4': 'linear-gradient(135deg, #7c3aed, #a78bfa)',
-    'OPT1': 'linear-gradient(135deg, #db2777, #f472b6)',
-    'OPT2': 'linear-gradient(135deg, #ea580c, #fb923c)',
-    'Unknown': 'linear-gradient(135deg, #64748b, #94a3b8)'
+    'GS1': 'var(--gs1)',
+    'GS2': 'var(--gs2)',
+    'GS3': 'var(--gs3)',
+    'GS4': 'var(--gs4)',
+    'OPT1': 'var(--opt1)',
+    'OPT2': 'var(--opt2)',
+    'Unknown': 'var(--muted)'
   };
 
   let html = '<div style="display:grid; gap:16px;">';
@@ -394,12 +393,12 @@ function showStatsBreakdown() {
 
   sortedPapers.forEach(paper => {
     const data = paperStats[paper];
-    const gradient = paperColors[paper] || paperColors['Unknown'];
+    const color = paperColors[paper] || paperColors['Unknown'];
     html += `
-      <div style="background:var(--surface-2); border-radius:12px; padding:16px; border-left: 5px solid var(--primary);">
+      <div style="background:var(--surface-2); border-radius:12px; padding:16px; border-left: 5px solid ${color};">
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
-          <strong style="font-size:16px; background:${gradient}; -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;">${paper}</strong>
-          <span style="background:${gradient}; color:#fff; padding:4px 12px; border-radius:999px; font-weight:800; font-size:13px;">${data.total} questions</span>
+          <strong style="font-size:16px; color:${color};">${paper}</strong>
+          <span style="background:${color}; color:#fff; padding:4px 12px; border-radius:999px; font-weight:800; font-size:13px;">${data.total} questions</span>
         </div>
         <div style="display:flex; flex-wrap:wrap; gap:6px; margin-top:8px;">
     `;
@@ -408,7 +407,7 @@ function showStatsBreakdown() {
       const count = data.subtopics[topic];
       html += `
         <span style="background:var(--surface); border:1px solid var(--border); border-radius:999px; padding:4px 12px; font-size:12px; font-weight:600; color:var(--text-soft);">
-          ${topic} <span style="background:${gradient}; color:#fff; border-radius:999px; padding:1px 8px; margin-left:4px; font-size:11px;">${count}</span>
+          ${topic} <span style="background:${color}; color:#fff; border-radius:999px; padding:1px 8px; margin-left:4px; font-size:11px;">${count}</span>
         </span>
       `;
     });
