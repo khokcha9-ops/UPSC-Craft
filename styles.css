@@ -343,3 +343,18 @@ body.modal-open { overflow: hidden; }
     background: linear-gradient(135deg, #dc2626, #b91c1c) !important;
     color: #ffffff !important;
 }
+/* ==========================================================
+   FORCE ALL 3 FILTERS TO ALWAYS SHOW (PAPER, SUBTOPIC, YEAR)
+   ========================================================== */
+#filter-year, 
+#filter-topic {
+    display: block !important;
+    visibility: visible !important;
+}
+
+/* Remove any old hiding logic */
+.filter-controls-stack {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 10px !important;
+}
