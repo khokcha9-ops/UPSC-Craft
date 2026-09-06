@@ -20,7 +20,6 @@
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); -webkit-font-smoothing: antialiased; transition: background 0.3s, color 0.3s; }
         
-        /* Header */
         .top-bar { padding: 20px 5%; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); background: var(--bg); position: sticky; top: 0; z-index: 100; }
         .logo { font-weight: 900; font-size: 24px; letter-spacing: -0.04em; display: flex; gap: 10px; align-items: center; text-decoration: none; color: var(--text); }
         .logo-icon { width: 32px; height: 32px; border-radius: 8px; background: var(--accent); color: white; display: flex; justify-content: center; align-items: center; }
@@ -30,37 +29,31 @@
         .nav-link:hover { color: var(--text); }
         .theme-toggle { background: var(--surface); border: 1px solid var(--border); color: var(--text); padding: 8px 12px; border-radius: 10px; cursor: pointer; font-weight: 700; }
 
-        /* Layout */
         .container { padding: 40px 5%; max-width: 1400px; margin: 0 auto; }
         .section-title { font-size: 32px; font-weight: 700; margin-bottom: 5px; letter-spacing: -0.03em; }
         .section-sub { color: var(--text-soft); margin-bottom: 30px; font-size: 16px; }
         
-        /* Controls */
         .controls { display: flex; gap: 15px; flex-wrap: wrap; margin-bottom: 30px; align-items: flex-end; background: var(--surface); border: 1px solid var(--border); padding: 20px; border-radius: 14px; }
         .control-group { display: flex; flex-direction: column; gap: 6px; min-width: 150px; }
         .control-group label { font-size: 13px; font-weight: 700; color: var(--text-soft); }
         select, input { padding: 12px; border: 1px solid var(--border); border-radius: 8px; background: var(--bg); color: var(--text); font-weight: 600; outline: none; }
         select:focus, input:focus { border-color: var(--accent); }
 
-        /* KPI Cards */
         .kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 20px; margin-bottom: 40px; }
         .kpi-card { background: var(--surface); border: 1px solid var(--border); padding: 25px; border-radius: 14px; }
         .kpi-label { font-size: 14px; color: var(--text-soft); font-weight: 700; margin-bottom: 8px; }
         .kpi-value { font-size: 36px; font-weight: 800; color: var(--accent); }
 
-        /* Grids */
         .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 40px; }
         .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; margin-bottom: 40px; }
         .card { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 25px; box-shadow: var(--shadow); }
         .card-header { font-size: 18px; font-weight: 800; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; }
 
-        /* Tables */
         .data-table { width: 100%; border-collapse: collapse; font-size: 14px; }
         .data-table th { text-align: left; padding: 12px; border-bottom: 2px solid var(--border); color: var(--text-soft); font-weight: 700; }
         .data-table td { padding: 12px; border-bottom: 1px solid var(--border); }
         .data-table tr:hover { background: var(--bg); cursor: pointer; }
 
-        /* Heatmap */
         .heatmap-container { overflow-x: auto; }
         .heatmap { display: grid; grid-template-columns: 200px repeat(14, 1fr); gap: 5px; font-size: 12px; min-width: 800px; }
         .hm-cell { background: var(--surface-2); border-radius: 6px; height: 35px; display: flex; align-items: center; justify-content: center; font-weight: 700; color: var(--text-soft); }
@@ -68,18 +61,26 @@
         .hm-filled { background: var(--accent); color: #fff; }
         .hm-empty { background: var(--surface-2); color: transparent; }
 
-        /* Recurrence */
         .list-item { display: flex; justify-content: space-between; padding: 12px; border-bottom: 1px solid var(--border); }
         .list-item:last-child { border-bottom: none; }
 
-        /* Insane Responsive */
+        /* Theme Explorer Styles */
+        .capsule-grid { display: flex; flex-wrap: wrap; gap: 15px; margin-bottom: 20px; }
+        .capsule-btn { border: none; padding: 12px 24px; border-radius: 50px; font-weight: 800; color: white; cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
+        .capsule-btn:hover { transform: translateY(-3px); box-shadow: 0 8px 16px rgba(0,0,0,0.3); }
+        .capsule-btn.active { outline: 4px solid var(--accent); }
+        .grad-1 { background: #D96B00; }
+        .grad-2 { background: #3b82f6; }
+        .grad-3 { background: #10b981; }
+        .grad-4 { background: #8b5cf6; }
+        .grad-5 { background: #f59e0b; }
+
         @media (max-width: 900px) {
             .grid-2, .grid-3 { grid-template-columns: 1fr; }
             .nav-links { overflow-x: auto; padding-bottom: 10px; }
             .controls { flex-direction: column; align-items: stretch; }
         }
 
-        /* Views */
         .view-section { display: none; }
         .view-section.active { display: block; animation: fadeIn 0.4s ease; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
@@ -103,7 +104,6 @@
     <div class="section-title">PYQ Intelligence</div>
     <div class="section-sub">Decode the patterns behind years of UPSC questions.</div>
 
-    <!-- Global Controls -->
     <div class="controls">
         <div class="control-group">
             <label>Paper</label>
@@ -129,88 +129,46 @@
         <button style="background: var(--accent); color: white; border: none; padding: 12px 24px; border-radius: 8px; font-weight: 800; cursor: pointer;" onclick="renderAll()">Apply Filters</button>
     </div>
 
-    <!-- 1. Overview -->
     <div id="overview" class="view-section active">
         <div class="kpi-grid" id="kpi-cards"></div>
-
         <div class="grid-3">
-            <div class="card">
-                <div class="card-header">Subject Distribution</div>
-                <canvas id="subject-chart" style="max-height: 250px;"></canvas>
-            </div>
-            <div class="card">
-                <div class="card-header">Theme Distribution</div>
-                <canvas id="theme-chart" style="max-height: 250px;"></canvas>
-            </div>
-            <div class="card">
-                <div class="card-header">Preparation Priority</div>
-                <div id="priority-list" style="font-size: 14px;"></div>
-            </div>
+            <div class="card"><div class="card-header">Subject Distribution</div><canvas id="subject-chart" style="max-height: 250px;"></canvas></div>
+            <div class="card"><div class="card-header">Theme Distribution</div><canvas id="theme-chart" style="max-height: 250px;"></canvas></div>
+            <div class="card"><div class="card-header">Preparation Priority</div><div id="priority-list" style="font-size: 14px;"></div></div>
         </div>
-
         <div class="card">
             <div class="card-header">Pattern Signals</div>
             <div class="grid-3">
-                <div style="background: var(--accent-soft); border-radius: 12px; padding: 20px; border: 1px solid var(--accent);"><b>🔥 Hot Themes</b><br><span id="hot-themes" style="font-size: 14px; line-height: 1.8;"></span></div>
-                <div style="background: var(--surface-2); border-radius: 12px; padding: 20px; border: 1px solid var(--border);"><b>📈 Rising Themes</b><br><span id="rising-themes" style="font-size: 14px; line-height: 1.8;"></span></div>
-                <div style="background: transparent; border-radius: 12px; padding: 20px; border: 1px solid var(--border);"><b>💤 Dormant Themes</b><br><span id="dormant-themes" style="font-size: 14px; line-height: 1.8;"></span></div>
+                <div style="background: var(--accent-soft); border-radius: 12px; padding: 20px;"><b>🔥 Hot Themes</b><br><span id="hot-themes" style="font-size: 14px;"></span></div>
+                <div style="background: var(--surface-2); border-radius: 12px; padding: 20px;"><b>📈 Rising Themes</b><br><span id="rising-themes" style="font-size: 14px;"></span></div>
+                <div style="background: transparent; border-radius: 12px; padding: 20px;"><b>💤 Dormant Themes</b><br><span id="dormant-themes" style="font-size: 14px;"></span></div>
             </div>
             <div style="margin-top: 15px; font-size: 13px; color: var(--text-soft);"><i>⚠️ Dormant does not mean predicted. It simply means UPSC has not recently revisited this area based on the available data.</i></div>
         </div>
     </div>
 
-    <!-- 2. Trends -->
     <div id="trends" class="view-section">
-        <div class="card" style="margin-bottom: 20px;">
-            <div class="card-header">Year-Wise Question Volume</div>
-            <canvas id="yearly-trend" style="max-height: 300px;"></canvas>
-        </div>
+        <div class="card" style="margin-bottom: 20px;"><div class="card-header">Year-Wise Question Volume</div><canvas id="yearly-trend" style="max-height: 300px;"></canvas></div>
         <div class="grid-2">
-            <div class="card">
-                <div class="card-header">Year Comparison (Earliest vs Latest)</div>
-                <div id="year-compare"></div>
-            </div>
-            <div class="card">
-                <div class="card-header">Rising vs Declining</div>
-                <div id="rise-decline"></div>
-            </div>
+            <div class="card"><div class="card-header">Year Comparison (Earliest vs Latest)</div><div id="year-compare"></div></div>
+            <div class="card"><div class="card-header">Rising vs Declining</div><div id="rise-decline"></div></div>
         </div>
     </div>
 
-    <!-- 3. Themes -->
+    <!-- THEME EXPLORER (New Section) -->
     <div id="themes" class="view-section">
         <div class="card">
-            <div class="card-header">Theme Ranking Table</div>
-            <table class="data-table" id="theme-table">
-                <thead><tr><th>Theme</th><th>Count</th><th>Recent</th><th>Recurrence</th><th>Trend</th><th>Priority</th></tr></thead>
-                <tbody></tbody>
-            </table>
-        </div>
-        <div id="theme-detail" class="card" style="margin-top: 20px; display:none;">
-            <div class="card-header" id="detail-title">Theme Detail</div>
-            <div class="grid-2">
-                <div><b>Total Questions:</b> <span id="detail-count"></span></div>
-                <div><b>First Asked:</b> <span id="detail-first"></span></div>
-                <div><b>Last Asked:</b> <span id="detail-last"></span></div>
-                <div><b>Years Appeared:</b> <span id="detail-years"></span></div>
-            </div>
-            <div id="detail-questions" style="margin-top: 20px;"></div>
+            <div class="card-header">Theme Explorer</div>
+            <div id="theme-capsules" style="margin-bottom: 20px;"></div>
+            <div id="theme-questions" style="border-top: 1px solid var(--border); padding-top: 20px;"></div>
         </div>
     </div>
 
-    <!-- 4. Patterns & Heatmap -->
     <div id="patterns" class="view-section">
-        <div class="card" style="margin-bottom: 20px;">
-            <div class="card-header">Theme × Year Heatmap (Click a cell to view PYQs)</div>
-            <div class="heatmap-container"><div class="heatmap" id="heatmap-container"></div></div>
-        </div>
-        <div class="card">
-            <div class="card-header">Recurrence Analysis</div>
-            <div id="recurrence-list"></div>
-        </div>
+        <div class="card" style="margin-bottom: 20px;"><div class="card-header">Theme × Year Heatmap (Click a cell to view PYQs)</div><div class="heatmap-container"><div class="heatmap" id="heatmap-container"></div></div></div>
+        <div class="card"><div class="card-header">Recurrence Analysis</div><div id="recurrence-list"></div></div>
     </div>
 
-    <!-- 5. Questions -->
     <div id="questions" class="view-section">
         <div class="card">
             <div class="card-header">Question Explorer</div>
@@ -226,6 +184,7 @@
     let pyqData = [];
     let themeData = [];
     let currentPaper = "GS1";
+    let currentTheme = null;
     const charts = {};
 
     window.onload = async () => { await loadPaper(); if(localStorage.getItem('qcab_theme') === 'dark') document.body.classList.add('dark-mode'); };
@@ -241,7 +200,6 @@
 
         const subjects = [...new Set(pyqData.map(q => q.subtopic))];
         document.getElementById('subject-filter').innerHTML = '<option value="ALL">All Subjects</option>' + subjects.map(s => `<option>${s}</option>`).join('');
-        
         const years = [...new Set(pyqData.map(q => q.year))].sort();
         document.getElementById('year-filter').innerHTML = '<option value="ALL">All Years</option>' + years.map(y => `<option>${y}</option>`).join('');
 
@@ -330,15 +288,19 @@
         `;
 
         renderHeatmap(questions);
+        renderThemeExplorer(questions); // Added this
 
-        const themeTable = document.getElementById('theme-table').querySelector('tbody');
-        themeTable.innerHTML = '';
-        Object.entries(themeCounts).sort((a,b) => b[1] - a[1]).forEach(([theme, count]) => {
-            const yearsAppeared = new Set(questions.filter(q => getThemeForQuestion(q.id) === theme).map(q => q.year)).size;
-            const recentCount = questions.filter(q => recentYears.includes(q.year) && getThemeForQuestion(q.id) === theme).length;
-            const trend = recentCount > 0 ? '🔥 Hot' : '❄️ Dormant';
-            themeTable.innerHTML += `<tr onclick="showThemeDetail('${theme.replace(/'/g, "\\'")}')"><td><b>${theme}</b></td><td>${count}</td><td>${recentCount}</td><td>${yearsAppeared}</td><td>${trend}</td><td>${count > 4 ? 'High' : count > 1 ? 'Med' : 'Low'}</td></tr>`;
-        });
+        const themeTable = document.getElementById('theme-table');
+        if(themeTable) {
+            const tbody = themeTable.querySelector('tbody');
+            tbody.innerHTML = '';
+            Object.entries(themeCounts).sort((a,b) => b[1] - a[1]).forEach(([theme, count]) => {
+                const yearsAppeared = new Set(questions.filter(q => getThemeForQuestion(q.id) === theme).map(q => q.year)).size;
+                const recentCount = questions.filter(q => recentYears.includes(q.year) && getThemeForQuestion(q.id) === theme).length;
+                const trend = recentCount > 0 ? '🔥 Hot' : '❄️ Dormant';
+                tbody.innerHTML += `<tr onclick="showThemeDetail('${theme.replace(/'/g, "\\'")}')"><td><b>${theme}</b></td><td>${count}</td><td>${recentCount}</td><td>${yearsAppeared}</td><td>${trend}</td><td>${count > 4 ? 'High' : count > 1 ? 'Med' : 'Low'}</td></tr>`;
+            });
+        }
 
         document.getElementById('recurrence-list').innerHTML = Object.entries(themeCounts).sort((a,b) => b[1] - a[1]).map(([theme, count]) => {
             const yearsAppeared = [...new Set(questions.filter(q => getThemeForQuestion(q.id) === theme).map(q => q.year))].sort();
@@ -348,6 +310,49 @@
         const qTable = document.getElementById('question-table').querySelector('tbody');
         qTable.innerHTML = '';
         questions.forEach(q => qTable.innerHTML += `<tr><td>${q.year}</td><td>${q.marks}</td><td>${q.question}</td><td>${getThemeForQuestion(q.id)}</td></tr>`);
+    }
+
+    // THEME EXPLORER LOGIC
+    function renderThemeExplorer(questions) {
+        const container = document.getElementById('theme-capsules');
+        const questionContainer = document.getElementById('theme-questions');
+        if(!container || !questionContainer) return;
+
+        // Group themes by subject
+        const grouped = {};
+        themeData.forEach(t => { grouped[t.subject] = grouped[t.subject] || []; grouped[t.subject].push(t); });
+
+        let html = '';
+        let index = 0;
+        for (const subject in grouped) {
+            html += `<h4 style="margin-top:20px; margin-bottom:10px; color:var(--text-soft);">${subject}</h4><div style="display:flex; flex-wrap:wrap; gap:10px;">`;
+            grouped[subject].forEach(themeObj => {
+                const count = questions.filter(q => getThemeForQuestion(q.id) === themeObj.theme).length;
+                if(count > 0) {
+                    const colorClass = `grad-${(index % 5) + 1}`;
+                    html += `<button class="capsule-btn ${colorClass} ${currentTheme === themeObj.theme ? 'active' : ''}" onclick="loadTheme('${themeObj.theme.replace(/'/g, "\\'")}')">${themeObj.theme} (${count})</button>`;
+                    index++;
+                }
+            });
+            html += `</div>`;
+        }
+        container.innerHTML = html;
+
+        // Show Questions for selected theme
+        if (currentTheme) {
+            const themeQuestions = questions.filter(q => getThemeForQuestion(q.id) === currentTheme);
+            questionContainer.innerHTML = `<h3 style="margin-bottom:15px;">${currentTheme} (${themeQuestions.length} Questions)</h3>` + themeQuestions.map((q, i) => `
+                <div style="padding: 10px; border-bottom: 1px solid var(--border);"><b>${i+1}. ${q.year}</b> (${q.marks}M) - ${q.question}</div>
+            `).join('');
+        } else {
+            questionContainer.innerHTML = '<p style="color:var(--text-soft);">Click a theme above to view questions.</p>';
+        }
+    }
+
+    function loadTheme(themeName) {
+        currentTheme = themeName;
+        const questions = getFilteredQuestions();
+        renderThemeExplorer(questions);
     }
 
     function renderBarChart(canvasId, labels, data, color) {
@@ -381,19 +386,6 @@
             });
         });
         document.getElementById('heatmap-container').innerHTML = html;
-    }
-
-    function showThemeDetail(themeName) {
-        const detail = document.getElementById('theme-detail');
-        const questions = getFilteredQuestions().filter(q => getThemeForQuestion(q.id) === themeName);
-        document.getElementById('detail-title').textContent = themeName;
-        document.getElementById('detail-count').textContent = questions.length;
-        document.getElementById('detail-first').textContent = Math.min(...questions.map(q => parseInt(q.year)));
-        document.getElementById('detail-last').textContent = Math.max(...questions.map(q => parseInt(q.year)));
-        document.getElementById('detail-years').textContent = new Set(questions.map(q => q.year)).size;
-        document.getElementById('detail-questions').innerHTML = questions.map((q, i) => `<div style="padding: 10px; border-bottom: 1px solid var(--border);"><b>${i+1}. ${q.year}</b> (${q.marks}M) - ${q.question}</div>`).join('');
-        detail.style.display = 'block';
-        detail.scrollIntoView({ behavior: 'smooth' });
     }
 </script>
 </body>
