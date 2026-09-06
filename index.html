@@ -6,10 +6,9 @@
   <link rel="icon" type="image/png" href="favicon.png">
   <title>UPSC Craft | Mains PYQ cum QCAB Generator</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=10005">
+  <link rel="stylesheet" href="styles.css?v=10006">
 </head>
 <body>
-
 <script>
   var APP_VERSION = '10.0'; 
   if (localStorage.getItem('qcab_app_version') !== APP_VERSION) {
@@ -26,10 +25,7 @@
 
 <div class="app">
   <aside class="sidebar" id="main-sidebar">
-    <div class="sidebar-header-mobile">
-      <span style="font-weight:750; font-size:13px; color:var(--muted);">Navigation Menu</span>
-      <button type="button" class="mobile-menu-close" id="mobile-menu-close">✕</button>
-    </div>
+    <!-- REMOVED sidebar-header-mobile completely for a clean desktop view -->
     <div class="brand">
       <img src="logo.png" alt="UPSC Craft Logo" class="brand-logo">
     </div>
@@ -261,8 +257,7 @@
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.6.2"></script>
 <script src="js/config.js?v=10002"></script>
 <script src="js/syllabus-data.js?v=10002"></script>
-<script src="js/app.js?v=10005"></script>
+<script src="js/app.js?v=10006"></script>
 <script src="js/features.js?v=10002"></script>
-
 </body>
 </html>
