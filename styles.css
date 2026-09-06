@@ -163,6 +163,20 @@ select:focus, input:focus { border-color: var(--accent); }
 .syllabus-menu-card:hover { border-color: var(--accent); transform: translateY(-3px); }
 .back-btn { background: transparent; border: 1px solid var(--border); padding: 8px 16px; border-radius: 8px; margin-bottom: 15px; cursor: pointer; }
 .syllabus-modal-close { background: transparent; border: none; font-size: 20px; cursor: pointer; color: var(--text-soft); }
+.syllabus-menu-card-title {
+    font-weight: 800;
+    margin-top: 10px;
+    color: var(--text);
+    font-size: 16px;
+}
+.syllabus-title-gs1 { color: var(--gs1); }
+.syllabus-title-gs2 { color: var(--gs2); }
+.syllabus-title-gs3 { color: var(--gs3); }
+.syllabus-title-gs4 { color: var(--gs4); }
+.syllabus-title-anthro1 { color: var(--opt1); }
+.syllabus-title-anthro2 { color: var(--opt2); }
+.syllabus-title-prelims { color: var(--muted); }
+.syllabus-title-essay { color: var(--accent); }
 
 /* Scroll Lock & Toast */
 body.modal-open, body.syllabus-open { overflow: hidden !important; }
