@@ -234,7 +234,8 @@ function renderAnalyzer() {
             <h3 style="margin:0;">${currentAnalyzerSubject}</h3>
         </div>`;
 
-        const trueSubjectCount = window.presetBank.filter(q => q.paper === currentAnalyzerPaper).length;
+                // *** FIX: Dynamically calculate count from the theme tags, not the entire paper! ***
+        const trueSubjectCount = window.presetBank.filter(q => allSubjectIds.includes(q.id)).length;
         html += `<div style="margin-bottom: 15px;">
             <button class="btn-primary" onclick="showAllQuestions=true; currentAnalyzerTheme=null; renderAnalyzer();">View All Questions in Subject (${trueSubjectCount})</button>
         </div>`;
