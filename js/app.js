@@ -1143,9 +1143,9 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 
   window.openSyllabusModal = openSyllabusModal;
-  window.closeSyllabusModal = closeSyllabusModal;
-  window.openSyllabusTopic = openSyllabusTopic;
-  window.backToSyllabusMenu = backToSyllabusMenu;
+window.closeSyllabusModal = closeSyllabusModal;
+window.openSyllabusTopic = openSyllabusTopic;
+window.backToSyllabusMenu = backToSyllabusMenu;
 
   function closeSyllabusModal() {
     document.getElementById('syllabus-modal-overlay').classList.remove('active');
