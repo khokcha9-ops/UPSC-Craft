@@ -1,448 +1,514 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="icon" type="image/png" href="favicon.png">
-  <title>UPSC Craft | Mains PYQ cum QCAB Generator</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=10002">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UPSC Craft | PYQ Intelligence</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --bg: #f9fafb; --surface: #ffffff; --surface-2: #f3f4f6;
+            --border: #e5e7eb; --text: #111827; --text-soft: #6b7280;
+            --accent: #e11d48; --accent-soft: #ffe4e6;
+            --primary: #4f46e5; --primary-soft: #e0e7ff;
+            --shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+            --matrix-0: #ffffff; --matrix-1: #ffe4e6; --matrix-2: #fecdd3; --matrix-3: #fda4af; --matrix-4: #fb7185; --matrix-5: #e11d48;
+        }
+        body.dark-mode {
+            --bg: #0f172a; --surface: #1e293b; --surface-2: #334155;
+            --border: #334155; --text: #f1f5f9; --text-soft: #94a3b8;
+            --accent: #f43f5e; --accent-soft: #4c0519;
+            --primary: #818cf8; --primary-soft: #312e81;
+            --shadow: 0 1px 3px 0 rgb(0 0 0 / 0.3), 0 1px 2px -1px rgb(0 0 0 / 0.3);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.3), 0 4px 6px -4px rgb(0 0 0 / 0.3);
+            --matrix-0: #1e293b; --matrix-1: #4c0519; --matrix-2: #881337; --matrix-3: #be123c; --matrix-4: #e11d48; --matrix-5: #f43f5e;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; }
+        body { background: var(--bg); color: var(--text); height: 100vh; display: flex; transition: background 0.3s, color 0.3s; }
+        
+        /* Sidebar */
+        .sidebar { width: 260px; background: var(--surface); border-right: 1px solid var(--border); display: flex; flex-direction: column; padding: 20px; gap: 20px; }
+        .logo { display: flex; align-items: center; gap: 10px; font-weight: 800; font-size: 18px; }
+        .logo-icon { width: 32px; height: 32px; background: var(--primary); color: white; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 18px; }
+        .nav { display: flex; flex-direction: column; gap: 4px; }
+        .nav-item { display: flex; align-items: center; gap: 12px; padding: 10px 12px; border-radius: 8px; color: var(--text-soft); cursor: pointer; font-weight: 600; transition: all 0.2s; }
+        .nav-item:hover { background: var(--surface-2); color: var(--text); }
+        .nav-item.active { background: var(--primary-soft); color: var(--primary); }
+        .nav-icon { font-size: 18px; }
+        .tip-box { background: var(--surface-2); padding: 16px; border-radius: 12px; border: 1px solid var(--border); font-size: 13px; margin-top: auto; }
+        .tip-box strong { display: block; margin-bottom: 4px; }
+        .theme-toggle { margin-top: 12px; background: var(--surface-2); border: 1px solid var(--border); color: var(--text); padding: 10px; border-radius: 8px; cursor: pointer; font-weight: 600; }
+        
+        /* Main Content */
+        .main-content { flex: 1; overflow-y: auto; padding: 30px; }
+        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .header h1 { font-size: 28px; font-weight: 800; letter-spacing: -0.5px; }
+        .header p { color: var(--text-soft); font-size: 14px; margin-top: 4px; }
+        .search-box { display: flex; align-items: center; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 10px 16px; width: 400px; box-shadow: var(--shadow); }
+        .search-box input { border: none; background: transparent; outline: none; flex: 1; color: var(--text); font-size: 14px; }
+        .search-box input::placeholder { color: var(--text-soft); }
+        .avatar { width: 40px; height: 40px; border-radius: 50%; background: var(--accent); color: white; display: flex; align-items: center; justify-content: center; font-weight: 700; }
+
+        /* Filters */
+        .filters { display: flex; gap: 12px; margin-bottom: 24px; flex-wrap: wrap; }
+        .filter-select { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 10px 16px; color: var(--text); font-weight: 600; cursor: pointer; outline: none; }
+        .btn-reset { background: var(--accent-soft); border: 1px solid var(--accent); color: var(--accent); padding: 10px 16px; border-radius: 10px; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 6px; }
+        .btn-reset:hover { background: var(--accent); color: white; }
+
+        /* Stats Cards */
+        .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 24px; }
+        .stat-card { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 20px; box-shadow: var(--shadow); }
+        .stat-icon { width: 40px; height: 40px; border-radius: 10px; background: var(--primary-soft); color: var(--primary); display: flex; align-items: center; justify-content: center; font-size: 20px; margin-bottom: 12px; }
+        .stat-value { font-size: 28px; font-weight: 800; letter-spacing: -1px; }
+        .stat-label { font-size: 13px; color: var(--text-soft); font-weight: 500; margin-top: 4px; }
+        .sparkline { margin-top: 10px; height: 30px; width: 100%; }
+
+        /* Charts Grid */
+        .charts-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; margin-bottom: 24px; }
+        .chart-card { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 20px; box-shadow: var(--shadow); }
+        .chart-card h3 { font-size: 16px; font-weight: 700; margin-bottom: 15px; }
+        .chart-card h3 span { float: right; font-size: 12px; color: var(--text-soft); font-weight: 500; }
+        .chart-container { height: 250px; position: relative; }
+
+        /* Radar */
+        .radar-list { display: flex; flex-direction: column; gap: 12px; }
+        .radar-item { display: flex; align-items: center; gap: 12px; }
+        .radar-icon { width: 32px; height: 32px; border-radius: 8px; background: var(--surface-2); color: var(--primary); display: flex; align-items: center; justify-content: center; }
+        .radar-info { flex: 1; }
+        .radar-name { font-size: 14px; font-weight: 700; }
+        .radar-year { font-size: 12px; color: var(--text-soft); }
+        .radar-tag { font-size: 10px; font-weight: 800; padding: 4px 8px; border-radius: 12px; }
+        .tag-high { background: var(--accent); color: white; }
+        .tag-med { background: #fbbf24; color: #78350f; }
+        .tag-low { background: #10b981; color: #064e3b; }
+
+        /* Matrix */
+        .matrix-section { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 20px; margin-bottom: 24px; box-shadow: var(--shadow); overflow-x: auto; }
+        .matrix-title { font-size: 16px; font-weight: 700; margin-bottom: 15px; }
+        .matrix-title span { float: right; font-size: 12px; color: var(--text-soft); font-weight: 500; }
+        .matrix-table { border-collapse: collapse; width: 100%; min-width: 800px; }
+        .matrix-table th, .matrix-table td { text-align: center; padding: 8px; font-size: 12px; }
+        .matrix-table th { color: var(--text-soft); font-weight: 600; border-bottom: 1px solid var(--border); }
+        .matrix-table td.cell { border: 1px solid var(--border); border-radius: 4px; width: 40px; height: 28px; cursor: pointer; transition: transform 0.1s; }
+        .matrix-table td.cell:hover { transform: scale(1.1); border-color: var(--text); }
+        .matrix-label { text-align: left !important; font-weight: 600; white-space: nowrap; }
+
+        /* Question Explorer */
+        .explorer-section { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 20px; box-shadow: var(--shadow-lg); position: relative; }
+        .explorer-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+        .explorer-header h2 { font-size: 16px; font-weight: 700; }
+        .explorer-header a { color: var(--primary); font-size: 13px; font-weight: 600; text-decoration: none; }
+        .exp-card { display: flex; gap: 16px; background: var(--surface-2); border-radius: 12px; padding: 20px; align-items: center; }
+        .exp-badges { display: flex; flex-direction: column; gap: 8px; }
+        .exp-year { font-size: 24px; font-weight: 800; color: var(--accent); }
+        .exp-paper { font-size: 14px; font-weight: 700; }
+        .exp-question { flex: 1; }
+        .exp-question h4 { font-size: 18px; font-weight: 700; margin-bottom: 10px; line-height: 1.5; }
+        .exp-tags { display: flex; gap: 8px; margin-bottom: 15px; }
+        .exp-tag { background: var(--primary-soft); color: var(--primary); font-size: 12px; font-weight: 700; padding: 4px 8px; border-radius: 6px; }
+        .exp-meta { color: var(--text-soft); font-size: 13px; }
+        .exp-actions { display: flex; flex-direction: column; gap: 10px; }
+        .btn-action { background: var(--primary-soft); color: var(--primary); border: none; padding: 10px 16px; border-radius: 8px; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: all 0.2s; }
+        .btn-action:hover { background: var(--primary); color: white; }
+        .btn-save { background: transparent; border: 1px solid var(--border); color: var(--text); padding: 10px 16px; border-radius: 8px; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: all 0.2s; }
+        .btn-save:hover { border-color: var(--primary); color: var(--primary); }
+
+        @media (max-width: 900px) {
+            .stats-grid { grid-template-columns: repeat(2, 1fr); }
+            .charts-grid { grid-template-columns: 1fr; }
+            .sidebar { display: none; }
+            .search-box { width: 100%; }
+            .exp-card { flex-direction: column; align-items: flex-start; }
+        }
+    </style>
 </head>
 <body>
 
-<script>
-  var APP_VERSION = '10.0'; 
-  if (localStorage.getItem('qcab_app_version') !== APP_VERSION) {
-    localStorage.removeItem('qcab_user'); localStorage.removeItem('userToken');
-    localStorage.removeItem('qcab_nested_folders'); localStorage.removeItem('qcab_preset_bank'); 
-    localStorage.removeItem('user_progress'); localStorage.setItem('qcab_app_version', APP_VERSION);
-  }
-</script>
-<script>
-  if (!localStorage.getItem('qcab_user')) {
-    localStorage.setItem('qcab_user', JSON.stringify({ email: 'guest@test.com', name: 'Guest', token: 'guest-token' }));
-  }
-</script>
-
-<div class="app">
-  <aside class="sidebar" id="main-sidebar">
-    <div class="sidebar-header-mobile">
-      <span style="font-weight:750; font-size:13px; color:var(--muted);">Navigation Menu</span>
-      <button type="button" class="mobile-menu-close" id="mobile-menu-close">✕</button>
-    </div>
-    <div class="brand">
-      <img src="logo.png" alt="UPSC Craft Logo" class="brand-logo">
-    </div>
-
-    <div class="nav-title">Workspace</div>
-    <nav class="nav">
-      <button type="button" class="nav-btn active" data-scroll="dashboard"><span class="nav-icon">⌂</span>Dashboard</button>
-      <button type="button" class="nav-btn" data-scroll="pyq-bank"><span class="nav-icon">▤</span>PYQ Bank</button>
-      <button type="button" class="nav-btn" data-scroll="create-question"><span class="nav-icon">＋</span>Create Question</button>
-      <button type="button" class="nav-btn" data-scroll="my-qcab"><span class="nav-icon">▣</span>My QCAB</button>
-      <button type="button" class="nav-btn" data-scroll="my-study"><span class="nav-icon">📘</span>My Study</button>
-    </nav>
-    <button type="button" class="nav-btn" onclick="window.location.href='analyzer.html'">
-  <span class="nav-icon">📊</span>
-  <span>PYQ Analyzer</span>
-</button>
-    <button type="button" class="nav-btn syllabus-btn" id="syllabus-sidebar-btn">
-      <span class="nav-icon">📚</span>
-      <span>View Syllabus</span>
-    </button>
-    
-    <div class="sidebar-progress" id="sidebar-progress" style="display:none; margin-top:20px; padding:12px; background:var(--surface-2); border-radius:14px;">
-      <div style="font-size:10px; font-weight:800; color:var(--muted); text-transform:uppercase; letter-spacing:0.5px; margin-bottom:8px;">Your Study Progress</div>
-      <div style="display:flex; gap:12px; justify-content:space-around;">
-        <span style="font-size:13px; font-weight:700;">⭐ <span id="sidebar-bookmarked" style="color:var(--primary);">0</span></span>
-        <span style="font-size:13px; font-weight:700;">✅ <span id="sidebar-revised" style="color:var(--accent);">0</span></span>
-        <span style="font-size:13px; font-weight:700;">📝 <span id="sidebar-notes" style="color:var(--gs3);">0</span></span>
-      </div>
-    </div>
-
-    <div class="sidebar-bottom"></div>
-  </aside>
-
-  <div class="content">
-    <div class="mobile-nav">
-      <div class="mobile-brand"><img src="logo.png" alt="UPSC Craft Logo" class="brand-logo-mobile"> UPSC CRAFT</div>
-      <div class="mobile-actions-right">
-        <button type="button" class="mobile-theme-toggle" id="mobile-theme-toggle">🌙</button>
-        <button type="button" class="mobile-menu-toggle" id="mobile-menu-toggle">☰</button>
-      </div>
-    </div>
-    <div class="mobile-menu-backdrop" id="mobile-backdrop"></div>
-
-    <header class="topbar">
-      <div>
-        <div class="topbar-title">UPSC Mains Answer Writing Workspace</div>
-        <div class="topbar-sub">Build, organize and print your question-cum-answer booklet</div>
-      </div>
-      <div class="topbar-actions">
-        <button type="button" class="theme-toggle" id="theme-toggle"><span id="theme-icon">🌙</span><span id="theme-text">Dark Mode</span></button>
-      </div>
-    </header>
-
-    <main class="page">
-      <section class="hero" id="dashboard">
-        <div>
-          <p class="eyebrow">✨ An Initiative to success</p>
-          <h1>UPSC Craft<br>PYQ cum QCAB Generator</h1>
-          <p>Find previous year questions, build your custom practice set and generate a print-ready answer booklet.</p>
+    <div class="sidebar">
+        <div class="logo"><div class="logo-icon">🦉</div> UPSC CRAFT</div>
+        <div class="nav">
+            <div class="nav-item"><span class="nav-icon">📊</span> Dashboard</div>
+            <div class="nav-item"><span class="nav-icon">📚</span> PYQs</div>
+            <div class="nav-item active"><span class="nav-icon">🧠</span> PYQ Intelligence</div>
+            <div class="nav-item"><span class="nav-icon">📝</span> Practice</div>
+            <div class="nav-item"><span class="nav-icon">🔖</span> Bookmarks</div>
+            <div class="nav-item"><span class="nav-icon">📈</span> Reports</div>
         </div>
-      </section>
-      
-      <section class="stats">
-        <!-- ENTIRE CARD IS A PLAIN BUTTON - NO TEXT -->
-        <div class="stat stat-bank" id="stat-bank-click" role="button" tabindex="0" aria-label="View detailed breakdown">
-          <div class="stat-label">📚 QUESTION BANK</div>
-          <div class="stat-value" id="dashboard-bank-count">—</div>
+        <div class="tip-box">
+            <strong>⚡ Quick Tip</strong>
+            Federalism has appeared 12 times in the last 14 years.
         </div>
-        <div class="stat"><div class="stat-label">📋 ACTIVE QCAB</div><div class="stat-value" id="dashboard-q-count">0</div><div class="stat-note">Questions selected</div></div>
-        <div class="stat"><div class="stat-label">📄 ANSWER PAGES</div><div class="stat-value" id="dashboard-pages">0</div><div class="stat-note">Based on marks selected</div></div>
-      </section>
+        <button class="theme-toggle" onclick="toggleTheme()">🌓 Toggle Theme</button>
+    </div>
 
-      <div class="folder-wrap">
-        <div class="breadcrumbs" id="breadcrumbs"></div>
-        <div class="folder-bar" id="folder-bar"></div>
-      </div>
-
-      <div class="workspace">
-        <section>
-          <div class="card" id="create-question">
-            <div class="card-header">
-              <div><h2 class="card-title">✏️ Create Custom Question</h2><p class="card-sub">Add your own question directly to the active booklet.</p></div>
-              <button type="button" class="btn btn-secondary-sm" id="toggle-create-section-btn">Hide Form ▾</button>
+    <div class="main-content">
+        <div class="header">
+            <div>
+                <h1>PYQ Intelligence</h1>
+                <p>Decode what UPSC has been asking</p>
             </div>
-            <div id="create-form-body">
-              <div class="field"><label for="q-paper">Paper</label><select id="q-paper"><option value="GS1">GS Paper 1</option><option value="GS2">GS Paper 2</option><option value="GS3">GS Paper 3</option><option value="GS4">GS Paper 4</option><option value="OPT1">Anthropology Optional Paper 1</option><option value="OPT2">Anthropology Optional Paper 2</option></select></div>
-              <div class="field"><label for="q-topic">Subtopic</label><select id="q-topic"></select></div>
-              <div class="field"><label for="q-text">Question Text</label><textarea id="q-text" placeholder="Paste or type your question here..."></textarea></div>
-              <div class="field"><label>Marks</label><div class="marks-row"><button type="button" class="marks-btn" data-marks="10" aria-pressed="true">10 Marks</button><button type="button" class="marks-btn" data-marks="15" aria-pressed="false">15 Marks</button><button type="button" class="marks-btn" data-marks="20" aria-pressed="false">20 Marks</button></div></div>
-              <div class="field"><label for="q-year">Year <span style="font-weight:500">(optional)</span></label><input type="text" id="q-year" placeholder="e.g. 2025"></div>
-              <div class="field checkbox-row"><input type="checkbox" id="include-index" checked><label for="include-index">Include index page in PDF</label></div>
-              <div class="form-actions">
-                <button type="button" class="btn btn-primary btn-wide" id="add-btn">➕ Add to Active Folder</button>
-                <button type="button" class="btn btn-wide" id="add-preset-btn">📥 Save as Preset Bank Question</button>
-                <button type="button" class="btn btn-wide btn-danger" id="cancel-edit-btn" style="display:none;">✖ Cancel Edit</button>
-              </div>
+            <div style="display: flex; align-items: center; gap: 16px;">
+                <div class="search-box">
+                    <input type="text" id="searchInput" placeholder="Search topics, years, questions...">
+                </div>
+                <div class="avatar">B</div>
             </div>
-          </div>
-
-          <div class="card" id="pyq-bank">
-            <div class="card-header">
-              <div><h2 class="card-title">📖 PYQ Bank</h2><p class="card-sub">Search by question, topic, paper or year. Results update as you type.</p></div>
-              <div class="bank-top-actions">
-                <button type="button" class="btn btn-secondary-sm" id="toggle-bank-btn"><span class="action-arrow" id="toggle-bank-icon">▼</span><span id="toggle-bank-text">Hide Bank</span></button>
-                <button type="button" class="btn btn-secondary-sm reset-btn" id="clear-bank-btn">⟳ Reset Bank</button>
-              </div>
-            </div>
-            
-            <div id="pyq-bank-body">
-              <div class="filter-bar-vertical">
-                <div class="filter-group">
-                  <label>📂 Paper</label>
-                  <select id="filter-paper"><option value="ALL">All Papers</option><option value="GS1">GS Paper 1</option><option value="GS2">GS Paper 2</option><option value="GS3">GS Paper 3</option><option value="GS4">GS Paper 4</option><option value="OPT1">Anthro Paper 1</option><option value="OPT2">Anthro Paper 2</option></select>
-                </div>
-                <div class="filter-group">
-                  <label>🏷️ Subtopic</label>
-                  <select id="filter-topic"><option value="ALL">All Subtopics</option></select>
-                </div>
-                <div class="filter-group">
-                  <label>📅 Year</label>
-                  <select id="filter-year"><option value="ALL">All Years</option></select>
-                </div>
-                <div class="filter-group filter-search">
-                  <label>🔍 Search</label>
-                  <input type="text" id="search-input" placeholder="Search questions...">
-                </div>
-                <div class="filter-actions">
-                  <button type="button" class="btn btn-filter-search" id="search-bank-btn">🔍 Search</button>
-                  <button type="button" class="btn btn-clear-filter" id="clear-results-btn">✖ Clear</button>
-                </div>
-              </div>
-
-              <div id="bank-status-text">Loading question bank...</div>
-              <div id="bank-results-container"></div>
-            </div>
-          </div>
-        </section>
-      </div>
-
-      <aside class="card sticky-card" id="my-qcab">
-        <div class="card-header"><div><h2 class="card-title">📋 My QCAB</h2><p class="card-sub">Questions in your active booklet.</p></div><span class="tag" id="count-tag">0 questions</span></div>
-        <div style="display:flex;justify-content:flex-end;gap:6px;margin-bottom:14px;flex-wrap:wrap;">
-          <button type="button" class="btn btn-secondary-sm" id="rename-folder-btn">✏️ Rename</button>
-          <button type="button" class="btn btn-secondary-sm btn-danger" id="delete-folder-btn">🗑️ Delete</button>
-          <button type="button" class="btn btn-secondary-sm" id="clear-q-btn">🧹 Clear</button>
         </div>
-        <div id="empty-state" class="empty-state"><div style="font-size:28px;margin-bottom:8px;">▣</div><strong style="display:block;color:var(--text);margin-bottom:4px;">Your booklet is empty</strong>Add questions from the PYQ Bank or create a custom question.</div>
-        <ol class="q-list" id="q-list"></ol>
-        <div class="summary-bar" id="summary-bar" style="display:none;"><div class="summary-stat"><span>TOTAL MARKS</span><strong id="total-marks">0</strong></div><div class="summary-stat"><span>ANSWER PAGES</span><strong id="total-pages">0</strong></div></div>
-        <button type="button" class="btn-generate" id="generate-btn" disabled>⬇ Generate &amp; Download PDF</button>
-      </aside>
 
-      <section id="my-study" style="margin-top:30px;">
-        <div class="card">
-          <div class="card-header"><div><h2 class="card-title">📘 My Study</h2><p class="card-sub">Bookmark questions, mark as revised, add notes, and track your progress.</p></div></div>
-          <div id="study-dashboard">
-            <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin-bottom:16px;">
-              <div class="stat" style="padding:14px;"><div class="stat-label">📌 Bookmarked</div><div class="stat-value" id="study-bookmarked">0</div></div>
-              <div class="stat" style="padding:14px;"><div class="stat-label">✅ Revised</div><div class="stat-value" id="study-revised">0</div></div>
-              <div class="stat" style="padding:14px;"><div class="stat-label">📝 With Notes</div><div class="stat-value" id="study-notes">0</div></div>
+        <div class="filters">
+            <select class="filter-select" id="paperFilter" onchange="applyFilters()">
+                <option value="ALL">All Papers</option>
+                <option value="GS1">GS1</option>
+                <option value="GS2">GS2</option>
+                <option value="GS3">GS3</option>
+                <option value="GS4">GS4</option>
+            </select>
+            <select class="filter-select" id="yearFilter" onchange="applyFilters()">
+                <option value="ALL">All Years</option>
+            </select>
+            <button class="btn-reset" onclick="resetFilters()">⟳ Reset all</button>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon">📄</div>
+                <div class="stat-value" id="totalQs">0</div>
+                <div class="stat-label">Total PYQs found</div>
             </div>
-            <div id="study-list-container"><p style="color:var(--muted);">Your bookmarked questions will appear here.</p></div>
-          </div>
+            <div class="stat-card">
+                <div class="stat-icon">🎯</div>
+                <div class="stat-value" id="totalTopics">0</div>
+                <div class="stat-label">Distinct Topics</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">🔁</div>
+                <div class="stat-value" id="recurringQs">0</div>
+                <div class="stat-label">Repeating Themes</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">📅</div>
+                <div class="stat-value" id="totalYears">0</div>
+                <div class="stat-label">Years Covered</div>
+            </div>
         </div>
-      </section>
 
-      <footer>UPSC Craft · Project by Biswajit Nahak</footer>
-    </main>
-  </div>
-</div>
-
-<!-- ====== MODALS ====== -->
-
-<!-- Custom Modal -->
-<div class="modal-overlay" id="customModal">
-  <div class="modal-content">
-    <div class="modal-header">
-      <h2 id="modalTitle">Notice</h2>
-      <button class="modal-close" onclick="document.getElementById('customModal').classList.remove('active')">✕</button>
-    </div>
-    <div class="modal-body">
-      <p id="modalMessage"></p>
-      <div id="modalInputContainer" style="display:none; margin-top:12px;">
-        <input type="text" id="modalInput" placeholder="Enter value..." style="width:100%; padding:10px; border:1px solid var(--border); border-radius:8px;">
-      </div>
-    </div>
-    <div class="modal-footer">
-      <button class="btn btn-secondary" id="modalCancelBtn" style="display:none;">Cancel</button>
-      <button class="btn btn-primary" id="modalConfirmBtn">OK</button>
-    </div>
-  </div>
-</div>
-
-<!-- AI Modal (Updated Order and Names) -->
-<div class="modal-overlay" id="ai-model-modal">
-  <div class="modal-content">
-    <div class="modal-header">
-      <h2>🤖 Choose AI Assistant</h2>
-      <button class="modal-close" id="ai-model-close">✕</button>
-    </div>
-    <div class="modal-body">
-      <p style="margin-bottom:15px;">Select where to generate the answer for the selected question.</p>
-      <div style="display:grid; gap:10px;">
-        <button class="model-option" data-model="secret" style="background:linear-gradient(135deg,#6366f1,#06b6d4); color:#fff; border:none; padding:14px; border-radius:12px; font-weight:800;">✨ My AI Answer</button>
-        <button class="model-option" data-model="perplexity" style="background:#8b5cf6; color:#fff; border:none; padding:14px; border-radius:12px; font-weight:800;">🌀 Perplexity (Search)</button>
-        <button class="model-option" data-model="chatgpt" style="background:#10a37f; color:#fff; border:none; padding:14px; border-radius:12px; font-weight:800;">💬 ChatGPT (Copy Prompt)</button>
-        <button class="model-option" data-model="deepseek" style="background:#1e293b; color:#fff; border:none; padding:14px; border-radius:12px; font-weight:800;">🔬 DeepSeek (Copy Prompt)</button>
-      </div>
-    </div>
-    <div class="modal-footer">
-      <button class="btn btn-secondary" id="cancel-ai-modal">Cancel</button>
-    </div>
-  </div>
-</div>
-
-<!-- Stats Modal -->
-<div class="modal-overlay" id="stats-modal">
-  <div class="modal-content" style="max-width: 700px;">
-    <div class="modal-header">
-      <h2>📊 Question Bank Breakdown</h2>
-      <button class="modal-close" onclick="document.getElementById('stats-modal').classList.remove('active')">✕</button>
-    </div>
-    <div class="modal-body" id="stats-modal-body">
-      <div id="stats-loading">Loading breakdown...</div>
-    </div>
-    <div class="modal-footer">
-      <button class="btn btn-secondary" onclick="document.getElementById('stats-modal').classList.remove('active')">Close</button>
-    </div>
-  </div>
-</div>
-
-<!-- Syllabus Modal -->
-<div class="syllabus-modal-overlay" id="syllabus-modal-overlay">
-  <div class="syllabus-modal-content">
-    <div class="syllabus-modal-header"><h2>📚 UPSC Syllabus</h2><button class="syllabus-modal-close" onclick="closeSyllabusModal()">✕</button></div>
-    <div class="syllabus-modal-body">
-      <div id="syllabus-main-menu"><div class="syllabus-grid" id="syllabus-cards-holder"></div></div>
-      <div id="syllabus-detail-view"><button class="back-btn" onclick="backToSyllabusMenu()">← Back to Papers</button><div id="syllabus-detail-content"></div></div>
-    </div>
-  </div>
-</div>
-
-<!-- Back to Top -->
-<button id="back-to-top">↑</button>
-
-<!-- Note Modal -->
-<div class="study-modal" id="note-modal">
-  <div class="study-modal-content">
-    <h3>📝 Add Note</h3>
-    <textarea id="note-textarea" placeholder="Write your note here..."></textarea>
-    <div class="btn-row">
-      <button class="btn btn-secondary-sm" id="note-save-btn">💾 Save</button>
-      <button class="btn btn-secondary-sm btn-danger" id="note-cancel-btn">✖ Cancel</button>
-    </div>
-  </div>
-</div>
-
-<div class="toast" id="toast"><span class="toast-icon" id="toastIcon">✅</span><span id="toastMessage">Copied!</span></div>
-
-<!-- Scripts -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.6.2"></script>
-<script src="js/config.js?v=10002"></script>
-<script src="js/syllabus-data.js?v=10002"></script>
-<script src="js/app.js?v=10002"></script>
-<script src="js/features.js?v=10002"></script>
-
-<script>
-/* ========== SYLLABUS FUNCTIONS ========== */
-function openSyllabusModal() {
-  var cardsHolder = document.getElementById('syllabus-cards-holder');
-  var menu = document.getElementById('syllabus-main-menu');
-  var detail = document.getElementById('syllabus-detail-view');
-  menu.style.display = 'block'; detail.style.display = 'none';
-  if (cardsHolder.children.length === 0) {
-    cardsHolder.innerHTML = '';
-    for (var key in SYLLABUS_DATA) {
-      var item = SYLLABUS_DATA[key];
-      var card = document.createElement('div');
-      card.className = 'syllabus-menu-card';
-      card.setAttribute('data-paper', key);
-      card.style.borderTop = '5px solid ' + item.color;
-      card.innerHTML = '<span class="syllabus-menu-card-icon">' + item.icon + '</span><div class="syllabus-menu-card-title syllabus-title-' + key + '">' + item.title + '</div>';
-      card.setAttribute('data-key', key);
-      card.onclick = function() { openSyllabusTopic(this.getAttribute('data-key')); };
-      cardsHolder.appendChild(card);
-    }
-  }
-  document.getElementById('syllabus-modal-overlay').classList.add('active');
-  document.body.classList.add('modal-open');
-}
-
-function closeSyllabusModal() {
-  document.getElementById('syllabus-modal-overlay').classList.remove('active');
-  document.body.classList.remove('modal-open');
-}
-
-function openSyllabusTopic(key) {
-  var item = SYLLABUS_DATA[key]; if (!item) return;
-  document.getElementById('syllabus-main-menu').style.display = 'none';
-  document.getElementById('syllabus-detail-view').style.display = 'block';
-  var detailContent = document.getElementById('syllabus-detail-content');
-  detailContent.style.borderTop = '5px solid ' + item.color;
-  detailContent.innerHTML = '<h3 style="color:' + item.color + '; margin-bottom: 15px;">' + item.title + '</h3>' + item.html;
-}
-
-function backToSyllabusMenu() {
-  document.getElementById('syllabus-detail-view').style.display = 'none';
-  document.getElementById('syllabus-main-menu').style.display = 'block';
-}
-
-document.getElementById('syllabus-sidebar-btn').addEventListener('click', openSyllabusModal);
-
-/* ========== NAVIGATION ========== */
-document.querySelectorAll('[data-scroll]').forEach(btn => {
-  btn.addEventListener('click', () => {
-    const id = btn.dataset.scroll;
-    const target = document.getElementById(id);
-    if (target) {
-      const offset = window.innerWidth <= 820 ? 70 : 10;
-      target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      window.scrollBy(0, -offset);
-    }
-    document.querySelectorAll('.nav-btn[data-scroll]').forEach(n => n.classList.remove('active'));
-    const match = document.querySelector(`.nav-btn[data-scroll="${id}"]`);
-    if (match) match.classList.add('active');
-  });
-});
-
-/* ========== QUESTION BANK BREAKDOWN ========== */
-document.addEventListener('DOMContentLoaded', function() {
-  const statBank = document.getElementById('stat-bank-click');
-  if (statBank) {
-    statBank.addEventListener('click', function() {
-      showStatsBreakdown();
-    });
-    statBank.addEventListener('keydown', function(e) {
-      if (e.key === 'Enter' || e.key === ' ') {
-        e.preventDefault();
-        showStatsBreakdown();
-      }
-    });
-  }
-});
-
-function showStatsBreakdown() {
-  const modal = document.getElementById('stats-modal');
-  const body = document.getElementById('stats-modal-body');
-  if (!modal || !body) return;
-
-  const bank = JSON.parse(localStorage.getItem('qcab_preset_bank') || '[]');
-  
-  let paperStats = {};
-  bank.forEach(q => {
-    const paper = q.paper || 'Unknown';
-    if (!paperStats[paper]) paperStats[paper] = { total: 0, subtopics: {} };
-    paperStats[paper].total++;
-    const topic = q.topic || 'General';
-    if (!paperStats[paper].subtopics[topic]) paperStats[paper].subtopics[topic] = 0;
-    paperStats[paper].subtopics[topic]++;
-  });
-
-  const paperColors = {
-    'GS1': 'var(--gs1)', 'GS2': 'var(--gs2)', 'GS3': 'var(--gs3)', 'GS4': 'var(--gs4)',
-    'OPT1': 'var(--opt1)', 'OPT2': 'var(--opt2)', 'Unknown': 'var(--muted)'
-  };
-
-  let html = '<div style="display:grid; gap:16px;">';
-  const sortedPapers = Object.keys(paperStats).sort();
-  
-  if (sortedPapers.length === 0) {
-    html = '<p style="color:var(--muted);">No questions loaded yet.</p>';
-    body.innerHTML = html;
-    modal.classList.add('active');
-    return;
-  }
-
-  sortedPapers.forEach(paper => {
-    const data = paperStats[paper];
-    const color = paperColors[paper] || paperColors['Unknown'];
-    html += `
-      <div style="background:var(--surface-2); border-radius:12px; padding:16px; border-left: 5px solid ${color};">
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
-          <strong style="font-size:18px; font-weight:900; color:${color};">${paper}</strong>
-          <span style="background:${color}; color:#fff; padding:4px 12px; border-radius:999px; font-weight:800; font-size:13px;">${data.total} questions</span>
+        <div class="charts-grid">
+            <div class="chart-card">
+                <h3>Question Trend by Year <span>All Topics</span></h3>
+                <div class="chart-container"><canvas id="trendChart"></canvas></div>
+            </div>
+            <div class="chart-card">
+                <h3>Most Repeated Topics <span>View all</span></h3>
+                <div class="chart-container"><canvas id="topicChart"></canvas></div>
+            </div>
+            <div class="chart-card">
+                <h3>Repeat Radar <span>High Frequency</span></h3>
+                <div class="radar-list" id="radarList"></div>
+            </div>
         </div>
-        <div style="display:flex; flex-wrap:wrap; gap:6px; margin-top:8px;">
-    `;
-    const sortedTopics = Object.keys(data.subtopics).sort();
-    sortedTopics.forEach(topic => {
-      const count = data.subtopics[topic];
-      html += `
-        <span style="background:var(--surface); border:1px solid var(--border); border-radius:999px; padding:4px 12px; font-size:13px; font-weight:700; color:var(--text-soft);">
-          ${topic} <span style="background:${color}; color:#fff; border-radius:999px; padding:1px 8px; margin-left:4px; font-size:11px;">${count}</span>
-        </span>
-      `;
-    });
-    html += `</div></div>`;
-  });
 
-  html += '</div>';
-  body.innerHTML = html;
-  modal.classList.add('active');
-}
+        <div class="matrix-section">
+            <div class="matrix-title">PYQ Matrix <span>(Year × Topic)</span></div>
+            <table class="matrix-table" id="matrixTable"></table>
+        </div>
 
-function switchFilterMode(mode, btn) {
-  document.getElementById('btn-filter-year').classList.remove('active');
-  document.getElementById('btn-filter-subtopic').classList.remove('active');
-  btn.classList.add('active');
-  document.getElementById('filter-year').style.display = 'block';
-  document.getElementById('filter-topic').style.display = 'block';
-  document.getElementById('search-bank-btn').click();
-}
-</script>
+        <div class="explorer-section">
+            <div class="explorer-header">
+                <h2>Question Explorer</h2>
+                <a href="#">Explore and analyze PYQs in detail →</a>
+            </div>
+            <div class="exp-card" id="explorerCard">
+                <div class="exp-badges">
+                    <div class="exp-year" id="expYear">2026</div>
+                    <div class="exp-paper" id="expPaper">GS2</div>
+                    <div class="exp-meta" id="expMarks">15 Marks</div>
+                </div>
+                <div class="exp-question">
+                    <h4 id="expQuestionText">Loading question...</h4>
+                    <div class="exp-tags" id="expTags"></div>
+                    <div class="exp-meta" id="expLastAsked">Last Asked: 2026</div>
+                </div>
+                <div class="exp-actions">
+                    <button class="btn-action">✨ Analyse Question</button>
+                    <button class="btn-action">⚡ Generate Answer</button>
+                    <button class="btn-save">💾 Save Question</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Theme
+        const savedTheme = localStorage.getItem('pyq-theme') || 'light';
+        if(savedTheme === 'dark') document.body.classList.add('dark-mode');
+
+        function toggleTheme() {
+            document.body.classList.toggle('dark-mode');
+            localStorage.setItem('pyq-theme', document.body.classList.contains('dark-mode') ? 'dark' : 'light');
+        }
+
+        // Data Processing
+        let allQuestions = [];
+        let myCharts = {};
+
+        async function loadData() {
+            const files = {
+                'GS1': './gs1_themes.json',
+                'GS2': './gs2_themes.json',
+                'GS3': './gs3_themes.json',
+                'GS4': './gs4_themes.json'
+            };
+
+            const rawData = await Promise.all(Object.entries(files).map(async ([paper, url]) => {
+                try {
+                    const res = await fetch(url);
+                    if (!res.ok) return { paper, data: {} };
+                    const json = await res.json();
+                    return { paper, data: json };
+                } catch (e) {
+                    console.warn(`Could not load ${url}`);
+                    return { paper, data: {} };
+                }
+            }));
+
+            // Flatten JSON into single array
+            rawData.forEach(({ paper, data }) => {
+                // Data structure is { "GS1": { "Subject": [ { ... } ] } }
+                // The top level key is the paper itself. So we get the paper data directly from data[paper]
+                if(data[paper]) {
+                    for(const subject in data[paper]) {
+                        data[paper][subject].forEach(q => {
+                            allQuestions.push({
+                                paper: paper,
+                                subject: subject,
+                                ...q
+                            });
+                        });
+                    }
+                }
+            });
+
+            // Populate year filter
+            const years = [...new Set(allQuestions.map(q => q.year))].sort();
+            const yearFilter = document.getElementById('yearFilter');
+            years.forEach(y => {
+                const opt = document.createElement('option');
+                opt.value = y;
+                opt.textContent = y;
+                yearFilter.appendChild(opt);
+            });
+
+            renderDashboard();
+        }
+
+        function applyFilters() {
+            renderDashboard();
+        }
+
+        function resetFilters() {
+            document.getElementById('paperFilter').value = 'ALL';
+            document.getElementById('yearFilter').value = 'ALL';
+            document.getElementById('searchInput').value = '';
+            renderDashboard();
+        }
+
+        function renderDashboard() {
+            const paper = document.getElementById('paperFilter').value;
+            const year = document.getElementById('yearFilter').value;
+            const search = document.getElementById('searchInput').value.toLowerCase();
+
+            let filtered = allQuestions.filter(q => {
+                if(paper !== 'ALL' && q.paper !== paper) return false;
+                if(year !== 'ALL' && q.year !== year) return false;
+                if(search && !q.key_pyq.toLowerCase().includes(search) && !q.microtheme.toLowerCase().includes(search)) return false;
+                return true;
+            });
+
+            // 1. Stats Cards
+            const totalTopics = new Set(filtered.map(q => q.microtheme)).size;
+            const totalYears = new Set(filtered.map(q => q.year)).size;
+            const recurringCount = filtered.filter(q => {
+                return filtered.filter(x => x.microtheme === q.microtheme).length > 1;
+            }).length / 2; // approximate
+
+            document.getElementById('totalQs').textContent = filtered.length;
+            document.getElementById('totalTopics').textContent = totalTopics;
+            document.getElementById('recurringQs').textContent = Math.round(recurringCount);
+            document.getElementById('totalYears').textContent = totalYears;
+
+            // 2. Charts
+            drawTrendChart(filtered);
+            drawTopicChart(filtered);
+            drawRadar(filtered);
+
+            // 3. Matrix
+            drawMatrix(filtered);
+
+            // 4. Explorer
+            updateExplorer(filtered[Math.floor(Math.random() * Math.min(filtered.length, 20))]);
+        }
+
+        function drawTrendChart(data) {
+            const years = {};
+            data.forEach(q => {
+                years[q.year] = (years[q.year] || 0) + 1;
+            });
+            const labels = Object.keys(years).sort();
+            const counts = labels.map(y => years[y]);
+
+            const ctx = document.getElementById('trendChart').getContext('2d');
+            if(myCharts.trend) myCharts.trend.destroy();
+
+            myCharts.trend = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels,
+                    datasets: [{
+                        label: 'Questions',
+                        data: counts,
+                        borderColor: '#e11d48',
+                        backgroundColor: 'rgba(225, 29, 72, 0.1)',
+                        fill: true,
+                        tension: 0.4,
+                        pointRadius: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        x: { grid: { display: false } },
+                        y: { beginAtZero: true }
+                    }
+                }
+            });
+        }
+
+        function drawTopicChart(data) {
+            const topics = {};
+            data.forEach(q => {
+                topics[q.microtheme] = (topics[q.microtheme] || 0) + 1;
+            });
+            const sorted = Object.entries(topics).sort((a, b) => b[1] - a[1]).slice(0, 8);
+            const labels = sorted.map(t => t[0]);
+            const counts = sorted.map(t => t[1]);
+
+            const ctx = document.getElementById('topicChart').getContext('2d');
+            if(myCharts.topic) myCharts.topic.destroy();
+
+            myCharts.topic = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels,
+                    datasets: [{
+                        label: 'Count',
+                        data: counts,
+                        backgroundColor: '#e11d48',
+                        borderRadius: 6
+                    }]
+                },
+                options: {
+                    indexAxis: 'y',
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        x: { beginAtZero: true, grid: { display: false } },
+                        y: { grid: { display: false } }
+                    }
+                }
+            });
+        }
+
+        function drawRadar(data) {
+            const topics = {};
+            data.forEach(q => {
+                topics[q.microtheme] = (topics[q.microtheme] || 0) + 1;
+            });
+            const sorted = Object.entries(topics).sort((a, b) => b[1] - a[1]);
+
+            const radarContainer = document.getElementById('radarList');
+            radarContainer.innerHTML = '';
+
+            sorted.slice(0, 5).forEach(([topic, count]) => {
+                const lastYear = data.filter(q => q.microtheme === topic).pop().year;
+                let tagClass = 'tag-low';
+                let tagText = 'Low';
+                if(count >= 5) { tagClass = 'tag-high'; tagText = 'Very High'; }
+                else if(count >= 3) { tagClass = 'tag-med'; tagText = 'High'; }
+
+                const item = document.createElement('div');
+                item.className = 'radar-item';
+                item.innerHTML = `
+                    <div class="radar-icon">📚</div>
+                    <div class="radar-info">
+                        <div class="radar-name">${topic}</div>
+                        <div class="radar-year">${count} Questions | Last Asked: ${lastYear}</div>
+                    </div>
+                    <span class="radar-tag ${tagClass}">${tagText}</span>
+                `;
+                radarContainer.appendChild(item);
+            });
+        }
+
+        function drawMatrix(data) {
+            const table = document.getElementById('matrixTable');
+            table.innerHTML = '';
+
+            const years = [...new Set(data.map(q => q.year))].sort();
+            const subjects = [...new Set(data.map(q => q.subject))].sort();
+
+            let html = '<tr><th>Subject</th>';
+            years.forEach(y => html += `<th>${y}</th>`);
+            html += '</tr>';
+
+            subjects.forEach(subject => {
+                html += `<tr><td class="matrix-label">${subject}</td>`;
+                years.forEach(year => {
+                    const count = data.filter(q => q.subject === subject && q.year === year).length;
+                    let colorClass = 'matrix-0';
+                    if(count === 1) colorClass = 'matrix-1';
+                    else if(count === 2) colorClass = 'matrix-2';
+                    else if(count === 3) colorClass = 'matrix-3';
+                    else if(count === 4) colorClass = 'matrix-4';
+                    else if(count >= 5) colorClass = 'matrix-5';
+
+                    html += `<td class="cell ${colorClass}" title="${count} question(s)"></td>`;
+                });
+                html += '</tr>';
+            });
+
+            table.innerHTML = html;
+        }
+
+        function updateExplorer(q) {
+            if(!q) return;
+            document.getElementById('expYear').textContent = q.year;
+            document.getElementById('expPaper').textContent = q.paper;
+            document.getElementById('expMarks').textContent = q.marks + " Marks";
+            document.getElementById('expQuestionText').textContent = q.key_pyq;
+            document.getElementById('expLastAsked').textContent = `Last Asked: ${q.year}`;
+
+            const tags = document.getElementById('expTags');
+            tags.innerHTML = `<span class="exp-tag">${q.paper}</span><span class="exp-tag">${q.subject}</span><span class="exp-tag">${q.microtheme}</span>`;
+        }
+
+        // Search on Enter or Debounced
+        document.getElementById('searchInput').addEventListener('input', debounce(applyFilters, 300));
+
+        function debounce(func, wait) {
+            let timeout;
+            return function (...args) {
+                clearTimeout(timeout);
+                timeout = setTimeout(() => func.apply(this, args), wait);
+            };
+        }
+
+        // Initialize
+        loadData();
+    </script>
 </body>
 </html>
