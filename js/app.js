@@ -138,13 +138,13 @@ function generatePerplexityQuery(question) { return generateFullPrompt(question)
 window.presetBank = [];
 
 // ============================================================
-// ANALYZER MODAL LOGIC (FIXED COUNT MISMATCH)
+// ANALYZER MODAL LOGIC
 // ============================================================
 let analyzerData = { GS1: {}, GS2: {}, GS3: {}, GS4: {} };
 let currentAnalyzerPaper = 'GS1';
 let currentAnalyzerSubject = null;
 let currentAnalyzerTheme = null;
-let showAllQuestions = false; // Flag to show all questions in subject
+let showAllQuestions = false;
 
 const analyzerOverlay = document.getElementById('analyzer-modal-overlay');
 const analyzerContainer = document.getElementById('analyzer-container');
@@ -234,7 +234,7 @@ function renderAnalyzer() {
             <h3 style="margin:0;">${currentAnalyzerSubject}</h3>
         </div>`;
 
-                const trueSubjectCount = window.presetBank.filter(q => q.paper === currentAnalyzerPaper).length;
+        const trueSubjectCount = window.presetBank.filter(q => q.paper === currentAnalyzerPaper).length;
         html += `<div style="margin-bottom: 15px;">
             <button class="btn btn-primary" onclick="showAllQuestions=true; currentAnalyzerTheme=null; renderAnalyzer();">View All Questions in Subject (${trueSubjectCount})</button>
         </div>`;
@@ -440,6 +440,14 @@ document.addEventListener('DOMContentLoaded', function() {
     if (norm === 'anthropology_paper2') return 'Anthro Paper 2';
     return norm;
   };
+
+  // *** CRITICAL FIX: RESTORED MISSING FUNCTION ***
+  function getPaperTagClass(paper) {
+    const norm = normalizePaperCode(paper);
+    const classes = { 'GS1': 'tag-paper-gs1', 'GS2': 'tag-paper-gs2', 'GS3': 'tag-paper-gs3', 'GS4': 'tag-paper-gs4' };
+    if (norm === 'anthropology_paper1' || norm === 'anthropology_paper2') return 'tag-paper-opt';
+    return classes[norm] || 'tag-paper-opt';
+  }
 
   window.escapeHtml = function(str) {
     if (!str) return '';
@@ -802,31 +810,6 @@ document.addEventListener('DOMContentLoaded', function() {
       updateStudyDashboard(); renderBankResults();
     } catch (e) { console.error('Failed to load study data from cloud', e); }
   }
-
-  // EXPORT/IMPORT STUDY DATA
-  document.getElementById('export-study-btn')?.addEventListener('click', () => {
-    const data = JSON.stringify(studyData, null, 2);
-    const blob = new Blob([data], { type: 'application/json' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a'); a.href = url; a.download = 'qcab_study_data.json'; a.click(); URL.revokeObjectURL(url);
-  });
-  document.getElementById('import-study-btn')?.addEventListener('click', () => {
-    const input = document.createElement('input');
-    input.type = 'file'; input.accept = '.json';
-    input.onchange = function(e) {
-      const file = e.target.files[0]; if (!file) return;
-      const reader = new FileReader();
-      reader.onload = function(ev) {
-        try {
-          const data = JSON.parse(ev.target.result);
-          if (typeof data === 'object') { studyData = data; saveStudyData(); renderBankResults(); showToast('Study data imported successfully!', '📥'); }
-          else showToast('Invalid file format.', '❌');
-        } catch(err) { showToast('Error reading file.', '❌'); }
-      };
-      reader.readAsText(file);
-    };
-    input.click();
-  });
 
   // RENDER QUESTIONS
   function renderQuestions() {
