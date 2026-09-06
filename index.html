@@ -1,263 +1,301 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="icon" type="image/png" href="favicon.png">
-  <title>UPSC Craft | Mains PYQ cum QCAB Generator</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=10006">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UPSC CRAFT | Mains Preparation, Structured.</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        /* ============================================================
+           PREMIUM LANDING PAGE STYLES
+           ============================================================ */
+        :root {
+            --bg: #faf9f6;          /* Warm Ivory */
+            --surface: #ffffff;
+            --text: #1a1a1a;        /* Near Black */
+            --text-soft: #6b6b6b;   /* Muted Grey */
+            --border: #e5e5e5;
+            --accent: #D96B00;      /* Restrained Saffron */
+            --shadow: 0 10px 30px -10px rgba(0,0,0,0.08);
+            --shadow-lg: 0 20px 50px -15px rgba(0,0,0,0.15);
+            --radius: 14px;
+            --font: 'Inter', sans-serif;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: var(--font);
+            background-color: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* Subtle Dot Texture Background */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-image: radial-gradient(rgba(0,0,0,0.04) 1px, transparent 1px);
+            background-size: 20px 20px;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        /* Navbar */
+        .navbar {
+            padding: 20px 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+            background: rgba(250,249,246,0.8);
+            backdrop-filter: blur(8px);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: 900;
+            letter-spacing: -0.03em;
+            text-decoration: none;
+            color: var(--text);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .logo-icon { width: 32px; height: 32px; border-radius: 8px; background: var(--accent); color: white; display: flex; align-items: center; justify-content: center; font-size: 16px; }
+
+        .nav-links { display: flex; gap: 30px; align-items: center; }
+        .nav-links a { text-decoration: none; color: var(--text-soft); font-weight: 600; font-size: 15px; transition: color 0.2s; }
+        .nav-links a:hover { color: var(--text); }
+
+        .btn-primary {
+            background: var(--accent);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 10px;
+            font-weight: 700;
+            font-size: 15px;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.2s;
+            box-shadow: 0 4px 12px rgba(217, 107, 0, 0.2);
+        }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 6px 16px rgba(217, 107, 0, 0.3); }
+
+        /* Hero Section */
+        .hero {
+            padding: 120px 5% 80px;
+            text-align: center;
+            animation: fadeIn 1s ease;
+        }
+        .hero h1 {
+            font-size: clamp(48px, 6vw, 76px);
+            font-weight: 650;
+            letter-spacing: -0.045em;
+            line-height: 1.05;
+            margin-bottom: 24px;
+        }
+        .hero h1 span { color: var(--accent); }
+        .hero p { font-size: 18px; color: var(--text-soft); max-width: 600px; margin: 0 auto 40px; }
+
+        .cta-container { display: flex; gap: 20px; justify-content: center; margin-bottom: 60px; }
+        .btn-secondary {
+            background: transparent;
+            color: var(--text);
+            border: 1px solid var(--border);
+            padding: 12px 24px;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 15px;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+        .btn-secondary:hover { border-color: var(--text); }
+
+        /* Stats */
+        .stats { display: flex; justify-content: center; gap: 60px; margin-bottom: 80px; animation: fadeInUp 1s ease 0.2s both; }
+        .stat-item { text-align: center; }
+        .stat-item h3 { font-size: 28px; font-weight: 800; color: var(--accent); margin-bottom: 5px; }
+        .stat-item p { font-size: 14px; color: var(--text-soft); font-weight: 500; }
+
+        /* Floating Workspace Preview */
+        .preview-container {
+            max-width: 800px;
+            margin: 0 auto 120px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-lg);
+            padding: 30px;
+            position: relative;
+            animation: float 6s ease-in-out infinite;
+        }
+        .preview-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .preview-header h4 { font-size: 16px; font-weight: 700; color: var(--text); }
+        .preview-tag { font-size: 12px; background: var(--accent); color: white; padding: 4px 10px; border-radius: 20px; }
+
+        .preview-question {
+            background: var(--bg);
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 15px;
+            border: 1px solid var(--border);
+        }
+        .preview-question p { font-size: 15px; font-weight: 600; margin-bottom: 10px; }
+        .preview-meta { display: flex; gap: 10px; font-size: 12px; color: var(--text-soft); }
+        .preview-btn { background: var(--accent); color: white; border: none; padding: 8px 16px; border-radius: 8px; font-weight: 600; cursor: pointer; }
+
+        /* Features Section */
+        .features { padding: 0 5% 80px; max-width: 1200px; margin: 0 auto; }
+        .section-title { font-size: 32px; font-weight: 700; letter-spacing: -0.03em; margin-bottom: 40px; text-align: center; }
+        .feature-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; }
+
+        .feature-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 30px;
+            transition: transform 0.2s, box-shadow 0.2s;
+            box-shadow: var(--shadow);
+        }
+        .feature-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-lg); }
+        .feature-number { font-size: 13px; color: var(--accent); font-weight: 800; margin-bottom: 20px; }
+        .feature-card h3 { font-size: 20px; font-weight: 700; margin-bottom: 10px; }
+        .feature-card p { font-size: 14px; color: var(--text-soft); }
+
+        /* Built for Mains Section */
+        .built-for { padding: 80px 5%; border-top: 1px solid var(--border); text-align: center; }
+        .workflow {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin-top: 40px;
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--text-soft);
+        }
+        .workflow span { color: var(--accent); }
+
+        .footer { padding: 40px 5%; border-top: 1px solid var(--border); text-align: center; font-size: 14px; color: var(--text-soft); }
+
+        /* Subtle Animations */
+        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
+
+        @media (max-width: 768px) {
+            .navbar { padding: 15px; }
+            .nav-links { display: none; }
+            .cta-container { flex-direction: column; align-items: center; }
+            .stats { flex-direction: column; gap: 20px; }
+            .hero { padding-top: 80px; }
+        }
+    </style>
 </head>
 <body>
-<script>
-  var APP_VERSION = '10.0'; 
-  if (localStorage.getItem('qcab_app_version') !== APP_VERSION) {
-    localStorage.removeItem('qcab_user'); localStorage.removeItem('userToken');
-    localStorage.removeItem('qcab_nested_folders'); localStorage.removeItem('qcab_preset_bank'); 
-    localStorage.removeItem('user_progress'); localStorage.setItem('qcab_app_version', APP_VERSION);
-  }
-</script>
-<script>
-  if (!localStorage.getItem('qcab_user')) {
-    localStorage.setItem('qcab_user', JSON.stringify({ email: 'guest@test.com', name: 'Guest', token: 'guest-token' }));
-  }
-</script>
 
-<div class="app">
-  <aside class="sidebar" id="main-sidebar">
-    <!-- REMOVED sidebar-header-mobile completely for a clean desktop view -->
-    <div class="brand">
-      <img src="logo.png" alt="UPSC Craft Logo" class="brand-logo">
-    </div>
-
-    <div class="nav-title">Workspace</div>
-    <nav class="nav">
-      <button type="button" class="nav-btn active" data-scroll="pyq-bank"><span class="nav-icon">▤</span>PYQ Bank</button>
-      <button type="button" class="nav-btn" data-scroll="create-question"><span class="nav-icon">＋</span>Create Question</button>
-      <button type="button" class="nav-btn" data-scroll="my-qcab"><span class="nav-icon">▣</span>My QCAB</button>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <a href="#" class="logo"><span class="logo-icon">🦉</span> UPSC CRAFT</a>
+        <div class="nav-links">
+            <a href="#features">Features</a>
+            <a href="#built-for">How it works</a>
+            <a href="workspace.html" target="_blank">PYQ Analyzer</a>
+        </div>
+        <a href="workspace.html" class="btn-primary">Open Workspace</a>
     </nav>
-    
-    <button type="button" class="nav-btn" onclick="openAnalyzerModal()">
-      <span class="nav-icon">📊</span>
-      <span>PYQ Analyzer</span>
-    </button>
-    
-    <button type="button" class="nav-btn syllabus-btn" id="syllabus-sidebar-btn">
-      <span class="nav-icon">📚</span>
-      <span>View Syllabus</span>
-    </button>
-    
-    <div class="sidebar-progress" id="sidebar-progress" style="display:none; margin-top:20px; padding:12px; background:var(--surface-2); border-radius:14px;">
-      <div style="font-size:10px; font-weight:800; color:var(--muted); text-transform:uppercase; letter-spacing:0.5px; margin-bottom:8px;">Your Study Progress</div>
-      <div style="display:flex; gap:12px; justify-content:space-around;">
-        <span style="font-size:13px; font-weight:700;">⭐ <span id="sidebar-bookmarked" style="color:var(--primary);">0</span></span>
-        <span style="font-size:13px; font-weight:700;">✅ <span id="sidebar-revised" style="color:var(--accent);">0</span></span>
-      </div>
-    </div>
 
-    <div class="sidebar-bottom"></div>
-  </aside>
+    <!-- Hero Section -->
+    <header class="hero">
+        <h1>Your Mains Preparation,<br><span>Structured.</span></h1>
+        <p>A focused workspace to organize UPSC Mains questions, build answer booklets and track your preparation.</p>
+        <div class="cta-container">
+            <a href="workspace.html" class="btn-primary">Open Workspace</a>
+            <a href="#features" class="btn-secondary">Explore Features</a>
+        </div>
 
-  <div class="content">
-    <div class="mobile-nav">
-      <div class="mobile-brand"><img src="logo.png" alt="UPSC Craft Logo" class="brand-logo-mobile"> UPSC CRAFT</div>
-      <div class="mobile-actions-right">
-        <button type="button" class="mobile-theme-toggle" id="mobile-theme-toggle">🌙</button>
-        <button type="button" class="mobile-menu-toggle" id="mobile-menu-toggle">☰</button>
-      </div>
-    </div>
-    <div class="mobile-menu-backdrop" id="mobile-backdrop"></div>
+        <!-- Stats -->
+        <div class="stats">
+            <div class="stat-item"><h3>2,000+</h3><p>PYQs</p></div>
+            <div class="stat-item"><h3>4</h3><p>GS Papers</p></div>
+            <div class="stat-item"><h3>2</h3><p>Anthropology Optional Papers</p></div>
+        </div>
 
-    <header class="topbar">
-      <div>
-        <div class="topbar-title">UPSC Mains Answer Writing Workspace</div>
-        <div class="topbar-sub">Build, organize and print your question-cum-answer booklet</div>
-      </div>
-      <div class="topbar-actions">
-        <button type="button" class="theme-toggle" id="theme-toggle"><span id="theme-icon">🌙</span><span id="theme-text">Dark Mode</span></button>
-      </div>
+        <!-- Floating Preview -->
+        <div class="preview-container">
+            <div class="preview-header">
+                <h4>PYQ BANK</h4>
+                <span class="preview-tag">GS1 · Geography</span>
+            </div>
+            <div class="preview-question">
+                <p>Discuss the role of geographical factors towards the development of Ancient India.</p>
+                <div class="preview-meta">
+                    <span>10 Marks</span> <span>·</span> <span>2023</span>
+                </div>
+            </div>
+            <div class="preview-question" style="margin-bottom: 0;">
+                <p>Underline the changes in the field of society and economy from the Rig Vedic to the later Vedic period.</p>
+                <div class="preview-meta">
+                    <span>10 Marks</span> <span>·</span> <span>2024</span>
+                </div>
+            </div>
+            <button class="preview-btn" style="margin-top: 20px;">+ Add to QCAB</button>
+        </div>
     </header>
 
-    <main class="page">
-      <!-- Clean Entry: No Hero or Stats, Straight to PYQ Bank -->
-      <div class="card" id="pyq-bank">
-        <div class="card-header">
-          <div><h2 class="card-title">📖 PYQ Bank</h2><p class="card-sub">Search by question, topic, paper or year. Results update as you type.</p></div>
-          <div class="bank-top-actions">
-            <button type="button" class="btn btn-secondary-sm" id="toggle-bank-btn"><span class="action-arrow" id="toggle-bank-icon">▼</span><span id="toggle-bank-text">Hide Bank</span></button>
-            <button type="button" class="btn btn-secondary-sm reset-btn" id="clear-bank-btn">⟳ Reset Bank</button>
-          </div>
-        </div>
-        
-        <div id="pyq-bank-body">
-          <div class="filter-bar-vertical">
-            <div class="filter-group">
-              <label>📂 Paper</label>
-              <select id="filter-paper"><option value="ALL">All Papers</option><option value="GS1">GS Paper 1</option><option value="GS2">GS Paper 2</option><option value="GS3">GS Paper 3</option><option value="GS4">GS Paper 4</option><option value="anthropology_paper1">Anthro Paper 1</option><option value="anthropology_paper2">Anthro Paper 2</option></select>
+    <!-- Features Section -->
+    <section class="features" id="features">
+        <h2 class="section-title">Everything you need<br>to practice Mains better.</h2>
+        <div class="feature-grid">
+            <div class="feature-card">
+                <div class="feature-number">01</div>
+                <h3>Explore PYQs</h3>
+                <p>Search UPSC Mains questions by year, paper, topic and marks.</p>
             </div>
-            <div class="filter-group">
-              <label>🏷️ Subtopic</label>
-              <select id="filter-topic"><option value="ALL">All Subtopics</option></select>
+            <div class="feature-card">
+                <div class="feature-number">02</div>
+                <h3>Build your QCAB</h3>
+                <p>Select questions and create your own practice booklet.</p>
             </div>
-            <div class="filter-group">
-              <label>📅 Year</label>
-              <select id="filter-year"><option value="ALL">All Years</option></select>
+            <div class="feature-card">
+                <div class="feature-number">03</div>
+                <h3>Analyse PYQs</h3>
+                <p>Understand what UPSC has actually been asking.</p>
             </div>
-            <div class="filter-group filter-search">
-              <label>🔍 Search</label>
-              <input type="text" id="search-input" placeholder="Search questions...">
+            <div class="feature-card">
+                <div class="feature-number">04</div>
+                <h3>Track your preparation</h3>
+                <p>Bookmark, revise and annotate important questions.</p>
             </div>
-            <div class="filter-actions">
-              <button type="button" class="btn btn-filter-search" id="search-bank-btn">🔍 Search</button>
-              <button type="button" class="btn btn-clear-filter" id="clear-results-btn">✖ Clear</button>
-            </div>
-          </div>
-
-          <div id="bank-status-text">Loading question bank...</div>
-          <div id="bank-results-container"></div>
         </div>
-      </div>
+    </section>
 
-      <div class="card" id="create-question">
-        <div class="card-header">
-          <div><h2 class="card-title">✏️ Create Custom Question</h2><p class="card-sub">Add your own question directly to the active booklet.</p></div>
-          <button type="button" class="btn btn-secondary-sm" id="toggle-create-section-btn">Hide Form ▾</button>
+    <!-- Built for Mains Section -->
+    <section class="built-for" id="built-for">
+        <h2 class="section-title">Built for how you study.</h2>
+        <p style="max-width: 500px; margin: 0 auto; color: var(--text-soft);">Not another resource library. UPSC Craft is designed around how serious aspirants actually prepare.</p>
+        <div class="workflow">
+            <div>PYQs</div> <span>→</span>
+            <div>Analysis</div> <span>→</span>
+            <div>Practice</div> <span>→</span>
+            <div>QCAB</div> <span>→</span>
+            <div>Revision</div>
         </div>
-        <div id="create-form-body">
-          <div class="field"><label for="q-paper">Paper</label><select id="q-paper"><option value="GS1">GS Paper 1</option><option value="GS2">GS Paper 2</option><option value="GS3">GS Paper 3</option><option value="GS4">GS Paper 4</option><option value="anthropology_paper1">Anthropology Optional Paper 1</option><option value="anthropology_paper2">Anthropology Optional Paper 2</option></select></div>
-          <div class="field"><label for="q-topic">Subtopic</label><select id="q-topic"></select></div>
-          <div class="field"><label for="q-text">Question Text</label><textarea id="q-text" placeholder="Paste or type your question here..."></textarea></div>
-          <div class="field"><label>Marks</label><div class="marks-row"><button type="button" class="marks-btn grad-1" data-marks="10" aria-pressed="true">10 Marks</button><button type="button" class="marks-btn grad-2" data-marks="15" aria-pressed="false">15 Marks</button><button type="button" class="marks-btn grad-3" data-marks="20" aria-pressed="false">20 Marks</button></div></div>
-          <div class="field"><label for="q-year">Year <span style="font-weight:500">(optional)</span></label><input type="text" id="q-year" placeholder="e.g. 2025"></div>
-          <div class="field checkbox-row"><input type="checkbox" id="include-index" checked><label for="include-index">Include index page in PDF</label></div>
-          <div class="form-actions">
-            <button type="button" class="btn btn-primary btn-wide" id="add-btn">➕ Add to Active Folder</button>
-            <button type="button" class="btn btn-wide" id="add-preset-btn">📥 Save as Preset Bank Question</button>
-            <button type="button" class="btn btn-wide btn-danger" id="cancel-edit-btn" style="display:none;">✖ Cancel Edit</button>
-          </div>
-        </div>
-      </div>
+    </section>
 
-      <aside class="card sticky-card" id="my-qcab">
-        <div class="card-header"><div><h2 class="card-title">📋 My QCAB</h2><p class="card-sub">Questions in your active booklet.</p></div><span class="tag" id="count-tag">0 questions</span></div>
-        <div style="display:flex;justify-content:flex-end;gap:6px;margin-bottom:14px;flex-wrap:wrap;">
-          <button type="button" class="btn btn-secondary-sm" id="rename-folder-btn">✏️ Rename</button>
-          <button type="button" class="btn btn-secondary-sm btn-danger" id="delete-folder-btn">🗑️ Delete</button>
-          <button type="button" class="btn btn-secondary-sm" id="clear-q-btn">🧹 Clear</button>
-        </div>
-        <div id="empty-state" class="empty-state"><div style="font-size:28px;margin-bottom:8px;">▣</div><strong style="display:block;color:var(--text);margin-bottom:4px;">Your booklet is empty</strong>Add questions from the PYQ Bank or create a custom question.</div>
-        <ol class="q-list" id="q-list"></ol>
-        <div class="summary-bar" id="summary-bar" style="display:none;"><div class="summary-stat"><span>TOTAL MARKS</span><strong id="total-marks">0</strong></div><div class="summary-stat"><span>ANSWER PAGES</span><strong id="total-pages">0</strong></div></div>
-        <button type="button" class="btn-generate grad-5" id="generate-btn" disabled>⬇ Generate &amp; Download PDF</button>
-      </aside>
+    <!-- Footer -->
+    <footer class="footer">
+        <p>UPSC CRAFT · Built for serious Mains preparation.</p>
+        <p style="margin-top: 10px;">© 2024 UPSC Craft. All rights reserved.</p>
+    </footer>
 
-      <footer>UPSC Craft · Project by Biswajit Nahak</footer>
-    </main>
-  </div>
-</div>
-
-<!-- ====== MODALS ====== -->
-<div class="modal-overlay" id="customModal">
-  <div class="modal-content">
-    <div class="modal-header">
-      <h2 id="modalTitle">Notice</h2>
-      <button class="modal-close" onclick="document.getElementById('customModal').classList.remove('active')">✕</button>
-    </div>
-    <div class="modal-body">
-      <p id="modalMessage"></p>
-      <div id="modalInputContainer" style="display:none; margin-top:12px;">
-        <input type="text" id="modalInput" placeholder="Enter value..." style="width:100%; padding:10px; border:1px solid var(--border); border-radius:8px;">
-      </div>
-    </div>
-    <div class="modal-footer">
-      <button class="btn btn-secondary" id="modalCancelBtn" style="display:none;">Cancel</button>
-      <button class="btn btn-primary" id="modalConfirmBtn">OK</button>
-    </div>
-  </div>
-</div>
-
-<!-- AI Modal -->
-<div class="modal-overlay" id="ai-model-modal">
-  <div class="modal-content">
-    <div class="modal-header">
-      <h2>🤖 Choose AI Assistant</h2>
-      <button class="modal-close" id="ai-model-close">✕</button>
-    </div>
-    <div class="modal-body">
-      <p style="margin-bottom:15px;">Select where to generate the answer for the selected question.</p>
-      <div style="display:grid; gap:10px;">
-        <button class="model-option grad-1" data-model="secret">✨ My AI Answer</button>
-        <button class="model-option grad-2" data-model="perplexity">🌀 Perplexity (Search)</button>
-        <button class="model-option grad-3" data-model="chatgpt">💬 ChatGPT (Copy Prompt)</button>
-        <button class="model-option grad-4" data-model="deepseek">🔬 DeepSeek (Copy Prompt)</button>
-      </div>
-    </div>
-    <div class="modal-footer">
-      <button class="btn btn-secondary" id="cancel-ai-modal">Cancel</button>
-    </div>
-  </div>
-</div>
-
-<!-- Stats Modal -->
-<div class="modal-overlay" id="stats-modal">
-  <div class="modal-content" style="max-width: 700px;">
-    <div class="modal-header">
-      <h2>📊 Question Bank Breakdown</h2>
-      <button class="modal-close" onclick="document.getElementById('stats-modal').classList.remove('active')">✕</button>
-    </div>
-    <div class="modal-body" id="stats-modal-body">
-      <div id="stats-loading">Loading breakdown...</div>
-    </div>
-    <div class="modal-footer">
-      <button class="btn btn-secondary" onclick="document.getElementById('stats-modal').classList.remove('active')">Close</button>
-    </div>
-  </div>
-</div>
-
-<!-- Syllabus Modal -->
-<div class="syllabus-modal-overlay" id="syllabus-modal-overlay">
-  <div class="syllabus-modal-content">
-    <div class="syllabus-modal-header"><h2>📚 UPSC Syllabus</h2><button class="syllabus-modal-close" onclick="closeSyllabusModal()">✕</button></div>
-    <div class="syllabus-modal-body">
-      <div id="syllabus-main-menu"><div class="syllabus-grid" id="syllabus-cards-holder"></div></div>
-      <div id="syllabus-detail-view"><button class="back-btn" onclick="backToSyllabusMenu()">← Back to Papers</button><div id="syllabus-detail-content"></div></div>
-    </div>
-  </div>
-</div>
-
-<!-- Analyzer Modal (Full Screen) -->
-<div class="analyzer-modal-overlay" id="analyzer-modal-overlay">
-  <div class="analyzer-content">
-    <div class="analyzer-header">
-      <h2 style="margin:0;">📊 PYQ Theme Analyzer</h2>
-      <div style="display:flex; gap:10px;">
-        <button type="button" class="btn btn-secondary-sm" id="analyzer-back-btn">← Back to Subjects</button>
-        <button type="button" class="btn btn-secondary-sm" id="analyzer-close-btn">✕ Close</button>
-      </div>
-    </div>
-    <div class="analyzer-body">
-      <div style="display:flex; gap:10px; margin-bottom:20px; border-bottom:1px solid var(--border); padding-bottom:10px;">
-        <button class="btn btn-secondary-sm analyzer-paper-btn active" onclick="selectAnalyzerPaper('GS1')">GS1</button>
-        <button class="btn btn-secondary-sm analyzer-paper-btn" onclick="selectAnalyzerPaper('GS2')">GS2</button>
-        <button class="btn btn-secondary-sm analyzer-paper-btn" onclick="selectAnalyzerPaper('GS3')">GS3</button>
-        <button class="btn btn-secondary-sm analyzer-paper-btn" onclick="selectAnalyzerPaper('GS4')">GS4</button>
-      </div>
-      <div id="analyzer-container">
-        <p style="text-align:center; color:var(--muted);">Click a Subject to view Themes with counts.</p>
-      </div>
-    </div>
-  </div>
-</div>
-
-<button id="back-to-top">↑</button>
-<div class="toast" id="toast"><span class="toast-icon" id="toastIcon">✅</span><span id="toastMessage">Copied!</span></div>
-
-<!-- Scripts -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.6.2"></script>
-<script src="js/config.js?v=10002"></script>
-<script src="js/syllabus-data.js?v=10002"></script>
-<script src="js/app.js?v=10006"></script>
-<script src="js/features.js?v=10002"></script>
 </body>
 </html>
