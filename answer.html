@@ -3,338 +3,64 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AI Model Answer - QCAB</title>
-  <!-- Google Fonts -->
+  <title>AI Model Answer - UPSC CRAFT</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&family=Merriweather:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
-  <!-- Markdown Parser -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&family=Merriweather:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/12.0.1/marked.min.js"></script>
   <style>
-    /* ============================================================
-       THEME VARIABLES (matching the old design)
-       ============================================================ */
     :root {
-      --accent-gradient: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #312e81 100%);
-      --bg-main: #f8fafc;
-      --card-bg: #ffffff;
-      --text-main: #334155;
-      --text-muted: #64748b;
-      --heading-color: #0f172a;
-      --border-color: #e2e8f0;
-      --card-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.01);
-      /* Colour coding */
-      --kw-term-color: #2563eb;
-      --kw-term-bg: #eff6ff;
-      --kw-example-color: #059669;
-      --kw-example-bg: #ecfdf5;
-      --kw-meta-color: #7c3aed;
-      --kw-meta-bg: #f5f3ff;
-      --kw-highlight-color: #d97706;
-      --kw-highlight-bg: #fffbe0;
-      --strong-color: #e11d48;
+      --bg: #faf9f6; --surface: #ffffff; --border: #e5e5e5;
+      --text: #1a1a1a; --text-soft: #6b6b6b; --accent: #D96B00;
+      --heading-color: #1a1a1a;
+      --kw-term-color: #1d4ed8; --kw-term-bg: #dbeafe;
+      --kw-example-color: #047857; --kw-example-bg: #d1fae5;
+      --kw-meta-color: #6d28d9; --kw-meta-bg: #ede9fe;
+      --kw-highlight-color: #b45309; --kw-highlight-bg: #fef3c7;
+      --strong-color: #be123c;
     }
-    [data-theme="dark"] {
-      --bg-main: #0f172a;
-      --card-bg: #1e293b;
-      --text-main: #cbd5e1;
-      --text-muted: #94a3b8;
-      --heading-color: #f8fafc;
-      --border-color: #334155;
-      --card-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.4);
-      /* Dark mode colour coding */
-      --kw-term-color: #60a5fa;
-      --kw-term-bg: #1e3a8a;
-      --kw-example-color: #34d399;
-      --kw-example-bg: #064e3b;
-      --kw-meta-color: #a78bfa;
-      --kw-meta-bg: #4c1d95;
-      --kw-highlight-color: #fbbf24;
-      --kw-highlight-bg: #78350f;
+    body.dark-mode {
+      --bg: #0B0F19; --surface: #1E293B; --border: #334155;
+      --text: #ffffff; --text-soft: #94A3B8; --heading-color: #faf9f6;
+      --kw-term-color: #93c5fd; --kw-term-bg: #1e3a8a;
+      --kw-example-color: #6ee7b7; --kw-example-bg: #064e3b;
+      --kw-meta-color: #c4b5fd; --kw-meta-bg: #4c1d95;
+      --kw-highlight-color: #fcd34d; --kw-highlight-bg: #78350f;
       --strong-color: #fb7185;
     }
-
-    * { box-sizing: border-box; }
-
-    body {
-      margin: 0;
-      font-family: 'Inter', system-ui, -apple-system, sans-serif;
-      background-color: var(--bg-main);
-      color: var(--text-main);
-      line-height: 1.85;
-      font-size: 19px;
-      padding-bottom: 60px;
-      transition: background-color 0.3s ease, color 0.3s ease;
-    }
-
-    /* ---------- Glassmorphism Header ---------- */
-    header {
-      background: var(--accent-gradient);
-      color: #ffffff;
-      padding: 48px 24px 72px 24px;
-      position: relative;
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
-    }
-
-    .header-content {
-      max-width: 860px;
-      margin: 0 auto;
-      padding-right: 70px; /* space for theme toggle */
-    }
-
-    .eyebrow {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      background: rgba(255, 255, 255, 0.12);
-      backdrop-filter: blur(8px);
-      -webkit-backdrop-filter: blur(8px);
-      padding: 6px 14px;
-      border-radius: 20px;
-      font-size: 12px;
-      font-weight: 700;
-      letter-spacing: 0.8px;
-      text-transform: uppercase;
-      margin-bottom: 16px;
-      border: 1px solid rgba(255, 255, 255, 0.2);
-    }
-
-    header h1 {
-      font-family: 'Merriweather', Georgia, serif;
-      font-size: 28px;
-      font-weight: 700;
-      line-height: 1.4;
-      margin: 0 0 16px 0;
-      letter-spacing: -0.01em;
-    }
-
-    .meta-tag {
-      display: inline-block;
-      background: rgba(255, 255, 255, 0.18);
-      backdrop-filter: blur(4px);
-      padding: 4px 12px;
-      border-radius: 6px;
-      font-size: 13px;
-      font-weight: 600;
-      border: 1px solid rgba(255, 255, 255, 0.25);
-    }
-
-    .theme-toggle {
-      position: absolute;
-      top: 32px;
-      right: 24px;
-      background: rgba(255, 255, 255, 0.15);
-      border: 1px solid rgba(255, 255, 255, 0.3);
-      color: #fff;
-      padding: 8px 16px;
-      border-radius: 999px;
-      font-size: 13px;
-      font-weight: 600;
-      cursor: pointer;
-      backdrop-filter: blur(6px);
-      transition: all 0.2s ease;
-      font-family: 'Inter', sans-serif;
-    }
-    .theme-toggle:hover {
-      background: rgba(255, 255, 255, 0.3);
-    }
-
-    /* ---------- Main Content ---------- */
-    .wrap {
-      max-width: 860px;
-      margin: -36px auto 60px auto;
-      padding: 0 16px;
-    }
-
-    .card {
-      background: var(--card-bg);
-      border-radius: 16px;
-      padding: 40px 48px;
-      box-shadow: var(--card-shadow);
-      border: 1px solid var(--border-color);
-      transition: background-color 0.3s ease, border-color 0.3s ease;
-    }
-
-    .status {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      color: var(--text-muted);
-      font-style: italic;
-      padding: 20px 0;
-    }
-
-    .spinner {
-      width: 20px;
-      height: 20px;
-      border: 3px solid var(--border-color);
-      border-top-color: #6366f1;
-      border-radius: 50%;
-      animation: spin 0.8s linear infinite;
-    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); line-height: 1.85; font-size: 19px; padding-bottom: 60px; transition: background 0.3s, color 0.3s; }
+    header { background: var(--accent); color: #fff; padding: 40px 24px 70px; position: relative; }
+    .header-content { max-width: 860px; margin: 0 auto; padding-right: 50px; }
+    .eyebrow { display: inline-block; background: rgba(255,255,255,0.15); padding: 6px 14px; border-radius: 20px; font-size: 12px; font-weight: 700; letter-spacing: 0.8px; text-transform: uppercase; margin-bottom: 16px; }
+    header h1 { font-family: 'Merriweather', serif; font-size: 28px; font-weight: 700; line-height: 1.4; margin: 0; }
+    .meta-tag { display: inline-block; background: rgba(255,255,255,0.18); padding: 4px 12px; border-radius: 6px; font-size: 13px; font-weight: 600; margin-top: 10px; }
+    .theme-toggle { position: absolute; top: 32px; right: 24px; background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.3); color: #fff; padding: 8px 16px; border-radius: 999px; font-size: 13px; font-weight: 600; cursor: pointer; }
+    .wrap { max-width: 860px; margin: -36px auto 60px; padding: 0 16px; }
+    .card { background: var(--surface); border-radius: 16px; padding: 40px 48px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); border: 1px solid var(--border); transition: background 0.3s, border 0.3s; }
+    .status { display: flex; align-items: center; gap: 12px; color: var(--text-soft); font-style: italic; padding: 20px 0; }
+    .spinner { width: 20px; height: 20px; border: 3px solid var(--border); border-top-color: var(--accent); border-radius: 50%; animation: spin 0.8s linear infinite; }
     @keyframes spin { to { transform: rotate(360deg); } }
-
-    /* ---------- Content Typography & Headings ---------- */
-    #content h1, #content h2, #content h3, #content h4 {
-      font-family: 'Merriweather', Georgia, serif;
-      color: var(--heading-color);
-      font-weight: 700;
-      letter-spacing: -0.01em;
-      border-bottom: 1px solid var(--border-color);
-      padding-bottom: 8px;
-    }
-    #content h1 { font-size: 26px; margin-top: 36px; margin-bottom: 16px; }
-    #content h2 { font-size: 22px; margin-top: 32px; margin-bottom: 14px; }
-    #content h3 { font-size: 20px; margin-top: 28px; margin-bottom: 12px; }
-    #content h4 { font-size: 18px; margin-top: 24px; margin-bottom: 10px; }
-
-    #content p {
-      font-size: 19px;
-      margin-bottom: 18px;
-      color: var(--text-main);
-      font-family: 'Inter', sans-serif;
-    }
-
-    #content ul, #content ol {
-      font-size: 19px;
-      padding-left: 28px;
-      margin: 16px 0;
-      color: var(--text-main);
-    }
-    #content li { margin-bottom: 10px; }
-
-    #content blockquote {
-      border-left: 4px solid #6366f1;
-      background: rgba(99, 102, 241, 0.05);
-      color: var(--text-main);
-      margin: 18px 0;
-      padding: 12px 20px;
-      border-radius: 0 8px 8px 0;
-      font-family: 'Inter', sans-serif;
-    }
-
-    /* ---------- Tables ---------- */
-    #content table {
-      width: 100%;
-      border-collapse: separate;
-      border-spacing: 0;
-      margin: 24px 0;
-      border-radius: 10px;
-      overflow: hidden;
-      border: 1px solid var(--border-color);
-      font-size: 17px;
-      font-family: 'Inter', sans-serif;
-    }
-    #content th {
-      background: rgba(0, 0, 0, 0.04);
-      color: var(--heading-color);
-      font-weight: 700;
-      padding: 14px 18px;
-      border-bottom: 1px solid var(--border-color);
-      text-align: left;
-    }
-    [data-theme="dark"] #content th {
-      background: rgba(255, 255, 255, 0.06);
-    }
-    #content td {
-      padding: 14px 18px;
-      border-bottom: 1px solid var(--border-color);
-    }
-    #content tr:last-child td { border-bottom: none; }
-
-    /* ---------- Colour Coding (matches old design) ---------- */
-    /* Bold -> Crimson */
-    #content strong {
-      color: var(--strong-color) !important;
-      font-weight: 700 !important;
-    }
-    /* Key Terms -> Blue */
-    #content .kw-term {
-      color: var(--kw-term-color) !important;
-      background: var(--kw-term-bg) !important;
-      font-weight: 700 !important;
-      padding: 2px 6px !important;
-      border-radius: 4px !important;
-    }
-    /* Examples, Thinkers, Schemes -> Emerald Green */
-    #content .kw-example, #content .eg, #content em {
-      color: var(--kw-example-color) !important;
-      background: var(--kw-example-bg) !important;
-      font-style: normal !important;
-      font-weight: 700 !important;
-      padding: 2px 6px !important;
-      border-radius: 4px !important;
-    }
-    /* Dates, Articles, Laws -> Deep Purple */
-    #content .kw-meta, #content .tag-meta {
-      color: var(--kw-meta-color) !important;
-      background: var(--kw-meta-bg) !important;
-      font-weight: 700 !important;
-      padding: 2px 6px !important;
-      border-radius: 4px !important;
-    }
-    /* Highlight Takeaways -> Amber */
-    #content .kw-highlight, #content mark.highlight {
-      color: var(--kw-highlight-color) !important;
-      background: var(--kw-highlight-bg) !important;
-      font-weight: 700 !important;
-      padding: 2px 6px !important;
-      border-radius: 4px !important;
-    }
-
-    /* ---------- Buttons ---------- */
-    .action-bar {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 12px;
-      margin-top: 28px;
-    }
-    .print-btn, .copy-btn {
-      display: inline-block;
-      background: var(--accent-gradient);
-      color: #fff;
-      border: none;
-      padding: 12px 24px;
-      border-radius: 999px;
-      font-weight: 600;
-      font-size: 14px;
-      cursor: pointer;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-      transition: opacity 0.2s ease;
-      font-family: 'Inter', sans-serif;
-    }
-    .print-btn:hover, .copy-btn:hover { opacity: 0.9; }
-    .copy-btn { background: #6366f1; }
-
-    .error-box {
-      background: rgba(239, 68, 68, 0.1);
-      border: 1px solid rgba(239, 68, 68, 0.3);
-      color: #f87171;
-      padding: 16px 20px;
-      border-radius: 10px;
-    }
-
-    /* ---------- Print ---------- */
-    @media print {
-      header, .action-bar, .theme-toggle { display: none !important; }
-      body { background: #fff !important; color: #000 !important; }
-      .wrap { margin-top: 0 !important; max-width: 100% !important; padding: 0 !important; }
-      .card { box-shadow: none !important; border: none !important; background: #fff !important; padding: 0 !important; }
-    }
-
-    /* ---------- Responsive ---------- */
-    @media (max-width: 640px) {
-      header { padding: 32px 16px 56px 16px; }
-      header h1 { font-size: 22px; }
-      .card { padding: 24px 16px; }
-      #content p, #content ul, #content ol { font-size: 17px; }
-      #content table { font-size: 15px; }
-      .theme-toggle { top: 20px; right: 16px; padding: 6px 12px; font-size: 12px; }
-    }
+    
+    #content h1, #content h2, #content h3, #content h4 { font-family: 'Merriweather', serif; color: var(--heading-color); border-bottom: 1px solid var(--border); padding-bottom: 8px; }
+    #content strong { color: var(--strong-color); font-weight: 700; }
+    #content .kw-term { color: var(--kw-term-color); background: var(--kw-term-bg); font-weight: 700; padding: 2px 6px; border-radius: 4px; }
+    #content .kw-example, #content .eg, #content em { color: var(--kw-example-color); background: var(--kw-example-bg); font-style: normal; font-weight: 700; padding: 2px 6px; border-radius: 4px; }
+    #content .kw-meta, #content .tag-meta { color: var(--kw-meta-color); background: var(--kw-meta-bg); font-weight: 700; padding: 2px 6px; border-radius: 4px; }
+    #content .kw-highlight, #content mark.highlight { color: var(--kw-highlight-color); background: var(--kw-highlight-bg); font-weight: 700; padding: 2px 6px; border-radius: 4px; }
+    #content table { width: 100%; border-collapse: collapse; margin: 24px 0; border: 1px solid var(--border); font-size: 17px; }
+    #content th { background: var(--bg); color: var(--heading-color); padding: 14px; text-align: left; border-bottom: 1px solid var(--border); }
+    #content td { padding: 14px; border-bottom: 1px solid var(--border); }
+    
+    .action-bar { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 28px; }
+    .print-btn, .copy-btn { background: var(--accent); color: #fff; border: none; padding: 12px 24px; border-radius: 999px; font-weight: 600; font-size: 14px; cursor: pointer; }
+    .copy-btn { background: var(--text); }
+    .error-box { background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.3); color: #f87171; padding: 16px 20px; border-radius: 10px; }
+    @media print { header, .action-bar, .theme-toggle { display: none !important; } body { background: #fff !important; color: #000 !important; } .wrap { margin-top: 0 !important; } .card { box-shadow: none !important; border: none !important; padding: 0 !important; } }
+    @media (max-width: 640px) { .card { padding: 24px 16px; } #content p, #content ul, #content ol { font-size: 17px; } }
   </style>
 </head>
 <body>
-
   <header>
     <button class="theme-toggle" id="theme-btn" onclick="toggleTheme()">🌙 Dark</button>
     <div class="header-content">
@@ -346,9 +72,7 @@
 
   <div class="wrap">
     <div class="card">
-      <div id="status" class="status">
-        <span class="spinner"></span> Synthesizing model answer via AI...
-      </div>
+      <div id="status" class="status"><span class="spinner"></span> Synthesizing model answer via AI...</div>
       <div id="content"></div>
       <div class="action-bar">
         <button id="print-btn" class="print-btn" style="display:none;" onclick="window.print()">🖨 Print / PDF</button>
@@ -358,43 +82,23 @@
   </div>
 
   <script>
-    // ================================================================
-    // CONFIG
-    // ================================================================
     const AI_PROXY_URL = "https://qcap-ai-v2.khokcha9.workers.dev/api/generate-answer";
-
-    // ================================================================
-    // THEME TOGGLE
-    // ================================================================
     const themeBtn = document.getElementById('theme-btn');
-    const currentTheme = localStorage.getItem('qcab_theme') || 'light';
-    if (currentTheme === 'dark') {
-      document.documentElement.setAttribute('data-theme', 'dark');
-      themeBtn.textContent = '☀️ Light';
-    }
-
-    function toggleTheme() {
-      const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
-      if (isDark) {
-        document.documentElement.removeAttribute('data-theme');
-        localStorage.setItem('qcab_theme', 'light');
-        themeBtn.textContent = '🌙 Dark';
-      } else {
-        document.documentElement.setAttribute('data-theme', 'dark');
-        localStorage.setItem('qcab_theme', 'dark');
+    if(localStorage.getItem('qcab_theme') === 'dark') {
+        document.body.classList.add('dark-mode');
         themeBtn.textContent = '☀️ Light';
-      }
+    }
+    function toggleTheme() {
+        document.body.classList.toggle('dark-mode');
+        localStorage.setItem('qcab_theme', document.body.classList.contains('dark-mode') ? 'dark' : 'light');
+        themeBtn.textContent = document.body.classList.contains('dark-mode') ? '☀️ Light' : '🌙 Dark';
     }
 
-    // ================================================================
-    // URL PARAMETERS (FIXED VARIABLE NAMES!)
-    // ================================================================
     const urlParams = new URLSearchParams(window.location.search);
     const question = urlParams.get('q') || '';
     const year = urlParams.get('y') || '';
     const marks = urlParams.get('m') || '';
-    // **** CRITICAL FIX: Reading 'paper' and passing it ****
-    const subject = urlParams.get('paper') || 'gs1'; 
+    const subject = urlParams.get('paper') || 'gs1';
 
     const titleEl = document.getElementById('q-title');
     const metaEl = document.getElementById('q-meta');
@@ -415,48 +119,26 @@
       fetchAnswer();
     }
 
-    // ================================================================
-    // FETCH ANSWER (FIXED: Now sends subject to Worker!)
-    // ================================================================
     async function fetchAnswer() {
       try {
         const res = await fetch(AI_PROXY_URL, {
           method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          // **** CRITICAL FIX: Sending both question AND subject ****
+          headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ question: question, subject: subject })
         });
-
         const data = await res.json();
-
-        if (!res.ok) {
-          const errorMsg = data.error || data.message || `Server error (${res.status})`;
-          throw new Error(errorMsg);
-        }
-
+        if (!res.ok) throw new Error(data.error || data.message || `Server error (${res.status})`);
         statusEl.style.display = 'none';
-
-        // Extract answer text
-        let answerMarkdown = data.text || data.answer || data.candidates?.[0]?.content?.parts?.[0]?.text || null;
-        
-        if (!answerMarkdown) {
-          console.warn('No answer text found in response:', data);
-          throw new Error('The AI returned an empty response. Please try again.');
-        }
-
-        // --- Render Markdown ---
+        let answerMarkdown = data.text || data.answer || null;
+        if (!answerMarkdown) throw new Error('The AI returned an empty response. Please try again.');
         if (window.marked) {
           marked.setOptions({ breaks: true, gfm: true });
           contentEl.innerHTML = marked.parse(answerMarkdown);
         } else {
           contentEl.textContent = answerMarkdown;
         }
-
         printBtn.style.display = 'inline-block';
         copyBtn.style.display = 'inline-block';
-
       } catch (err) {
         console.error(err);
         statusEl.style.display = 'none';
@@ -464,16 +146,9 @@
       }
     }
 
-    // ================================================================
-    // COPY CONTENT
-    // ================================================================
     function copyContent() {
       const text = contentEl.innerText;
-      navigator.clipboard.writeText(text).then(() => {
-        alert('Answer copied to clipboard!');
-      }).catch(() => {
-        alert('Failed to copy. Please try again.');
-      });
+      navigator.clipboard.writeText(text).then(() => alert('Answer copied to clipboard!')).catch(() => alert('Failed to copy.'));
     }
   </script>
 </body>
