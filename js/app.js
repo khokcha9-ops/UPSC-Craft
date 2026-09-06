@@ -599,10 +599,12 @@ document.addEventListener('DOMContentLoaded', function() {
       if (q.year && q.year !== 'Other') yearMap[key].push(q.year);
     });
 
-    const filtered = presetBank.filter((q) => {
+        const filtered = presetBank.filter((q) => {
+      // Normalize paper inside filter so OPT1 matches anthropology_paper1
+      const normalizedPaper = normalizePaperCode(q.paper);
       const qText = `${q.question || ''} ${q.topic || ''} ${q.paper || ''} ${q.year || ''}`.toLowerCase();
       if (query && !qText.includes(query)) return false;
-      if (selectedP !== 'ALL' && q.paper !== selectedP) return false;
+      if (selectedP !== 'ALL' && normalizedPaper !== selectedP) return false;
       if (selectedY !== 'ALL' && getYearGroup(q) !== String(selectedY).trim()) return false;
       if (selectedT !== 'ALL') {
         const qTopicClean = String(q.topic || '').trim().toLowerCase();
