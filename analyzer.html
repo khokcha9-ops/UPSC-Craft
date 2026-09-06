@@ -10,19 +10,34 @@
         :root {
             --bg: #f8fafc; --surface: #ffffff; --surface-2: #f1f5f9;
             --border: #e2e8f0; --text: #0f172a; --text-soft: #64748b;
+            
+            /* Default GS1 Pink */
             --accent: #e11d48; --accent-hover: #be123c; --accent-soft: #ffe4e6;
             --primary: #6366f1; --primary-soft: #e0e7ff;
+            
             --shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
             --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
         }
+
+        /* Multi-Color Theme Classes */
+        body.theme-gs1 { --accent: #e11d48; --accent-hover: #be123c; --accent-soft: #ffe4e6; }
+        body.theme-gs2 { --accent: #3b82f6; --accent-hover: #2563eb; --accent-soft: #dbeafe; }
+        body.theme-gs3 { --accent: #10b981; --accent-hover: #059669; --accent-soft: #d1fae5; }
+        body.theme-gs4 { --accent: #8b5cf6; --accent-hover: #7c3aed; --accent-soft: #ede9fe; }
+
         body.dark-mode {
             --bg: #0f172a; --surface: #1e293b; --surface-2: #334155;
             --border: #334155; --text: #f1f5f9; --text-soft: #94a3b8;
-            --accent: #f43f5e; --accent-hover: #e11d48; --accent-soft: #4c0519;
-            --primary: #818cf8; --primary-soft: #312e81;
+            
+            body.theme-gs1 { --accent: #f43f5e; --accent-hover: #e11d48; --accent-soft: #4c0519; }
+            body.theme-gs2 { --accent: #60a5fa; --accent-hover: #3b82f6; --accent-soft: #1e3a8a; }
+            body.theme-gs3 { --accent: #34d399; --accent-hover: #10b981; --accent-soft: #064e3b; }
+            body.theme-gs4 { --accent: #a78bfa; --accent-hover: #8b5cf6; --accent-soft: #4c1d95; }
+            
             --shadow: 0 1px 3px 0 rgb(0 0 0 / 0.3), 0 1px 2px -1px rgb(0 0 0 / 0.3);
             --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.3), 0 4px 6px -4px rgb(0 0 0 / 0.3);
         }
+
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; }
         body { background: var(--bg); color: var(--text); height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
 
@@ -33,7 +48,7 @@
         /* Header */
         .header { height: 70px; background: var(--surface); border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; padding: 0 24px; flex-shrink: 0; z-index: 100; }
         .logo { display: flex; align-items: center; gap: 12px; font-weight: 900; font-size: 20px; }
-        .logo-icon { width: 36px; height: 36px; border-radius: 10px; background: linear-gradient(135deg, #e11d48, #fb7185); color: white; display: flex; align-items: center; justify-content: center; font-size: 20px; }
+        .logo-icon { width: 36px; height: 36px; border-radius: 10px; background: var(--accent); color: white; display: flex; align-items: center; justify-content: center; font-size: 20px; }
         .header-controls { display: flex; gap: 16px; align-items: center; }
         
         .btn-back { text-decoration: none; background: var(--surface-2); border: 1px solid var(--border); color: var(--text); padding: 8px 16px; border-radius: 8px; font-weight: 800; font-size: 14px; transition: 0.2s; }
@@ -84,33 +99,45 @@
 
         /* Main Content */
         .main-content { flex: 1; overflow-y: auto; padding: 24px; background: var(--bg); }
+
+        /* Mobile Tabs (Always visible on Mobile) */
+        .mobile-tabs { display: none; padding: 12px; gap: 8px; background: var(--surface); border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 10; }
+        .m-tab { flex: 1; padding: 10px; text-align: center; background: var(--surface-2); border: 1px solid var(--border); border-radius: 8px; cursor: pointer; font-weight: 800; color: var(--text-soft); }
+        .m-tab.active { background: var(--accent); color: white; border-color: var(--accent); }
         
         .paper-summary { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 24px; }
         .sum-card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 16px; }
         .sum-value { font-size: 28px; font-weight: 900; color: var(--accent); }
         .sum-label { font-size: 12px; color: var(--text-soft); font-weight: 600; }
 
-        /* Explorer (Modified to hold multiple questions) */
+        /* Explorer */
         .explorer-section { background: var(--surface); border: 2px solid var(--border); border-radius: 20px; padding: 24px; box-shadow: var(--shadow-lg); margin-bottom: 30px; }
         .exp-badges { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 20px; }
         .badge { font-size: 13px; font-weight: 900; padding: 6px 12px; border-radius: 50px; }
+        
+        /* Dynamic Subject Colors */
         .badge-year { background: var(--accent); color: white; }
         .badge-paper { background: var(--primary); color: white; }
-        .badge-marks { background: var(--primary-soft); color: var(--primary); }
+        .badge-marks { background: var(--accent-soft); color: var(--accent); }
         .badge-subject { background: var(--surface-2); color: var(--text-soft); border: 1px solid var(--border); }
-        
-        .q-item {
-            border-bottom: 1px solid var(--border);
-            padding-bottom: 20px;
-            margin-bottom: 20px;
-        }
+        .badge-subject.polity { background: #dbeafe; color: #2563eb; }
+        .badge-subject.gov { background: #e0e7ff; color: #4f46e5; }
+        .badge-subject.econ { background: #d1fae5; color: #059669; }
+        .badge-subject.agri { background: #dcfce7; color: #16a34a; }
+        .badge-subject.sec { background: #fef3c7; color: #d97706; }
+        .badge-subject.env { background: #ccfbf1; color: #0d9488; }
+        .badge-subject.eth { background: #ede9fe; color: #7c3aed; }
+        .badge-subject.case { background: #fce7f3; color: #db2777; }
+
+        .q-item { border-bottom: 1px solid var(--border); padding-bottom: 20px; margin-bottom: 20px; }
         .q-item:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
 
         .q-text { font-size: 22px; font-weight: 800; line-height: 1.6; margin-bottom: 24px; }
-        .exp-actions { display: flex; gap: 12px; }
-        .btn-action { background: var(--accent); color: white; border: none; padding: 12px 20px; border-radius: 10px; font-weight: 800; cursor: pointer; transition: 0.2s; }
+        
+        .exp-actions { display: flex; gap: 12px; flex-wrap: wrap; }
+        .btn-action { background: var(--accent); color: white; border: none; padding: 10px 18px; border-radius: 10px; font-weight: 800; cursor: pointer; transition: 0.2s; font-size: 14px; }
         .btn-action:hover { background: var(--accent-hover); transform: translateY(-2px); }
-        .btn-save { background: transparent; border: 2px solid var(--border); color: var(--text); padding: 12px 20px; border-radius: 10px; font-weight: 800; cursor: pointer; transition: 0.2s; }
+        .btn-save { background: transparent; border: 2px solid var(--border); color: var(--text); padding: 10px 18px; border-radius: 10px; font-weight: 800; cursor: pointer; transition: 0.2s; font-size: 14px; }
         .btn-save:hover { border-color: var(--accent); color: var(--accent); }
 
         .charts-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
@@ -125,15 +152,20 @@
             .hamburger { display: block; }
             .sidebar { position: fixed; top: 0; left: 0; height: 100%; transform: translateX(-100%); width: 320px; }
             .sidebar.open { transform: translateX(0); }
+            
+            /* Mobile Tabs Visible */
+            .mobile-tabs { display: flex; }
+            
             .main-content { padding: 16px; }
             .paper-summary { grid-template-columns: repeat(2, 1fr); }
             .charts-row { grid-template-columns: 1fr; }
             .q-text { font-size: 18px; }
-            .exp-actions { flex-direction: column; }
+            .exp-actions { gap: 8px; }
+            .btn-action, .btn-save { flex: 1; justify-content: center; text-align: center; padding: 10px; }
         }
     </style>
 </head>
-<body>
+<body class="theme-gs1">
 
     <div class="overlay" id="overlay" onclick="toggleSidebar(false)"></div>
 
@@ -163,6 +195,14 @@
         </div>
 
         <div class="main-content">
+            <!-- Mobile Paper Switcher -->
+            <div class="mobile-tabs">
+                <button class="m-tab active" onclick="selectPaper('GS1')">GS1</button>
+                <button class="m-tab" onclick="selectPaper('GS2')">GS2</button>
+                <button class="m-tab" onclick="selectPaper('GS3')">GS3</button>
+                <button class="m-tab" onclick="selectPaper('GS4')">GS4</button>
+            </div>
+
             <div class="paper-summary" id="paperSummary">
                 <div class="sum-card"><div class="sum-value" id="sum-qs">0</div><div class="sum-label">Total Questions</div></div>
                 <div class="sum-card"><div class="sum-value" id="sum-themes">0</div><div class="sum-label">Micro-Themes</div></div>
@@ -173,10 +213,6 @@
             <div class="explorer-section">
                 <div id="q-container">
                     <div class="q-text" id="qText">Select a micro-theme to explore</div>
-                    <div class="exp-actions">
-                        <button class="btn-action" onclick="alert('AI Answer Generation Coming Soon!')">✨ Generate Answer</button>
-                        <button class="btn-save" onclick="alert('Question Saved to Bookmarks!')">💾 Save Question</button>
-                    </div>
                 </div>
             </div>
 
@@ -198,6 +234,12 @@
     </div>
 
     <script>
+        // Set body class for paper colors
+        function setPaperTheme(paper) {
+            document.body.className = `theme-${paper.toLowerCase()}`;
+        }
+
+        // Keep the theme toggle purely aesthetic (No local storage)
         function toggleTheme() { document.body.classList.toggle('dark-mode'); }
 
         function toggleSidebar(open) {
@@ -212,6 +254,14 @@
             'GS2': { 'Polity': ['Polity'], 'Governance': ['Governance'], 'Social Justice': ['Social Justice'], 'International Relations': ['International Relations'] },
             'GS3': { 'Economy': ['Economic Development'], 'Agriculture': ['Agriculture'], 'Internal Security': ['Internal Security'], 'Environment & Disaster Management': ['Environment', 'Disaster Management'], 'Science & Tech': ['Science & Technology'] },
             'GS4': { 'Ethics Theory': ['Ethics'], 'Case Studies': ['Case Studies'] }
+        };
+
+        // Map Broad Subject to a color class
+        const SubjectColorMap = {
+            'Polity': 'polity', 'Governance': 'gov', 'Social Justice': 'gov',
+            'Economy': 'econ', 'Agriculture': 'agri', 'Internal Security': 'sec',
+            'Environment & Disaster Management': 'env', 'Science & Tech': 'sec',
+            'Ethics Theory': 'eth', 'Case Studies': 'case'
         };
 
         let allData = {};
@@ -235,7 +285,7 @@
                         if(rawPaperData[key]) {
                             rawPaperData[key].forEach(q => {
                                 q.subject = broadSubject;
-                                q.paper = res.paper; // FIX: Inject paper!
+                                q.paper = res.paper;
                             });
                             grouped[broadSubject] = grouped[broadSubject].concat(rawPaperData[key]);
                         }
@@ -249,7 +299,7 @@
                     if(!isFound) {
                         rawPaperData[subject].forEach(q => {
                             q.subject = 'General';
-                            q.paper = res.paper; // FIX: Inject paper!
+                            q.paper = res.paper;
                         });
                         grouped['General'] = (grouped['General'] || []).concat(rawPaperData[subject]);
                     }
@@ -262,10 +312,16 @@
 
         function selectPaper(paper) {
             currentPaper = paper;
-            document.querySelectorAll('.paper-tab').forEach(tab => tab.classList.toggle('active', tab.textContent === paper));
+            setPaperTheme(paper); // Change the whole page color!
+
+            // Update desktop tabs
+            document.querySelectorAll('.sidebar .paper-tab').forEach(tab => tab.classList.toggle('active', tab.textContent === paper));
+            // Update mobile tabs
+            document.querySelectorAll('.mobile-tabs .m-tab').forEach(tab => tab.classList.toggle('active', tab.textContent === paper));
+            
             renderSidebar();
             renderDashboard();
-            toggleSidebar(false);
+            toggleSidebar(false); // Close mobile sidebar
         }
 
         function renderSidebar() {
@@ -301,7 +357,6 @@
                         const btn = document.createElement('button');
                         btn.className = 'direct-theme-btn';
                         btn.innerHTML = `<span>${rootTheme}</span> <span class="count-badge">${themeArr.length}</span>`;
-                        // FIX: Pass the entire array
                         btn.onclick = () => showQuestions(themeArr, btn);
                         nav.appendChild(btn);
                         continue;
@@ -334,7 +389,6 @@
                         const microBtn = document.createElement('button');
                         microBtn.className = 'micro-btn';
                         microBtn.innerHTML = `<span>${microTheme}</span> <span class="count-badge">${count}</span>`;
-                        // FIX: Pass the filtered array
                         const microQs = themeArr.filter(q => q.microtheme === microTheme);
                         microBtn.onclick = () => showQuestions(microQs, microBtn);
                         microList.appendChild(microBtn);
@@ -344,7 +398,6 @@
             }
         }
 
-        // FIX: Completely rewritten to show ALL questions
         function showQuestions(questions, btnElement) {
             document.querySelectorAll('.micro-btn, .direct-theme-btn').forEach(b => b.classList.remove('active-micro'));
             btnElement.classList.add('active-micro');
@@ -353,6 +406,7 @@
             container.innerHTML = '';
 
             questions.forEach(q => {
+                const subjectClass = SubjectColorMap[q.subject] || '';
                 const qDiv = document.createElement('div');
                 qDiv.className = 'q-item';
                 
@@ -361,7 +415,7 @@
                         <span class="badge badge-year">📅 ${q.year}</span>
                         <span class="badge badge-marks">🎯 ${q.marks} Marks</span>
                         <span class="badge badge-paper">📚 ${q.paper}</span>
-                        <span class="badge badge-subject">${q.subject}</span>
+                        <span class="badge badge-subject ${subjectClass}">${q.subject}</span>
                         <span class="badge badge-subject">${q.microtheme}</span>
                     </div>
                     <div class="q-text">${q.key_pyq}</div>
@@ -411,7 +465,7 @@
             if(myCharts.trend) myCharts.trend.destroy();
             myCharts.trend = new Chart(ctx, {
                 type: 'line',
-                data: { labels, datasets: [{ data: counts, borderColor: '#e11d48', backgroundColor: 'rgba(225,29,72,0.1)', fill: true, tension: 0.4, pointRadius: 4 }] },
+                data: { labels, datasets: [{ data: counts, borderColor: getComputedStyle(document.body).getPropertyValue('--accent'), backgroundColor: getComputedStyle(document.body).getPropertyValue('--accent-soft'), fill: true, tension: 0.4, pointRadius: 4 }] },
                 options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { grid: { display: false } }, y: { beginAtZero: true } } }
             });
         }
@@ -424,7 +478,7 @@
             if(myCharts.topic) myCharts.topic.destroy();
             myCharts.topic = new Chart(ctx, {
                 type: 'bar',
-                data: { labels, datasets: [{ data: counts, backgroundColor: '#6366f1', borderRadius: 6 }] },
+                data: { labels, datasets: [{ data: counts, backgroundColor: getComputedStyle(document.body).getPropertyValue('--primary'), borderRadius: 6 }] },
                 options: { indexAxis: 'y', responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { beginAtZero: true, grid: { display: false } }, y: { grid: { display: false } } } }
             });
         }
@@ -437,7 +491,7 @@
             if(myCharts.radar) myCharts.radar.destroy();
             myCharts.radar = new Chart(ctx, {
                 type: 'radar',
-                data: { labels, datasets: [{ data: counts, backgroundColor: 'rgba(225,29,72,0.2)', borderColor: '#e11d48', pointBackgroundColor: '#e11d48', borderWidth: 2 }] },
+                data: { labels, datasets: [{ data: counts, backgroundColor: getComputedStyle(document.body).getPropertyValue('--accent-soft'), borderColor: getComputedStyle(document.body).getPropertyValue('--accent'), pointBackgroundColor: getComputedStyle(document.body).getPropertyValue('--accent'), borderWidth: 2 }] },
                 options: { responsive: true, maintainAspectRatio: false, scales: { r: { beginAtZero: true } }, plugins: { legend: { display: false } } }
             });
         }
