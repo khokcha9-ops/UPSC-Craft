@@ -16,7 +16,7 @@ async function showAlert(message, title = 'Notice') {
     if (inputContainer) inputContainer.style.display = 'none';
     if (confirmBtn) {
       confirmBtn.textContent = 'OK';
-      confirmBtn.className = 'btn btn-primary';
+      confirmBtn.className = 'btn-primary'; // Updated for new CSS
       confirmBtn.onclick = function() { overlay.classList.remove('active'); resolve(); };
     }
     if (cancelBtn) cancelBtn.style.display = 'none';
@@ -40,12 +40,12 @@ async function showConfirm(message, title = 'Confirm') {
     if (inputContainer) inputContainer.style.display = 'none';
     if (confirmBtn) {
       confirmBtn.textContent = 'OK';
-      confirmBtn.className = 'btn btn-primary';
+      confirmBtn.className = 'btn-primary'; // Updated
       confirmBtn.onclick = function() { overlay.classList.remove('active'); resolve(true); };
     }
     if (cancelBtn) {
       cancelBtn.style.display = 'inline-block';
-      cancelBtn.className = 'btn btn-secondary';
+      cancelBtn.className = 'btn-secondary'; // Updated
       cancelBtn.onclick = function() { overlay.classList.remove('active'); resolve(false); };
     }
     overlay.classList.add('active');
@@ -70,12 +70,12 @@ async function showPrompt(message, title = 'Enter Value', defaultValue = '') {
     if (inputEl) inputEl.value = defaultValue || '';
     if (confirmBtn) {
       confirmBtn.textContent = 'OK';
-      confirmBtn.className = 'btn btn-primary';
+      confirmBtn.className = 'btn-primary'; // Updated
       confirmBtn.onclick = function() { overlay.classList.remove('active'); resolve(inputEl ? inputEl.value : ''); };
     }
     if (cancelBtn) {
       cancelBtn.style.display = 'inline-block';
-      cancelBtn.className = 'btn btn-secondary';
+      cancelBtn.className = 'btn-secondary'; // Updated
       cancelBtn.onclick = function() { overlay.classList.remove('active'); resolve(null); };
     }
     overlay.classList.add('active');
@@ -230,13 +230,13 @@ function renderAnalyzer() {
         allSubjectIds = [...new Set(allSubjectIds)];
 
         html += `<div class="analyzer-view-header">
-            <button class="btn btn-secondary-sm" onclick="currentAnalyzerSubject=null; currentAnalyzerTheme=null; showAllQuestions=false; renderAnalyzer();">← Back to Subjects</button>
+            <button class="btn-secondary" onclick="currentAnalyzerSubject=null; currentAnalyzerTheme=null; showAllQuestions=false; renderAnalyzer();">← Back to Subjects</button>
             <h3 style="margin:0;">${currentAnalyzerSubject}</h3>
         </div>`;
 
         const trueSubjectCount = window.presetBank.filter(q => q.paper === currentAnalyzerPaper).length;
         html += `<div style="margin-bottom: 15px;">
-            <button class="btn btn-primary" onclick="showAllQuestions=true; currentAnalyzerTheme=null; renderAnalyzer();">View All Questions in Subject (${trueSubjectCount})</button>
+            <button class="btn-primary" onclick="showAllQuestions=true; currentAnalyzerTheme=null; renderAnalyzer();">View All Questions in Subject (${trueSubjectCount})</button>
         </div>`;
 
         if (currentAnalyzerTheme || showAllQuestions) {
@@ -267,7 +267,7 @@ function renderAnalyzer() {
                             </div>
                             <div class="bank-question">${idx + 1}. ${escapeHtml(q.question)}</div>
                             <div class="bank-actions">
-                                <button class="btn btn-secondary-sm" onclick="window.fetchAIAnswer(this)">✨ Generate Answer</button>
+                                <button class="btn-ai-answer" onclick="window.fetchAIAnswer(this)">✨ Generate Answer</button>
                             </div>
                         </div>`;
                 });
@@ -715,13 +715,13 @@ document.addEventListener('DOMContentLoaded', function() {
             <span class="tag tag-topic">${escapeHtml(q.topic || 'General')}</span>
             <span class="tag ${isRepeated ? 'tag-repeat' : ''}">${q.marks} M ${yearTagText ? '/ ' + escapeHtml(yearTagText) : ''}</span>
           </div>
-          <div class="bank-actions" style="flex-wrap:wrap; gap:6px;">
+          <div class="bank-actions" style="flex-wrap:wrap; gap:10px;">
             <button class="btn-study ${bookmarked ? 'active-bookmark' : ''}" data-action="bookmark" data-id="${q.id}">⭐ ${bookmarked ? 'Bookmarked' : 'Bookmark'}</button>
             <button class="btn-study ${revised ? 'active-revised' : ''}" data-action="revise" data-id="${q.id}">✅ ${revised ? 'Revised' : 'Mark Revised'}</button>
             <button class="btn-study note-btn" data-action="note" data-id="${q.id}">📝 Note</button>
-            <button class="btn-secondary-sm btn-add-item">+ Add</button>
-            <button class="btn-secondary-sm btn-direct-pdf">⚡ PDF</button>
-            <button class="btn-secondary-sm btn-ai-answer btn-ai-highlight" onclick="window.fetchAIAnswer(this)">✨ AI</button>
+            <button class="btn-add-item">+ Add</button>
+            <button class="btn-direct-pdf">⚡ PDF</button>
+            <button class="btn-ai-answer btn-ai-highlight" onclick="window.fetchAIAnswer(this)">✨ AI</button>
           </div>
         </div>
       `;
