@@ -387,13 +387,14 @@
     }
 
     // ================================================================
-    // URL PARAMETERS
+    // URL PARAMETERS (FIXED VARIABLE NAMES!)
     // ================================================================
     const urlParams = new URLSearchParams(window.location.search);
-const question = urlParams.get('q') || '';
-const year = urlParams.get('y') || '';
-const marks = urlParams.get('m') || '';
-const subject = urlParams.get('paper') || 'gs1';  // <--- Make sure this line is there!
+    const question = urlParams.get('q') || '';
+    const year = urlParams.get('y') || '';
+    const marks = urlParams.get('m') || '';
+    // **** CRITICAL FIX: Reading 'paper' and passing it ****
+    const subject = urlParams.get('paper') || 'gs1'; 
 
     const titleEl = document.getElementById('q-title');
     const metaEl = document.getElementById('q-meta');
@@ -402,20 +403,20 @@ const subject = urlParams.get('paper') || 'gs1';  // <--- Make sure this line is
     const printBtn = document.getElementById('print-btn');
     const copyBtn = document.getElementById('copy-btn');
 
-    if (!questionText) {
+    if (!question) {
       statusEl.style.display = 'none';
       contentEl.innerHTML = `<div class="error-box">❌ No question provided in the URL.</div>`;
     } else {
-      titleEl.textContent = questionText;
-      if (marksText || yearText) {
+      titleEl.textContent = question;
+      if (marks || year) {
         metaEl.style.display = 'inline-block';
-        metaEl.textContent = `${marksText ? marksText : ''} ${yearText ? '/ ' + yearText : ''}`.trim();
+        metaEl.textContent = `${marks ? marks : ''} ${year ? '/ ' + year : ''}`.trim();
       }
       fetchAnswer();
     }
 
     // ================================================================
-    // FETCH ANSWER
+    // FETCH ANSWER (FIXED: Now sends subject to Worker!)
     // ================================================================
     async function fetchAnswer() {
       try {
@@ -424,24 +425,23 @@ const subject = urlParams.get('paper') || 'gs1';  // <--- Make sure this line is
           headers: {
             'Content-Type': 'application/json'
           },
-          body: JSON.stringify({ question: questionText })
+          // **** CRITICAL FIX: Sending both question AND subject ****
+          body: JSON.stringify({ question: question, subject: subject })
         });
 
         const data = await res.json();
 
         if (!res.ok) {
-          // Try to get error message from the response body
           const errorMsg = data.error || data.message || `Server error (${res.status})`;
           throw new Error(errorMsg);
         }
 
         statusEl.style.display = 'none';
 
-        // Extract answer text – try multiple possible response structures
+        // Extract answer text
         let answerMarkdown = data.text || data.answer || data.candidates?.[0]?.content?.parts?.[0]?.text || null;
         
         if (!answerMarkdown) {
-          // If no answer found, show raw data for debugging (but hide in production)
           console.warn('No answer text found in response:', data);
           throw new Error('The AI returned an empty response. Please try again.');
         }
