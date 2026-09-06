@@ -83,7 +83,6 @@ async function showPrompt(message, title = 'Enter Value', defaultValue = '') {
   });
 }
 
-// Close modal on Escape key
 document.addEventListener('keydown', function(e) {
   if (e.key === 'Escape') {
     const overlay = document.getElementById('customModal');
@@ -95,7 +94,6 @@ document.addEventListener('keydown', function(e) {
   }
 });
 
-// Close modals on backdrop click
 document.getElementById('customModal')?.addEventListener('click', function(e) { if (e.target === this) this.classList.remove('active'); });
 document.getElementById('ai-model-modal')?.addEventListener('click', function(e) { if (e.target === this) this.classList.remove('active'); });
 document.getElementById('stats-modal')?.addEventListener('click', function(e) { if (e.target === this) this.classList.remove('active'); });
@@ -214,7 +212,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   });
 
-  // 3. MOBILE MENU (SIDEBAR SCROLL LOCK LOGIC)
+  // 3. MOBILE MENU
   (function() {
     const sidebar = document.getElementById('main-sidebar');
     const toggleBtn = document.getElementById('mobile-menu-toggle');
@@ -311,22 +309,27 @@ document.addEventListener('DOMContentLoaded', function() {
   backToTopBtn?.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
 
   // 9. HELPER FUNCTIONS
-  // **UPDATED**: Map old OPT1/OPT2 codes to new anthropology_paper1/2
+  // *** BULLETPROOF NORMALIZER (HANDLES OPT1, OPT2, ANTHRO1, PAPER1, ETC) ***
   function normalizePaperCode(paperVal) {
     if (!paperVal) return 'GS1';
     let cleaned = String(paperVal).toUpperCase().replace(/[\s\-\.]/g, ''); 
-    if (cleaned === 'OPT1' || cleaned === 'ANTHROPOLOGYPAPER1' || cleaned === 'ANTHRO1') return 'anthropology_paper1';
-    if (cleaned === 'OPT2' || cleaned === 'ANTHROPOLOGYPAPER2' || cleaned === 'ANTHRO2') return 'anthropology_paper2';
-    if (cleaned.includes('GS')) {
-      if (cleaned.includes('2')) return 'GS2';
-      if (cleaned.includes('3')) return 'GS3';
-      if (cleaned.includes('4')) return 'GS4';
-      return 'GS1';
+
+    if (cleaned.includes('ANTHRO') || cleaned.includes('OPT') || cleaned.includes('PAPER')) {
+        if (cleaned.includes('2')) return 'anthropology_paper2';
+        return 'anthropology_paper1';
     }
+    
+    if (cleaned.includes('GS')) {
+        if (cleaned.includes('2')) return 'GS2';
+        if (cleaned.includes('3')) return 'GS3';
+        if (cleaned.includes('4')) return 'GS4';
+        return 'GS1';
+    }
+    
     return 'GS1';
   }
 
-  // **NEW**: Display friendly name in UI
+  // Display friendly name in UI
   function formatPaperName(paper) {
     const norm = normalizePaperCode(paper);
     if (norm === 'anthropology_paper1') return 'Anthro Paper 1';
@@ -531,7 +534,8 @@ document.addEventListener('DOMContentLoaded', function() {
     if (prevSelected && filterYear.querySelector(`option[value="${prevSelected}"]`)) filterYear.value = prevSelected;
   }
 
-  // 15. LOAD QUESTIONS FROM JSON
+  // 15. LOAD QUESTIONS FROM JSON 
+  // *** UPDATED TO USE NEW FILENAMES ***
   async function fetchJSONFile(url) {
     try {
       const response = await fetch(url + '?t=' + Date.now());
@@ -579,7 +583,7 @@ document.addEventListener('DOMContentLoaded', function() {
   function savePresets() { localStorage.setItem(PRESET_STORAGE_KEY, JSON.stringify(presetBank)); updateBankStatus(); }
   function updateBankStatus() { if (bankStatusText) bankStatusText.textContent = `Current Bank Size: ${presetBank.length} question(s) loaded.`; syncDashboard(); }
 
-  // 16. RENDER BANK RESULTS (UPDATED FOR DUPLICATE YEAR DETECTION)
+  // 16. RENDER BANK RESULTS (FIXED FILTER LOGIC)
   let renderRequestId = 0;
   async function renderBankResults() {
     if (!bankResultsContainer) return;
@@ -599,8 +603,8 @@ document.addEventListener('DOMContentLoaded', function() {
       if (q.year && q.year !== 'Other') yearMap[key].push(q.year);
     });
 
-        const filtered = presetBank.filter((q) => {
-      // Normalize paper inside filter so OPT1 matches anthropology_paper1
+    // *** CRITICAL FIX: Normalize q.paper inside the filter loop ***
+    const filtered = presetBank.filter((q) => {
       const normalizedPaper = normalizePaperCode(q.paper);
       const qText = `${q.question || ''} ${q.topic || ''} ${q.paper || ''} ${q.year || ''}`.toLowerCase();
       if (query && !qText.includes(query)) return false;
@@ -1022,11 +1026,10 @@ document.addEventListener('DOMContentLoaded', function() {
       const question = pendingQuestion.question;
       const year = pendingQuestion.year || '';
       const marks = pendingQuestion.marks || '';
-      // **CRITICAL UPDATE**: Ensure 'paper' is included!
-      const paper = pendingQuestion.paper || 'gs1';
+      // Ensure the exact Worker code is passed
+      const paper = normalizePaperCode(pendingQuestion.paper || 'gs1');
 
       if (model === 'secret') { // My AI Answer
-        // **CRITICAL UPDATE**: Pass 'paper' in the URL parameters
         const params = new URLSearchParams({ q: question, y: year, m: marks, model: 'secret', paper: paper });
         window.open(`answer.html?${params.toString()}`, '_blank');
         closeAIModal();
@@ -1069,7 +1072,6 @@ document.addEventListener('DOMContentLoaded', function() {
         marks = parts[0].trim();
         if (parts[1]) year = parts[1].trim();
       } else if (text.includes('Anthro Paper 1')) {
-        // **CRITICAL UPDATE**: Extract and map back to exact Worker code
         paper = 'anthropology_paper1';
       } else if (text.includes('Anthro Paper 2')) {
         paper = 'anthropology_paper2';
