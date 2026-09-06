@@ -204,5 +204,55 @@
       themeToggleTop.textContent = document.body.classList.contains('dark-mode') ? '☀️' : '🌙';
   });
 </script>
+<script>
+  // SYLLABUS LOGIC (Global Fix)
+  function openSyllabusModal() {
+    var cardsHolder = document.getElementById('syllabus-cards-holder');
+    var menu = document.getElementById('syllabus-main-menu');
+    var detail = document.getElementById('syllabus-detail-view');
+    menu.style.display = 'block'; detail.style.display = 'none';
+    
+    if (cardsHolder.children.length === 0) {
+      cardsHolder.innerHTML = '';
+      for (var key in SYLLABUS_DATA) {
+        var item = SYLLABUS_DATA[key];
+        var card = document.createElement('div');
+        card.className = 'syllabus-menu-card';
+        card.style.borderTop = '5px solid ' + item.color;
+        card.innerHTML = '<span class="syllabus-menu-card-icon">' + item.icon + '</span><div class="syllabus-menu-card-title syllabus-title-' + key + '">' + item.title + '</div>';
+        card.onclick = function() { openSyllabusTopic(this.getAttribute('data-key')); };
+        card.setAttribute('data-key', key);
+        cardsHolder.appendChild(card);
+      }
+    }
+    document.getElementById('syllabus-modal-overlay').classList.add('active');
+    document.body.classList.add('syllabus-open');
+  }
+
+  function closeSyllabusModal() {
+    document.getElementById('syllabus-modal-overlay').classList.remove('active');
+    document.body.classList.remove('syllabus-open');
+  }
+
+  function openSyllabusTopic(key) {
+    var item = SYLLABUS_DATA[key]; 
+    if (!item) return;
+    document.getElementById('syllabus-main-menu').style.display = 'none';
+    document.getElementById('syllabus-detail-view').style.display = 'block';
+    var detailContent = document.getElementById('syllabus-detail-content');
+    detailContent.style.borderTop = '5px solid ' + item.color;
+    detailContent.innerHTML = '<h3 style="color:' + item.color + '; margin-bottom: 15px;">' + item.title + '</h3>' + item.html;
+  }
+
+  function backToSyllabusMenu() {
+    document.getElementById('syllabus-detail-view').style.display = 'none';
+    document.getElementById('syllabus-main-menu').style.display = 'block';
+  }
+  
+  window.openSyllabusModal = openSyllabusModal;
+  window.closeSyllabusModal = closeSyllabusModal;
+  window.openSyllabusTopic = openSyllabusTopic;
+  window.backToSyllabusMenu = backToSyllabusMenu;
+</script>
 </body>
 </html>
