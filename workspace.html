@@ -7,55 +7,37 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
   <style>
-    /* Mobile Responsive Fixes for Workspace */
+    /* Mobile Responsive Fixes for Filters (Strict Stacking) */
     @media (max-width: 900px) {
       .filter-bar-vertical {
-        grid-template-columns: 1fr !important;
-        gap: 12px;
-        padding: 15px;
-      }
-      .filter-group label {
-        margin-bottom: 4px;
-      }
-      .filter-actions {
+        display: flex !important;
         flex-direction: column !important;
-        gap: 8px;
-        width: 100%;
-      }
-      .filter-actions .btn-primary,
-      .filter-actions .btn-clear {
-        width: 100%;
-        text-align: center;
-      }
-      .stats-row {
-        grid-template-columns: 1fr !important;
-        gap: 12px;
-      }
-      .form-row {
-        grid-template-columns: 1fr !important;
+        width: 100% !important;
         gap: 15px;
       }
-      .marks-row {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 8px;
+      .filter-grid {
+        display: flex !important;
+        flex-direction: column !important;
+        width: 100% !important;
+        gap: 10px;
       }
-      .marks-btn {
-        flex: 1;
-        min-width: 100px;
+      .filter-group, .filter-group select, .filter-group input {
+        width: 100% !important;
+        max-width: 100% !important;
       }
-      .content {
-        padding: 15px 15px 60px;
+      .filter-actions {
+        display: flex !important;
+        flex-direction: column !important;
+        width: 100% !important;
       }
-      .topbar {
-        padding: 20px 0 15px;
+      .filter-actions .btn-primary, .filter-actions .btn-clear {
+        width: 100% !important;
+        text-align: center;
       }
-      .features-grid {
-        grid-template-columns: 1fr !important;
-      }
-      .q-item {
-        padding: 12px 0;
-      }
+      .stats-row { grid-template-columns: 1fr !important; gap: 12px; }
+      .content { padding: 15px 15px 60px; }
+      .topbar { padding: 20px 0 15px; }
+      .features-grid { grid-template-columns: 1fr !important; }
     }
   </style>
 </head>
@@ -70,7 +52,6 @@
         <button class="nav-btn" data-section="pyq-bank" onclick="switchSection('pyq-bank')"><span class="nav-icon">⌕</span> PYQ Bank</button>
         <button class="nav-btn" data-section="create-question" onclick="switchSection('create-question')"><span class="nav-icon">＋</span> Create Question</button>
         <button class="nav-btn" data-section="my-qcab" onclick="switchSection('my-qcab')"><span class="nav-icon">▣</span> My QCAB</button>
-        <!-- Updated to open in same tab -->
         <button class="nav-btn" onclick="window.location.href='analyzer.html'"><span class="nav-icon">◈</span> PYQ Intelligence</button>
     </nav>
     
@@ -96,11 +77,10 @@
       </div>
       <div class="topbar-actions">
         <button class="theme-toggle" id="theme-toggle-top">🌙</button>
-        <a href="index.html" class="btn-secondary">← Home</a>
+        <a href="index.html" class="btn-secondary">← Main Page</a>
       </div>
     </header>
 
-    <!-- Dashboard -->
     <div id="dashboard" class="dashboard-section active">
       <div class="stats-row">
         <a href="#" class="stat-card" onclick="switchSection('pyq-bank'); return false;"><div class="stat-label">📚 PYQ BANK</div><div class="stat-value" id="dashboard-bank-count">—</div><div class="stat-note">Total questions available</div></a>
@@ -117,7 +97,6 @@
       </div>
     </div>
 
-    <!-- PYQ Bank -->
     <div id="pyq-bank" class="workspace-section">
       <div style="display: flex; justify-content: space-between; margin-bottom: 20px;">
         <h2 style="font-size: 24px; font-weight: 800;">📖 PYQ Bank</h2>
@@ -141,7 +120,6 @@
       <div id="bank-results-container"></div>
     </div>
 
-    <!-- Create Question Section -->
     <div id="create-question" class="workspace-section">
       <h2 style="font-size: 24px; font-weight: 800; margin-bottom: 20px;">✏️ Create Custom Question</h2>
       <div class="create-form">
@@ -161,7 +139,6 @@
       </div>
     </div>
 
-    <!-- My QCAB -->
     <div id="my-qcab" class="workspace-section">
       <div style="display: flex; justify-content: space-between; margin-bottom: 20px;">
         <h2 style="font-size: 24px; font-weight: 800;">📋 My QCAB</h2>
@@ -200,6 +177,8 @@
     <div class="modal-footer"><button class="btn-secondary" id="modalCancelBtn" style="display:none;">Cancel</button><button class="btn-primary" id="modalConfirmBtn">OK</button></div>
   </div>
 </div>
+
+<!-- Syllabus Modal -->
 <div class="syllabus-modal-overlay" id="syllabus-modal-overlay">
   <div class="syllabus-modal-content">
     <div class="syllabus-modal-header"><h2>📚 UPSC Syllabus</h2><button class="syllabus-modal-close" onclick="closeSyllabusModal()">✕</button></div>
@@ -215,9 +194,11 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.6.2"></script>
 <script src="js/config.js?v=10002"></script>
+<!-- THIS IS THE CRITICAL FIX: Loading syllabus data BEFORE app logic -->
 <script src="js/syllabus-data.js?v=10002"></script>
 <script src="js/app.js?v=10020"></script>
 <script src="js/features.js?v=10002"></script>
+
 <script>
   function switchSection(sectionId) {
     document.querySelectorAll('.dashboard-section, .workspace-section').forEach(el => el.classList.remove('active'));
@@ -233,7 +214,7 @@
     if(sectionId === 'create-question') populateFormSubtopics();
   }
 
-  // Global Syllabus Functions (Fixed Scope)
+  // Global Syllabus Functions (uses SYLLABUS_DATA)
   function openSyllabusModal() {
     var cardsHolder = document.getElementById('syllabus-cards-holder');
     var menu = document.getElementById('syllabus-main-menu');
