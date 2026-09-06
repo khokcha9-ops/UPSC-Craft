@@ -184,7 +184,7 @@ function selectAnalyzerSubject(subject) {
 
 function selectAnalyzerTheme(theme) {
     currentAnalyzerTheme = theme;
-    showAllQuestions = false; // Reset to theme view when clicking a tag
+    showAllQuestions = false;
     renderAnalyzer();
 }
 
@@ -227,21 +227,17 @@ function renderAnalyzer() {
         themes.forEach(t => {
             if (t.question_tags) allSubjectIds = allSubjectIds.concat(t.question_tags);
         });
-        // Deduplicate IDs
         allSubjectIds = [...new Set(allSubjectIds)];
 
-        // Header
         html += `<div class="analyzer-view-header">
             <button class="btn btn-secondary-sm" onclick="currentAnalyzerSubject=null; currentAnalyzerTheme=null; showAllQuestions=false; renderAnalyzer();">← Back to Subjects</button>
             <h3 style="margin:0;">${currentAnalyzerSubject}</h3>
         </div>`;
 
-        // "View All Questions" button to catch any missing from tags (Fixes 35 vs 31)
         html += `<div style="margin-bottom: 15px;">
             <button class="btn btn-primary" onclick="showAllQuestions=true; currentAnalyzerTheme=null; renderAnalyzer();">View All Questions in Subject (${allSubjectIds.length})</button>
         </div>`;
 
-        // Show Questions (If Theme selected OR "Show All" is clicked)
         if (currentAnalyzerTheme || showAllQuestions) {
             let questions = [];
             if (showAllQuestions) {
@@ -278,7 +274,6 @@ function renderAnalyzer() {
             }
         }
 
-        // Show Tag Buttons (Below Questions)
         html += `<div style="display:flex; flex-wrap:wrap; gap:10px; margin-top:15px;">`;
         themes.forEach((theme, index) => {
             const count = theme.question_tags ? theme.question_tags.length : 0;
