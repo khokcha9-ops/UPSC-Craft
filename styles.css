@@ -246,3 +246,77 @@ body.menu-open { overflow: hidden; }
   .stats { grid-template-columns: 1fr; }
   .filter-actions { flex-direction: column; }
 }
+
+/* ========================================
+   IMPROVED CENTERING FOR CREATE QUESTION
+   ======================================== */
+
+#create-question .card-header > div {
+  text-align: center;
+  flex: 1;
+}
+
+#create-question .field {
+  text-align: center;
+}
+
+#create-question .field label {
+  display: block;
+  font-weight: 800;
+  margin-bottom: 6px;
+  color: var(--text-soft);
+  text-align: center;
+}
+
+#create-question .field input,
+#create-question .field select,
+#create-question .field textarea {
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+/* For long text in textarea, you may want left-align for readability,
+   but we center per request. If you prefer left, change to text-align: left; */
+#create-question .field textarea {
+  text-align: center;
+}
+
+/* Marks row - center buttons within grid */
+#create-question .marks-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+#create-question .marks-row .marks-btn {
+  width: 100%;
+  text-align: center;
+}
+
+/* Checkbox row - center with flex */
+#create-question .checkbox-row {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  margin: 0 auto;
+  max-width: 600px;
+}
+
+/* Form actions - center buttons */
+#create-question .form-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 20px;
+}
+
+#create-question .form-actions .btn {
+  flex: 0 1 auto;
+  min-width: 200px;
+}
