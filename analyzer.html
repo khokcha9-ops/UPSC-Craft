@@ -64,7 +64,6 @@
         .list-item { display: flex; justify-content: space-between; padding: 12px; border-bottom: 1px solid var(--border); }
         .list-item:last-child { border-bottom: none; }
 
-        /* Theme Explorer Styles */
         .capsule-grid { display: flex; flex-wrap: wrap; gap: 15px; margin-bottom: 20px; }
         .capsule-btn { border: none; padding: 12px 24px; border-radius: 50px; font-weight: 800; color: white; cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
         .capsule-btn:hover { transform: translateY(-3px); box-shadow: 0 8px 16px rgba(0,0,0,0.3); }
@@ -75,20 +74,34 @@
         .grad-4 { background: #8b5cf6; }
         .grad-5 { background: #f59e0b; }
 
-        @media (max-width: 900px) {
-            .grid-2, .grid-3 { grid-template-columns: 1fr; }
-            .nav-links { overflow-x: auto; padding-bottom: 10px; }
-            .controls { flex-direction: column; align-items: stretch; }
-        }
-
         .view-section { display: none; }
         .view-section.active { display: block; animation: fadeIn 0.4s ease; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Mobile Responsive Fixes for Analyzer */
+        @media (max-width: 900px) {
+            .top-bar { flex-wrap: wrap; gap: 10px; padding: 15px; }
+            .nav-links { width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; padding-bottom: 5px; gap: 20px; }
+            .nav-link { white-space: nowrap; font-size: 14px; }
+            .theme-toggle { font-size: 13px; padding: 8px 10px; }
+            .controls { flex-direction: column; gap: 12px; padding: 15px; }
+            .control-group { width: 100%; min-width: 100%; }
+            .kpi-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+            .kpi-value { font-size: 28px; }
+            .grid-2, .grid-3 { grid-template-columns: 1fr !important; gap: 15px; }
+            .card { padding: 15px; }
+            .section-title { font-size: 26px; }
+            #theme-capsules .capsule-btn { font-size: 13px; padding: 10px 16px; margin-bottom: 8px; }
+            .data-table { display: block; overflow-x: auto; white-space: nowrap; width: 100%; }
+            .heatmap { grid-template-columns: 120px repeat(14, 1fr); }
+            .hm-cell { font-size: 11px; height: 30px; }
+        }
     </style>
 </head>
 <body>
 
 <div class="top-bar">
+    <!-- Same tab navigation to workspace -->
     <a href="workspace.html" class="logo"><div class="logo-icon">🦉</div> UPSC CRAFT</a>
     <div class="nav-links">
         <button class="nav-link active" onclick="showSection('overview')">Overview</button>
@@ -155,7 +168,6 @@
         </div>
     </div>
 
-    <!-- THEME EXPLORER (New Section) -->
     <div id="themes" class="view-section">
         <div class="card">
             <div class="card-header">Theme Explorer</div>
@@ -288,19 +300,7 @@
         `;
 
         renderHeatmap(questions);
-        renderThemeExplorer(questions); // Added this
-
-        const themeTable = document.getElementById('theme-table');
-        if(themeTable) {
-            const tbody = themeTable.querySelector('tbody');
-            tbody.innerHTML = '';
-            Object.entries(themeCounts).sort((a,b) => b[1] - a[1]).forEach(([theme, count]) => {
-                const yearsAppeared = new Set(questions.filter(q => getThemeForQuestion(q.id) === theme).map(q => q.year)).size;
-                const recentCount = questions.filter(q => recentYears.includes(q.year) && getThemeForQuestion(q.id) === theme).length;
-                const trend = recentCount > 0 ? '🔥 Hot' : '❄️ Dormant';
-                tbody.innerHTML += `<tr onclick="showThemeDetail('${theme.replace(/'/g, "\\'")}')"><td><b>${theme}</b></td><td>${count}</td><td>${recentCount}</td><td>${yearsAppeared}</td><td>${trend}</td><td>${count > 4 ? 'High' : count > 1 ? 'Med' : 'Low'}</td></tr>`;
-            });
-        }
+        renderThemeExplorer(questions);
 
         document.getElementById('recurrence-list').innerHTML = Object.entries(themeCounts).sort((a,b) => b[1] - a[1]).map(([theme, count]) => {
             const yearsAppeared = [...new Set(questions.filter(q => getThemeForQuestion(q.id) === theme).map(q => q.year))].sort();
@@ -312,13 +312,11 @@
         questions.forEach(q => qTable.innerHTML += `<tr><td>${q.year}</td><td>${q.marks}</td><td>${q.question}</td><td>${getThemeForQuestion(q.id)}</td></tr>`);
     }
 
-    // THEME EXPLORER LOGIC
     function renderThemeExplorer(questions) {
         const container = document.getElementById('theme-capsules');
         const questionContainer = document.getElementById('theme-questions');
         if(!container || !questionContainer) return;
 
-        // Group themes by subject
         const grouped = {};
         themeData.forEach(t => { grouped[t.subject] = grouped[t.subject] || []; grouped[t.subject].push(t); });
 
@@ -338,7 +336,6 @@
         }
         container.innerHTML = html;
 
-        // Show Questions for selected theme
         if (currentTheme) {
             const themeQuestions = questions.filter(q => getThemeForQuestion(q.id) === currentTheme);
             questionContainer.innerHTML = `<h3 style="margin-bottom:15px;">${currentTheme} (${themeQuestions.length} Questions)</h3>` + themeQuestions.map((q, i) => `
