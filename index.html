@@ -115,7 +115,7 @@
               <button type="button" class="btn btn-secondary-sm" id="toggle-create-section-btn">Hide Form ▾</button>
             </div>
             <div id="create-form-body">
-              <div class="field"><label for="q-paper">Paper</label><select id="q-paper"><option value="GS1">GS Paper 1</option><option value="GS2">GS Paper 2</option><option value="GS3">GS Paper 3</option><option value="GS4">GS Paper 4</option><option value="OPT1">Anthropology Optional Paper 1</option><option value="OPT2">Anthropology Optional Paper 2</option></select></div>
+              <div class="field"><label for="q-paper">Paper</label><select id="q-paper"><option value="GS1">GS Paper 1</option><option value="GS2">GS Paper 2</option><option value="GS3">GS Paper 3</option><option value="GS4">GS Paper 4</option><option value="anthropology_paper1">Anthropology Optional Paper 1</option><option value="anthropology_paper2">Anthropology Optional Paper 2</option></select></div>
               <div class="field"><label for="q-topic">Subtopic</label><select id="q-topic"></select></div>
               <div class="field"><label for="q-text">Question Text</label><textarea id="q-text" placeholder="Paste or type your question here..."></textarea></div>
               <div class="field"><label>Marks</label><div class="marks-row"><button type="button" class="marks-btn" data-marks="10" aria-pressed="true">10 Marks</button><button type="button" class="marks-btn" data-marks="15" aria-pressed="false">15 Marks</button><button type="button" class="marks-btn" data-marks="20" aria-pressed="false">20 Marks</button></div></div>
@@ -142,7 +142,7 @@
               <div class="filter-bar-vertical">
                 <div class="filter-group">
                   <label>📂 Paper</label>
-                  <select id="filter-paper"><option value="ALL">All Papers</option><option value="GS1">GS Paper 1</option><option value="GS2">GS Paper 2</option><option value="GS3">GS Paper 3</option><option value="GS4">GS Paper 4</option><option value="OPT1">Anthro Paper 1</option><option value="OPT2">Anthro Paper 2</option></select>
+                  <select id="filter-paper"><option value="ALL">All Papers</option><option value="GS1">GS Paper 1</option><option value="GS2">GS Paper 2</option><option value="GS3">GS Paper 3</option><option value="GS4">GS Paper 4</option><option value="anthropology_paper1">Anthro Paper 1</option><option value="anthropology_paper2">Anthro Paper 2</option></select>
                 </div>
                 <div class="filter-group">
                   <label>🏷️ Subtopic</label>
@@ -394,7 +394,7 @@ function showStatsBreakdown() {
 
   const paperColors = {
     'GS1': 'var(--gs1)', 'GS2': 'var(--gs2)', 'GS3': 'var(--gs3)', 'GS4': 'var(--gs4)',
-    'OPT1': 'var(--opt1)', 'OPT2': 'var(--opt2)', 'Unknown': 'var(--muted)'
+    'anthropology_paper1': 'var(--opt1)', 'anthropology_paper2': 'var(--opt2)', 'Unknown': 'var(--muted)'
   };
 
   let html = '<div style="display:grid; gap:16px;">';
