@@ -22,7 +22,6 @@
             --shadow: 0 1px 3px 0 rgb(0 0 0 / 0.3);
         }
 
-        /* Multi-Color Theme for GS Papers */
         body.theme-gs1 { --accent: #e11d48; --accent-soft: #ffe4e6; }
         body.theme-gs2 { --accent: #3b82f6; --accent-soft: #dbeafe; }
         body.theme-gs3 { --accent: #10b981; --accent-soft: #d1fae5; }
@@ -31,35 +30,27 @@
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; }
         body { background: var(--bg); color: var(--text); height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
 
-        /* Mobile Overlay */
         .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 90; display: none; opacity: 0; transition: opacity 0.3s; }
         .overlay.show { display: block; opacity: 1; }
 
-        /* Header */
         .header { height: 70px; background: var(--surface); border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; padding: 0 16px; flex-shrink: 0; z-index: 100; }
         .logo { display: flex; align-items: center; gap: 12px; font-weight: 900; font-size: 18px; }
         .logo-icon { width: 36px; height: 36px; border-radius: 10px; background: var(--accent); color: white; display: flex; align-items: center; justify-content: center; font-size: 20px; }
         .header-controls { display: flex; gap: 10px; align-items: center; }
-        
         .btn-back { text-decoration: none; background: var(--surface-2); border: 1px solid var(--border); color: var(--text); padding: 8px 12px; border-radius: 20px; font-weight: 800; font-size: 13px; transition: 0.2s; display: flex; align-items: center; gap: 4px; }
         .btn-back:hover { background: var(--accent); color: white; border-color: var(--accent); }
-        
         .theme-toggle { background: var(--surface-2); border: 1px solid var(--border); color: var(--text); padding: 8px 12px; border-radius: 20px; cursor: pointer; font-weight: 700; }
         .hamburger { display: none; background: none; border: none; color: var(--text); font-size: 24px; cursor: pointer; }
 
-        /* Layout */
         .container { display: flex; flex: 1; overflow: hidden; position: relative; }
 
-        /* Sidebar (Desktop) */
         .sidebar { width: 260px; background: var(--surface); border-right: 1px solid var(--border); display: flex; flex-direction: column; padding: 16px; gap: 12px; }
         .sidebar-tabs { display: flex; flex-direction: column; gap: 10px; }
         .paper-tab { padding: 16px; text-align: left; background: var(--surface-2); border: none; border-radius: 12px; cursor: pointer; font-weight: 900; color: var(--text-soft); font-size: 18px; transition: 0.2s; }
         .paper-tab.active { background: var(--accent); color: white; transform: translateX(4px); }
 
-        /* Main Content */
         .main-content { flex: 1; overflow-y: auto; padding: 24px; background: var(--bg); }
 
-        /* Mobile Nav */
         .mobile-nav { display: none; position: sticky; top: 0; z-index: 10; background: var(--surface); padding: 12px; gap: 8px; border-bottom: 1px solid var(--border); }
         .m-btn { flex: 1; padding: 12px; text-align: center; background: var(--surface-2); border: 1px solid var(--border); border-radius: 8px; cursor: pointer; font-weight: 900; color: var(--text-soft); }
         .m-btn.active { background: var(--accent); color: white; border-color: var(--accent); }
@@ -73,13 +64,16 @@
 
         .capsule-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 12px; margin-bottom: 30px; }
 
-        /* Unique Gradient Capsules */
-        .capsule-btn { border: none; padding: 16px; border-radius: 50px; cursor: pointer; font-weight: 900; font-size: 14px; text-align: left; display: flex; justify-content: space-between; align-items: center; transition: 0.2s; color: white; box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
+        .capsule-btn { border: none; padding: 16px; border-radius: 50px; cursor: pointer; font-weight: 900; font-size: 14px; text-align: left; display: flex; justify-content: space-between; align-items: center; transition: 0.2s; color: white; box-shadow: 0 4px 10px rgba(0,0,0,0.2); position: relative; }
         .capsule-btn:hover { transform: translateY(-3px); box-shadow: 0 8px 16px rgba(0,0,0,0.3); }
-        .capsule-btn.active { outline: 4px solid var(--bg); box-shadow: 0 8px 20px rgba(0,0,0,0.4); }
+        
+        /* ACTIVE STATE (Collapse/Expand feedback) */
+        .capsule-btn.active { outline: 4px solid var(--bg); box-shadow: 0 8px 20px rgba(0,0,0,0.4); transform: translateY(-2px); filter: brightness(1.1); }
+        .capsule-btn.active::after { content: '▼'; position: absolute; right: 15px; top: 50%; transform: translateY(-50%); font-size: 12px; }
+        .capsule-btn:not(.active)::after { content: '›'; position: absolute; right: 15px; top: 50%; transform: translateY(-50%); font-size: 16px; }
+        
         .capsule-count { background: rgba(255,255,255,0.3); padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 800; }
 
-        /* Dynamic Gradients */
         .grad-1 { background: linear-gradient(135deg, #f43f5e, #fb923c); }
         .grad-2 { background: linear-gradient(135deg, #3b82f6, #06b6d4); }
         .grad-3 { background: linear-gradient(135deg, #10b981, #84cc16); }
@@ -90,6 +84,7 @@
         .grad-8 { background: linear-gradient(135deg, #6366f1, #a855f7); }
 
         /* Questions */
+        .questions-container { margin-top: -10px; padding-top: 10px; }
         .q-item { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 20px; margin-bottom: 16px; box-shadow: 0 2px 6px rgba(0,0,0,0.05); }
         .exp-badges { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; }
         .badge { font-size: 12px; font-weight: 900; padding: 5px 10px; border-radius: 50px; }
@@ -97,13 +92,11 @@
         .badge-paper { background: var(--primary); color: white; }
         .badge-marks { background: var(--accent-soft); color: var(--accent); }
         .badge-subject { background: var(--surface-2); color: var(--text-soft); border: 1px solid var(--border); }
-        
         .q-text { font-size: 20px; font-weight: 800; line-height: 1.6; margin-bottom: 20px; }
         .exp-actions { display: flex; gap: 12px; }
         .btn-action { background: var(--accent); color: white; border: none; padding: 10px 18px; border-radius: 10px; font-weight: 800; cursor: pointer; }
         .btn-save { background: transparent; border: 2px solid var(--border); color: var(--text); padding: 10px 18px; border-radius: 10px; font-weight: 800; cursor: pointer; }
 
-        /* Charts (Bottom) */
         .charts-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; margin-top: 20px; }
         .chart-card { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 20px; box-shadow: var(--shadow); }
         .chart-card h3 { font-size: 16px; font-weight: 900; margin-bottom: 15px; }
@@ -140,7 +133,6 @@
     </div>
 
     <div class="container">
-        <!-- Desktop Sidebar -->
         <div class="sidebar" id="sidebar">
             <div class="sidebar-tabs">
                 <button class="paper-tab active" onclick="selectPaper('GS1')">GS1</button>
@@ -151,7 +143,6 @@
         </div>
 
         <div class="main-content">
-            <!-- Mobile Paper Switcher -->
             <div class="mobile-nav">
                 <button class="m-btn active" onclick="selectPaper('GS1')">GS1</button>
                 <button class="m-btn" onclick="selectPaper('GS2')">GS2</button>
@@ -159,7 +150,6 @@
                 <button class="m-btn" onclick="selectPaper('GS4')">GS4</button>
             </div>
 
-            <!-- Dashboard / Capsules -->
             <div class="dashboard-section" id="dashboard">
                 <!-- Dynamically Loaded Here -->
             </div>
@@ -203,7 +193,6 @@
         let currentMicroTheme = null;
         let myCharts = {};
 
-        // ONLY loads from THEMES JSON files
         async function loadData() {
             const files = { 'GS1': './gs1_themes.json', 'GS2': './gs2_themes.json', 'GS3': './gs3_themes.json', 'GS4': './gs4_themes.json' };
             const results = await Promise.all(Object.entries(files).map(async ([paper, url]) => {
@@ -212,7 +201,6 @@
 
             results.forEach(res => {
                 const grouped = {};
-                // Handle wrapped vs unwrapped JSON structures
                 const rawPaperData = res.data[res.paper] ? res.data[res.paper] : res.data;
                 
                 for (const broadSubject in MajorMap[res.paper]) {
@@ -229,7 +217,6 @@
                     });
                 }
 
-                // Fallback for unlisted subjects
                 for (const subject in rawPaperData) {
                     let isFound = false;
                     for(const broadSubject in MajorMap[res.paper]) {
@@ -264,20 +251,20 @@
             toggleSidebar(false);
         }
 
-        // Gradient Assignments for Capsules
         const gradClasses = ['grad-1', 'grad-2', 'grad-3', 'grad-4', 'grad-5', 'grad-6', 'grad-7', 'grad-8'];
 
+        // NEW: KEEPS TAGS VISIBLE AND EXPANDS/COLLAPSES QUESTIONS BELOW THEM
         function renderDashboard() {
             const container = document.getElementById('dashboard');
             container.innerHTML = '';
             const paperData = allData[currentPaper];
 
             if (!paperData) {
-                container.innerHTML = `<div style="padding: 40px; text-align: center;">No data found for ${currentPaper}. Please ensure themes JSON exists.</div>`;
+                container.innerHTML = `<div style="padding: 40px; text-align: center;">No data found for ${currentPaper}.</div>`;
                 return;
             }
 
-            // 1. Show Subjects
+            // 1. Show Subjects (If no subject selected)
             if (!currentSubject) {
                 container.innerHTML = `<h2 style="margin-bottom: 20px;">Select a Subject</h2>`;
                 const grid = document.createElement('div');
@@ -287,7 +274,6 @@
                 for (const subject in paperData) {
                     const subjectQs = paperData[subject];
                     const btn = document.createElement('button');
-                    // Assigning unique gradients to each subject
                     btn.className = `capsule-btn ${gradClasses[gradIndex % gradClasses.length]}`;
                     gradIndex++;
                     btn.innerHTML = `<span>${subject}</span> <span class="capsule-count">${subjectQs.length}</span>`;
@@ -298,83 +284,86 @@
                 return;
             }
 
-            // 2. Show Micro-Themes (Grouped by Root)
-            if (!currentMicroTheme) {
-                container.innerHTML = `
-                    <div class="breadcrumb">
-                        <button class="breadcrumb-btn" onclick="currentSubject=null; renderDashboard();">← Subjects</button> / 
-                        <span>${currentSubject}</span>
-                    </div>
-                    <h2 style="margin-bottom: 20px;">Select a Micro-theme</h2>`;
-                
-                const grid = document.createElement('div');
-                grid.className = 'capsule-grid';
-                
-                const themes = {};
-                paperData[currentSubject].forEach(q => {
-                    const parts = q.microtheme.split(' x ');
-                    const root = parts.length > 1 ? parts[0].trim() : q.microtheme;
-                    if (!themes[root]) themes[root] = [];
-                    themes[root].push(q);
-                });
-
-                let gradIndex = 0;
-                for (const themeRoot in themes) {
-                    const themeQs = themes[themeRoot];
-                    const btn = document.createElement('button');
-                    // Assign unique gradients to micro-themes as well
-                    btn.className = `capsule-btn ${gradClasses[gradIndex % gradClasses.length]}`;
-                    gradIndex++;
-                    btn.innerHTML = `<span>${themeRoot}</span> <span class="capsule-count">${themeQs.length}</span>`;
-                    btn.onclick = () => toggleMicroTheme(themeRoot); // Toggle Logic
-                    grid.appendChild(btn);
-                }
-                container.appendChild(grid);
-                return;
-            }
-
-            // 3. Show Questions (with Toggle Logic: Click same theme again -> clear currentMicroTheme)
-            const qList = paperData[currentSubject].filter(q => {
+            // 2. Show Micro-Themes (Always stays visible)
+            let gradIndex = 0;
+            const themes = {};
+            paperData[currentSubject].forEach(q => {
                 const parts = q.microtheme.split(' x ');
                 const root = parts.length > 1 ? parts[0].trim() : q.microtheme;
-                return root === currentMicroTheme;
+                if (!themes[root]) themes[root] = [];
+                themes[root].push(q);
             });
 
             container.innerHTML = `
                 <div class="breadcrumb">
-                    <button class="breadcrumb-btn" onclick="currentMicroTheme=null; renderDashboard();">← Themes</button> / 
-                    <button class="breadcrumb-btn" onclick="currentSubject=null; renderDashboard();">${currentSubject}</button> / 
-                    <span>${currentMicroTheme}</span>
+                    <button class="breadcrumb-btn" onclick="currentSubject=null; currentMicroTheme=null; renderDashboard();">← Subjects</button> / 
+                    <span>${currentSubject}</span>
                 </div>
-                <h2 style="margin-bottom: 20px;">${currentMicroTheme} (${qList.length} Questions)</h2>`;
+                <h2 style="margin-bottom: 20px;">Themes</h2>`;
+            
+            const grid = document.createElement('div');
+            grid.className = 'capsule-grid';
+            
+            for (const themeRoot in themes) {
+                const themeQs = themes[themeRoot];
+                const btn = document.createElement('button');
+                // Assign gradient based on current count
+                btn.className = `capsule-btn ${gradClasses[gradIndex % gradClasses.length]}`;
+                gradIndex++;
+                
+                // IF this is the active theme, add 'active' class for highlight
+                if (currentMicroTheme === themeRoot) {
+                    btn.classList.add('active');
+                }
 
-            qList.forEach(q => {
-                const qDiv = document.createElement('div');
-                qDiv.className = 'q-item';
-                qDiv.innerHTML = `
-                    <div class="exp-badges">
-                        <span class="badge badge-year">📅 ${q.year}</span>
-                        <span class="badge badge-marks">🎯 ${q.marks} Marks</span>
-                        <span class="badge badge-paper">📚 ${q.paper}</span>
-                        <span class="badge badge-subject">${q.subject}</span>
-                    </div>
-                    <div class="q-text">${q.key_pyq}</div>
-                    <div class="exp-actions">
-                        <button class="btn-action" onclick="alert('Generate Answer for Year ${q.year}!')">✨ Generate Answer</button>
-                        <button class="btn-save" onclick="alert('Saved!')">💾 Save</button>
-                    </div>`;
-                container.appendChild(qDiv);
-            });
-        }
-
-        // Toggle Function: If clicked same theme, hide questions. If clicked new, show.
-        function toggleMicroTheme(themeName) {
-            if (currentMicroTheme === themeName) {
-                currentMicroTheme = null; // This hides questions and goes back to themes list
-            } else {
-                currentMicroTheme = themeName;
+                btn.innerHTML = `<span>${themeRoot}</span> <span class="capsule-count">${themeQs.length}</span>`;
+                
+                // TOGGLE LOGIC: If clicked same theme -> collapse. If new theme -> expand.
+                btn.onclick = () => {
+                    if (currentMicroTheme === themeRoot) {
+                        currentMicroTheme = null; // Collapse
+                    } else {
+                        currentMicroTheme = themeRoot; // Expand
+                    }
+                    renderDashboard();
+                };
+                grid.appendChild(btn);
             }
-            renderDashboard();
+            container.appendChild(grid);
+
+            // 3. Show Questions ONLY if a microtheme is selected (Below the tags)
+            if (currentMicroTheme) {
+                const qList = paperData[currentSubject].filter(q => {
+                    const parts = q.microtheme.split(' x ');
+                    const root = parts.length > 1 ? parts[0].trim() : q.microtheme;
+                    return root === currentMicroTheme;
+                });
+
+                const qContainer = document.createElement('div');
+                qContainer.className = 'questions-container';
+                
+                qContainer.innerHTML = `<h2 style="margin-bottom: 20px;">${currentMicroTheme} (${qList.length} Questions)</h2>`;
+
+                qList.forEach(q => {
+                    const qDiv = document.createElement('div');
+                    qDiv.className = 'q-item';
+                    qDiv.innerHTML = `
+                        <div class="exp-badges">
+                            <span class="badge badge-year">📅 ${q.year}</span>
+                            <span class="badge badge-marks">🎯 ${q.marks} Marks</span>
+                            <span class="badge badge-paper">📚 ${q.paper}</span>
+                            <span class="badge badge-subject">${q.subject}</span>
+                        </div>
+                        <div class="q-text">${q.key_pyq}</div>
+                        <div class="exp-actions">
+                            <button class="btn-action" onclick="alert('Generate Answer for Year ${q.year}!')">✨ Generate Answer</button>
+                            <button class="btn-save" onclick="alert('Saved!')">💾 Save</button>
+                        </div>`;
+                    qContainer.appendChild(qDiv);
+                });
+
+                container.appendChild(qContainer);
+            }
         }
 
         function renderCharts() {
