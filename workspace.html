@@ -3,242 +3,39 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="icon" type="image/png" href="favicon.png">
   <title>UPSC CRAFT | Workspace</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
-  
-  <!-- PREMIUM WORKSPACE STYLES -->
-  <style>
-    :root {
-      --bg: #faf9f6;          /* Warm Ivory */
-      --surface: #ffffff;
-      --text: #1a1a1a;
-      --text-soft: #6b6b6b;
-      --border: #e5e5e5;
-      --accent: #D96B00;      /* Saffron */
-      --shadow: 0 4px 20px rgba(0,0,0,0.04);
-      --shadow-lg: 0 15px 40px rgba(0,0,0,0.08);
-      --radius: 14px;
-      --font: 'Inter', sans-serif;
-      
-      /* Existing JS Variable Overrides for seamless compatibility */
-      --primary: #D96B00;
-      --accent-soft: #fdf0e3;
-      --glow: rgba(217,107,0,0.15);
-      --shadow-glow: 0 8px 32px rgba(217,107,0,0.15);
-    }
-
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { font-family: var(--font); background: var(--bg); color: var(--text); line-height: 1.6; -webkit-font-smoothing: antialiased; }
-    
-    /* Subtle Dotted Texture */
-    body::before {
-      content: '';
-      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-      background-image: radial-gradient(rgba(0,0,0,0.04) 1px, transparent 1px);
-      background-size: 20px 20px;
-      z-index: -1;
-    }
-
-    .app { display: grid; grid-template-columns: 250px minmax(0, 1fr); height: 100vh; }
-    
-    /* Sidebar */
-    .sidebar {
-      background: var(--surface);
-      border-right: 1px solid var(--border);
-      padding: 24px 16px;
-      display: flex;
-      flex-direction: column;
-      gap: 30px;
-    }
-    .brand { display: flex; align-items: center; gap: 10px; padding: 0 12px; }
-    .brand-logo { font-size: 22px; font-weight: 900; letter-spacing: -0.04em; text-decoration: none; color: var(--text); display: flex; align-items: center; gap: 10px; }
-    .logo-icon { width: 32px; height: 32px; border-radius: 8px; background: var(--accent); color: white; display: flex; align-items: center; justify-content: center; font-size: 16px; }
-
-    .sidebar-title { font-size: 12px; font-weight: 700; color: var(--text-soft); text-transform: uppercase; letter-spacing: 0.05em; margin: 0 12px 10px; }
-    .nav { display: flex; flex-direction: column; gap: 4px; }
-    .nav-btn {
-      display: flex; align-items: center; gap: 12px;
-      padding: 12px 16px; border-radius: 10px; border: none;
-      background: transparent; color: var(--text-soft);
-      font-weight: 600; font-size: 15px; cursor: pointer;
-      transition: all 0.2s; width: 100%; text-align: left;
-    }
-    .nav-btn:hover { background: var(--bg); color: var(--text); }
-    .nav-btn.active { background: var(--accent); color: #fff; box-shadow: 0 4px 12px rgba(217,107,0,0.2); }
-    .nav-btn .nav-icon { font-size: 18px; }
-
-    .sidebar-bottom { margin-top: auto; padding-top: 20px; border-top: 1px solid var(--border); }
-    .sidebar-bottom .nav-btn { font-size: 14px; }
-
-    /* Main Workspace */
-    .content { overflow-y: auto; padding: 0 40px 60px; }
-
-    /* Top Bar */
-    .topbar { padding: 30px 0 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); margin-bottom: 30px; }
-    .topbar h1 { font-size: 28px; font-weight: 700; letter-spacing: -0.03em; }
-    .topbar p { font-size: 14px; color: var(--text-soft); margin-top: 4px; }
-    .topbar-actions { display: flex; gap: 12px; }
-    .btn-secondary { background: transparent; border: 1px solid var(--border); padding: 10px 20px; border-radius: 10px; font-weight: 600; cursor: pointer; transition: all 0.2s; color: var(--text); text-decoration: none; font-size: 14px; }
-    .btn-secondary:hover { border-color: var(--accent); color: var(--accent); }
-
-    /* Dashboard Grid */
-    .dashboard-section { display: none; animation: fadeIn 0.4s ease; }
-    .dashboard-section.active { display: block; }
-
-    .stats-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-bottom: 30px; }
-    .stat-card {
-      background: var(--surface); border: 1px solid var(--border);
-      border-radius: var(--radius); padding: 25px;
-      box-shadow: var(--shadow); transition: transform 0.2s;
-      cursor: pointer; text-decoration: none; color: inherit; display: block;
-    }
-    .stat-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-lg); }
-    .stat-label { font-size: 14px; color: var(--text-soft); font-weight: 600; margin-bottom: 10px; }
-    .stat-value { font-size: 36px; font-weight: 800; color: var(--accent); margin-bottom: 5px; }
-    .stat-note { font-size: 13px; color: var(--text-soft); }
-
-    .section-heading { font-size: 18px; font-weight: 700; margin-bottom: 15px; margin-top: 40px; }
-    
-    /* Recent Activity */
-    .recent-list { display: flex; flex-direction: column; gap: 10px; }
-    .recent-item { background: var(--surface); border: 1px solid var(--border); padding: 15px 20px; border-radius: 10px; display: flex; justify-content: space-between; align-items: center; box-shadow: var(--shadow); }
-    .recent-tag { font-size: 12px; color: var(--accent); font-weight: 700; margin-bottom: 4px; }
-    .recent-text { font-size: 14px; font-weight: 600; }
-
-    /* Feature Cards */
-    .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; }
-    .feature-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 30px; transition: transform 0.2s; }
-    .feature-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-lg); }
-    .feature-number { font-size: 13px; color: var(--accent); font-weight: 800; margin-bottom: 20px; }
-    .feature-card h3 { font-size: 18px; font-weight: 700; margin-bottom: 10px; }
-    .feature-card p { font-size: 14px; color: var(--text-soft); }
-
-    /* PYQ Bank & QCAB Sections */
-    .workspace-section { display: none; animation: fadeIn 0.4s ease; }
-    .workspace-section.active { display: block; }
-
-    /* Filter Bar */
-    .filter-bar-vertical { display: grid; grid-template-columns: repeat(4, 1fr) auto; gap: 15px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; margin-bottom: 20px; }
-    .filter-group { display: flex; flex-direction: column; gap: 6px; }
-    .filter-group label { font-size: 13px; font-weight: 700; color: var(--text-soft); }
-    select, input { padding: 12px; border: 1px solid var(--border); border-radius: 8px; font-family: var(--font); font-size: 14px; background: var(--bg); color: var(--text); outline: none; }
-    select:focus, input:focus { border-color: var(--accent); }
-    .filter-actions { display: flex; gap: 10px; align-items: flex-end; }
-    .btn-primary { background: var(--accent); color: white; border: none; padding: 12px 24px; border-radius: 8px; font-weight: 700; cursor: pointer; transition: all 0.2s; }
-    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(217,107,0,0.3); }
-    .btn-clear { background: transparent; border: 1px solid var(--border); padding: 12px 24px; border-radius: 8px; font-weight: 600; color: var(--text-soft); cursor: pointer; }
-
-    /* Question Items */
-    .bank-item { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; margin-bottom: 15px; transition: transform 0.2s, border-color 0.2s; }
-    .bank-item:hover { border-color: var(--accent); transform: translateY(-2px); }
-    .bank-question { font-size: 16px; font-weight: 700; margin-bottom: 12px; line-height: 1.5; }
-    .tags { display: flex; gap: 8px; margin-bottom: 15px; }
-    .tag { font-size: 12px; font-weight: 700; padding: 4px 10px; border-radius: 20px; background: var(--bg); border: 1px solid var(--border); color: var(--text-soft); }
-    .bank-actions { display: flex; gap: 10px; }
-    .btn-study { background: transparent; border: 1px solid var(--border); padding: 8px 16px; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.2s; }
-    .btn-study.active-bookmark { background: var(--accent-soft); color: var(--accent); border-color: var(--accent); }
-    .btn-study.active-revised { background: #e6f4ea; color: #188038; border-color: #188038; }
-    .btn-ai-answer { background: var(--accent); color: white; border: none; padding: 8px 16px; border-radius: 8px; font-size: 13px; font-weight: 700; cursor: pointer; }
-
-    /* QCAB */
-    .q-item { display: flex; justify-content: space-between; padding: 15px 0; border-bottom: 1px solid var(--border); }
-    .q-text { font-size: 15px; font-weight: 600; }
-    .btn-generate { width: 100%; margin-top: 20px; background: var(--accent); color: white; border: none; padding: 15px; border-radius: 10px; font-size: 16px; font-weight: 700; cursor: pointer; }
-    .btn-generate:disabled { background: var(--border); color: var(--text-soft); cursor: not-allowed; }
-
-    /* Analyzer Modal */
-    .analyzer-modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.7); z-index: 10000; display: none; justify-content: center; align-items: center; backdrop-filter: blur(4px); }
-    .analyzer-modal-overlay.active { display: flex; }
-    .analyzer-content { background: var(--bg); width: 95%; height: 90vh; border-radius: 20px; padding: 30px; display: flex; flex-direction: column; overflow: hidden; box-shadow: var(--shadow-lg); }
-    .analyzer-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); padding-bottom: 20px; margin-bottom: 20px; }
-    .analyzer-paper-btn { background: var(--surface); border: 1px solid var(--border); padding: 8px 16px; border-radius: 8px; font-weight: 600; cursor: pointer; }
-    .analyzer-paper-btn.active { background: var(--accent); color: white; border-color: var(--accent); }
-    .analyzer-body { flex: 1; overflow-y: auto; }
-    .analyzer-capsule { display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; border-radius: 10px; margin-bottom: 10px; cursor: pointer; font-weight: 700; color: white; border: none; font-size: 16px; }
-    .analyzer-count { background: rgba(255,255,255,0.2); padding: 4px 12px; border-radius: 20px; font-size: 14px; }
-    .grad-1 { background: #D96B00; } .grad-2 { background: #3b82f6; } .grad-3 { background: #10b981; } .grad-4 { background: #8b5cf6; } .grad-5 { background: #f59e0b; }
-
-    /* Modals */
-    .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.7); z-index: 10001; display: none; justify-content: center; align-items: center; }
-    .modal-overlay.active { display: flex; }
-    .modal-content { background: var(--surface); border-radius: 16px; width: 90%; max-width: 500px; padding: 25px; box-shadow: var(--shadow-lg); }
-    .modal-header { display: flex; justify-content: space-between; margin-bottom: 20px; }
-    .modal-close { background: transparent; border: none; font-size: 20px; cursor: pointer; color: var(--text-soft); }
-    .modal-footer { display: flex; justify-content: flex-end; gap: 10px; margin-top: 20px; }
-    .model-option { display: block; width: 100%; margin-bottom: 10px; padding: 15px; border-radius: 10px; border: none; font-weight: 700; cursor: pointer; }
-
-    /* Syllabus Modal */
-    .syllabus-modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.7); z-index: 10002; display: none; justify-content: center; align-items: center; }
-    .syllabus-modal-overlay.active { display: flex; }
-    .syllabus-modal-content { background: var(--bg); width: 90%; max-width: 800px; height: 80vh; border-radius: 20px; padding: 30px; overflow-y: auto; box-shadow: var(--shadow-lg); }
-    .syllabus-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-top: 20px; }
-    .syllabus-menu-card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 20px; text-align: center; cursor: pointer; transition: all 0.2s; }
-    .syllabus-menu-card:hover { border-color: var(--accent); transform: translateY(-3px); }
-    .back-btn { background: transparent; border: 1px solid var(--border); padding: 8px 16px; border-radius: 8px; margin-bottom: 15px; cursor: pointer; }
-
-    /* Toast */
-    .toast { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); background: var(--text); color: white; padding: 12px 24px; border-radius: 30px; opacity: 0; transition: opacity 0.3s, transform 0.3s; z-index: 10005; font-weight: 600; }
-    .toast.show { opacity: 1; transform: translateX(-50%) translateY(-10px); }
-
-    /* Animations */
-    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-
-    /* Mobile Responsive */
-    @media (max-width: 900px) {
-      .app { grid-template-columns: 1fr; }
-      .sidebar { display: none; position: fixed; z-index: 200; left: 0; top: 0; bottom: 0; width: 250px; background: var(--surface); transform: translateX(-100%); transition: 0.3s; }
-      .sidebar.mobile-open { transform: translateX(0); }
-      .mobile-nav { display: flex; align-items: center; justify-content: space-between; padding: 20px; position: sticky; top: 0; background: var(--bg); z-index: 100; border-bottom: 1px solid var(--border); }
-      .hamburger { background: none; border: none; font-size: 24px; cursor: pointer; }
-      .content { padding: 20px 20px 60px; }
-      .stats-row { grid-template-columns: 1fr; }
-      .filter-bar-vertical { grid-template-columns: 1fr; }
-      .mobile-menu-backdrop { position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 150; display: none; }
-      .mobile-menu-backdrop.active { display: block; }
-    }
-  </style>
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-
 <div class="app">
-  <!-- Sidebar (Premium) -->
   <aside class="sidebar" id="main-sidebar">
-    <a href="index.html" class="brand"><div class="logo-icon">🦉</div> UPSC CRAFT</a>
-
-    <div>
-      <div class="sidebar-title">Workspace</div>
-      <nav class="nav">
+    <a href="index.html" class="brand-logo"><span class="logo-icon">🦉</span> UPSC CRAFT</a>
+    <div class="nav-title">Workspace</div>
+    <nav class="nav">
         <button class="nav-btn active" data-section="dashboard" onclick="switchSection('dashboard')"><span class="nav-icon">⌂</span> Overview</button>
         <button class="nav-btn" data-section="pyq-bank" onclick="switchSection('pyq-bank')"><span class="nav-icon">⌕</span> PYQ Bank</button>
         <button class="nav-btn" data-section="my-qcab" onclick="switchSection('my-qcab')"><span class="nav-icon">▣</span> My QCAB</button>
         <button class="nav-btn" onclick="openAnalyzerModal()"><span class="nav-icon">◈</span> Analyzer</button>
-      </nav>
-    </div>
-
-    <div>
-      <div class="sidebar-title">Reference</div>
-      <nav class="nav">
+    </nav>
+    <div class="nav-title">Reference</div>
+    <nav class="nav">
         <button class="nav-btn" id="syllabus-sidebar-btn"><span class="nav-icon">◎</span> Syllabus</button>
-      </nav>
-    </div>
-
+    </nav>
     <div class="sidebar-bottom">
       <button class="nav-btn" onclick="window.location.href='index.html'"><span class="nav-icon">←</span> Back to Home</button>
       <button class="nav-btn" id="theme-toggle-workspace"><span class="nav-icon">☾</span> Dark Mode</button>
     </div>
   </aside>
 
-  <!-- Main Content -->
   <div class="content">
     <div class="mobile-nav">
-      <div class="logo-icon" style="color:white;">🦉</div>
+      <div class="logo-icon">🦉</div>
       <span style="font-weight: 800;">UPSC CRAFT</span>
       <button class="hamburger" onclick="document.getElementById('main-sidebar').classList.toggle('mobile-open'); document.getElementById('mobile-backdrop').classList.toggle('active');">☰</button>
     </div>
     <div class="mobile-menu-backdrop" id="mobile-backdrop" onclick="document.getElementById('main-sidebar').classList.remove('mobile-open'); this.classList.remove('active');"></div>
 
-    <!-- Topbar -->
     <header class="topbar">
       <div>
         <h1 id="topbar-title">Good Morning, Aspirant</h1>
@@ -249,7 +46,6 @@
       </div>
     </header>
 
-    <!-- Dashboard Section -->
     <div id="dashboard" class="dashboard-section active">
       <div class="stats-row">
         <a href="#" class="stat-card" onclick="switchSection('pyq-bank'); return false;">
@@ -266,24 +62,6 @@
           <div class="stat-label">📄 PAGES</div>
           <div class="stat-value" id="dashboard-pages">0</div>
           <div class="stat-note">Based on marks selected</div>
-        </div>
-      </div>
-
-      <div class="section-heading">Recent Activity</div>
-      <div class="recent-list">
-        <div class="recent-item">
-          <div>
-            <div class="recent-tag">GS1 · Geography</div>
-            <div class="recent-text">Discuss the role of geographical factors towards the development of Ancient India.</div>
-          </div>
-          <span class="tag">2023</span>
-        </div>
-        <div class="recent-item">
-          <div>
-            <div class="recent-tag">GS2 · Polity</div>
-            <div class="recent-text">Explain the constitutional perspectives of Gender Justice.</div>
-          </div>
-          <span class="tag">2023</span>
         </div>
       </div>
 
@@ -312,48 +90,26 @@
       </div>
     </div>
 
-    <!-- PYQ Bank Section -->
     <div id="pyq-bank" class="workspace-section">
       <div style="display: flex; justify-content: space-between; margin-bottom: 20px;">
         <h2 style="font-size: 24px; font-weight: 800;">📖 PYQ Bank</h2>
         <button class="btn-secondary" id="clear-bank-btn">⟳ Reset</button>
       </div>
-
       <div class="filter-bar-vertical">
-        <div class="filter-group">
-          <label>Paper</label>
-          <select id="filter-paper"><option value="ALL">All Papers</option><option value="GS1">GS1</option><option value="GS2">GS2</option><option value="GS3">GS3</option><option value="GS4">GS4</option><option value="anthropology_paper1">Anthro 1</option><option value="anthropology_paper2">Anthro 2</option></select>
-        </div>
-        <div class="filter-group">
-          <label>Subtopic</label>
-          <select id="filter-topic"><option value="ALL">All Subtopics</option></select>
-        </div>
-        <div class="filter-group">
-          <label>Year</label>
-          <select id="filter-year"><option value="ALL">All Years</option></select>
-        </div>
-        <div class="filter-group">
-          <label>Search</label>
-          <input type="text" id="search-input" placeholder="Search questions...">
-        </div>
-        <div class="filter-actions">
-          <button class="btn-primary" id="search-bank-btn">Search</button>
-          <button class="btn-clear" id="clear-results-btn">✖ Clear</button>
-        </div>
+        <div class="filter-group"><label>Paper</label><select id="filter-paper"><option value="ALL">All Papers</option><option value="GS1">GS1</option><option value="GS2">GS2</option><option value="GS3">GS3</option><option value="GS4">GS4</option><option value="anthropology_paper1">Anthro 1</option><option value="anthropology_paper2">Anthro 2</option></select></div>
+        <div class="filter-group"><label>Subtopic</label><select id="filter-topic"><option value="ALL">All Subtopics</option></select></div>
+        <div class="filter-group"><label>Year</label><select id="filter-year"><option value="ALL">All Years</option></select></div>
+        <div class="filter-group"><label>Search</label><input type="text" id="search-input" placeholder="Search questions..."></div>
+        <div class="filter-actions"><button class="btn-primary" id="search-bank-btn">Search</button><button class="btn-clear" id="clear-results-btn">✖ Clear</button></div>
       </div>
-
       <div id="bank-status-text" style="color: var(--text-soft); margin-bottom: 15px; font-weight: 600;">Loading...</div>
       <div id="bank-results-container"></div>
     </div>
 
-    <!-- My QCAB Section -->
     <div id="my-qcab" class="workspace-section">
       <div style="display: flex; justify-content: space-between; margin-bottom: 20px;">
         <h2 style="font-size: 24px; font-weight: 800;">📋 My QCAB</h2>
-        <div>
-          <button class="btn-secondary" id="rename-folder-btn">✏️ Rename</button>
-          <button class="btn-secondary" id="clear-q-btn">🧹 Clear</button>
-        </div>
+        <div><button class="btn-secondary" id="rename-folder-btn">✏️ Rename</button> <button class="btn-secondary" id="clear-q-btn">🧹 Clear</button></div>
       </div>
       <div id="empty-state" class="stat-card" style="text-align: center; padding: 40px;">Your booklet is empty. Add questions from the PYQ Bank.</div>
       <ol class="q-list" id="q-list"></ol>
@@ -363,22 +119,48 @@
       </div>
       <button class="btn-generate" id="generate-btn" disabled>⬇ Generate &amp; Download PDF</button>
     </div>
-
   </div>
 </div>
 
-<!-- Modals (Keep Structure for JS) -->
-<div class="modal-overlay" id="ai-model-modal">...</div>
-<div class="modal-overlay" id="customModal">...</div>
-<div class="syllabus-modal-overlay" id="syllabus-modal-overlay">...</div>
+<!-- Modals -->
+<div class="modal-overlay" id="ai-model-modal">
+  <div class="modal-content">
+    <div class="modal-header"><h2>🤖 Choose AI Assistant</h2><button class="modal-close" id="ai-model-close">✕</button></div>
+    <div class="modal-body">
+      <div style="display:grid; gap:10px;">
+        <button class="model-option grad-1" data-model="secret">✨ My AI Answer</button>
+        <button class="model-option grad-2" data-model="perplexity">🌀 Perplexity (Search)</button>
+        <button class="model-option grad-3" data-model="chatgpt">💬 ChatGPT (Copy Prompt)</button>
+        <button class="model-option grad-4" data-model="deepseek">🔬 DeepSeek (Copy Prompt)</button>
+      </div>
+    </div>
+    <div class="modal-footer"><button class="btn-secondary" id="cancel-ai-modal">Cancel</button></div>
+  </div>
+</div>
+<div class="modal-overlay" id="customModal">
+  <div class="modal-content">
+    <div class="modal-header"><h2 id="modalTitle">Notice</h2><button class="modal-close" onclick="document.getElementById('customModal').classList.remove('active')">✕</button></div>
+    <div class="modal-body">
+      <p id="modalMessage"></p>
+      <div id="modalInputContainer" style="display:none; margin-top:12px;"><input type="text" id="modalInput" placeholder="Enter value..." style="width:100%; padding:10px; border:1px solid var(--border); border-radius:8px;"></div>
+    </div>
+    <div class="modal-footer"><button class="btn-secondary" id="modalCancelBtn" style="display:none;">Cancel</button><button class="btn-primary" id="modalConfirmBtn">OK</button></div>
+  </div>
+</div>
+<div class="syllabus-modal-overlay" id="syllabus-modal-overlay">
+  <div class="syllabus-modal-content">
+    <div class="syllabus-modal-header"><h2>📚 UPSC Syllabus</h2><button class="syllabus-modal-close" onclick="closeSyllabusModal()">✕</button></div>
+    <div class="syllabus-modal-body">
+      <div id="syllabus-main-menu"><div class="syllabus-grid" id="syllabus-cards-holder"></div></div>
+      <div id="syllabus-detail-view"><button class="back-btn" onclick="backToSyllabusMenu()">← Back to Papers</button><div id="syllabus-detail-content"></div></div>
+    </div>
+  </div>
+</div>
 <div class="analyzer-modal-overlay" id="analyzer-modal-overlay">
   <div class="analyzer-content">
     <div class="analyzer-header">
       <h2>📊 PYQ Theme Analyzer</h2>
-      <div>
-        <button class="btn-secondary" id="analyzer-back-btn">← Back</button>
-        <button class="btn-secondary" id="analyzer-close-btn">✕ Close</button>
-      </div>
+      <div><button class="btn-secondary" id="analyzer-back-btn">← Back</button> <button class="btn-secondary" id="analyzer-close-btn">✕ Close</button></div>
     </div>
     <div class="analyzer-body">
       <div style="display: flex; gap: 10px; margin-bottom: 20px;">
@@ -391,43 +173,32 @@
     </div>
   </div>
 </div>
+
 <div class="toast" id="toast">✅ Copied!</div>
 
-<!-- Scripts -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.6.2"></script>
 <script src="js/config.js?v=10002"></script>
 <script src="js/syllabus-data.js?v=10002"></script>
-<script src="js/app.js?v=10005"></script>
+<script src="js/app.js?v=10009"></script>
 <script src="js/features.js?v=10002"></script>
-
-<!-- Core Workspace Logic -->
 <script>
-  /* Section Switching (Dashboard, PYQ, QCAB) */
   function switchSection(sectionId) {
     document.querySelectorAll('.dashboard-section, .workspace-section').forEach(el => el.classList.remove('active'));
     document.getElementById(sectionId).classList.add('active');
-    
     document.querySelectorAll('.nav-btn[data-section]').forEach(btn => btn.classList.remove('active'));
     const activeBtn = document.querySelector(`.nav-btn[data-section="${sectionId}"]`);
     if(activeBtn) activeBtn.classList.add('active');
-    
     document.getElementById('topbar-title').textContent = sectionId === 'dashboard' ? 'Good Morning, Aspirant' : (sectionId === 'pyq-bank' ? 'PYQ Bank' : 'My QCAB');
     document.getElementById('topbar-subtitle').textContent = sectionId === 'dashboard' ? 'Your Mains Workspace' : 'Workspace';
-    
     if(sectionId === 'pyq-bank') renderBankResults();
     if(sectionId === 'my-qcab') renderQuestions();
   }
-  
-  /* Dark Mode Toggle */
   document.getElementById('theme-toggle-workspace').addEventListener('click', () => {
       document.body.classList.toggle('dark-mode');
       localStorage.setItem('qcab_theme', document.body.classList.contains('dark-mode') ? 'dark' : 'light');
   });
-  
-  /* Apply saved theme */
   if(localStorage.getItem('qcab_theme') === 'dark') document.body.classList.add('dark-mode');
 </script>
-
 </body>
 </html>
