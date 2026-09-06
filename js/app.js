@@ -1134,7 +1134,8 @@ document.addEventListener('DOMContentLoaded', function() {
         var card = document.createElement('div');
         card.className = 'syllabus-menu-card';
         card.style.borderTop = '5px solid ' + item.color;
-        card.innerHTML = '<span class="syllabus-menu-card-icon">' + item.icon + '</span><div class="syllabus-menu-card-title syllabus-title-' + key + '">' + item.title + '</div>';
+        var itemTitle = item.title || item.name || key;
+        card.innerHTML = '<span class="syllabus-menu-card-icon">' + item.icon + '</span><div class="syllabus-menu-card-title syllabus-title-' + key + '">' + itemTitle + '</div>';
         card.onclick = function() { openSyllabusTopic(this.getAttribute('data-key')); };
         cardsHolder.appendChild(card);
       }
