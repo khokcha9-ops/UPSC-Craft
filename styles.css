@@ -194,3 +194,37 @@ body.modal-open #main-sidebar, body.syllabus-open #main-sidebar { overflow-y: hi
   .filter-actions { flex-direction: column; }
   .marks-row { grid-template-columns: 1fr; }
 }
+/* ========================================
+   CLEAN MAIN PAGE & MOBILE SCROLL FIX
+   ======================================== */
+.page {
+    padding-bottom: 100px; /* Prevents content from being cut off on mobile */
+}
+
+/* Mobile Analyzer Header Cleanup */
+@media (max-width: 820px) {
+    .analyzer-header {
+        flex-direction: row; 
+        flex-wrap: wrap; 
+        align-items: center; 
+        justify-content: space-between; 
+        padding: 15px; 
+        gap: 5px;
+    }
+    .analyzer-header h2 {
+        font-size: 18px;
+        width: 100%;
+        margin-bottom: 5px;
+    }
+    .analyzer-header div {
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+    }
+    .analyzer-header .btn {
+        padding: 8px 12px;
+        font-size: 13px;
+        flex: 1;
+        text-align: center;
+    }
+}
