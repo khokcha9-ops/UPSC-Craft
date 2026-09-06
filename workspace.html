@@ -22,10 +22,7 @@
     <nav class="nav">
         <button class="nav-btn" id="syllabus-sidebar-btn"><span class="nav-icon">◎</span> Syllabus</button>
     </nav>
-    <div class="sidebar-bottom">
-      <button class="nav-btn" onclick="window.location.href='index.html'"><span class="nav-icon">←</span> Back to Home</button>
-      <button class="nav-btn" id="theme-toggle-workspace"><span class="nav-icon">☾</span> Dark Mode</button>
-    </div>
+    <div class="sidebar-bottom">UPSC CRAFT v1.0</div>
   </aside>
 
   <div class="content">
@@ -36,64 +33,39 @@
     </div>
     <div class="mobile-menu-backdrop" id="mobile-backdrop" onclick="document.getElementById('main-sidebar').classList.remove('mobile-open'); this.classList.remove('active');"></div>
 
+    <!-- Topbar -->
     <header class="topbar">
       <div>
         <h1 id="topbar-title">Good Morning, Aspirant</h1>
         <p id="topbar-subtitle">Your Mains Workspace</p>
       </div>
       <div class="topbar-actions">
-        <a href="index.html" class="btn-secondary">← Exit</a>
+        <button class="theme-toggle" id="theme-toggle-top">🌙</button>
+        <a href="index.html" class="btn-secondary">← Home</a>
       </div>
     </header>
 
+    <!-- Dashboard -->
     <div id="dashboard" class="dashboard-section active">
       <div class="stats-row">
-        <a href="#" class="stat-card" onclick="switchSection('pyq-bank'); return false;">
-          <div class="stat-label">📚 PYQ BANK</div>
-          <div class="stat-value" id="dashboard-bank-count">—</div>
-          <div class="stat-note">Total questions available</div>
-        </a>
-        <a href="#" class="stat-card" onclick="switchSection('my-qcab'); return false;">
-          <div class="stat-label">📋 ACTIVE QCAB</div>
-          <div class="stat-value" id="dashboard-q-count">0</div>
-          <div class="stat-note">Questions selected</div>
-        </a>
-        <div class="stat-card">
-          <div class="stat-label">📄 PAGES</div>
-          <div class="stat-value" id="dashboard-pages">0</div>
-          <div class="stat-note">Based on marks selected</div>
-        </div>
+        <a href="#" class="stat-card" onclick="switchSection('pyq-bank'); return false;"><div class="stat-label">📚 PYQ BANK</div><div class="stat-value" id="dashboard-bank-count">—</div><div class="stat-note">Total questions available</div></a>
+        <a href="#" class="stat-card" onclick="switchSection('my-qcab'); return false;"><div class="stat-label">📋 ACTIVE QCAB</div><div class="stat-value" id="dashboard-q-count">0</div><div class="stat-note">Questions selected</div></a>
+        <div class="stat-card"><div class="stat-label">📄 PAGES</div><div class="stat-value" id="dashboard-pages">0</div><div class="stat-note">Based on marks selected</div></div>
       </div>
-
       <div class="section-heading">Everything you need to practice Mains better</div>
       <div class="features-grid">
-        <div class="feature-card">
-          <div class="feature-number">01</div>
-          <h3>Explore PYQs</h3>
-          <p>Search UPSC Mains questions by year, paper, topic and marks.</p>
-        </div>
-        <div class="feature-card">
-          <div class="feature-number">02</div>
-          <h3>Build your QCAB</h3>
-          <p>Select questions and create your own practice booklet.</p>
-        </div>
-        <div class="feature-card">
-          <div class="feature-number">03</div>
-          <h3>Analyse PYQs</h3>
-          <p>Understand what UPSC has actually been asking.</p>
-        </div>
-        <div class="feature-card">
-          <div class="feature-number">04</div>
-          <h3>Track your preparation</h3>
-          <p>Bookmark, revise and annotate important questions.</p>
-        </div>
+        <div class="feature-card"><div class="feature-number">01</div><h3>Explore PYQs</h3><p>Search UPSC Mains questions by year, paper, topic and marks.</p></div>
+        <div class="feature-card"><div class="feature-number">02</div><h3>Build your QCAB</h3><p>Select questions and create your own practice booklet.</p></div>
+        <div class="feature-card"><div class="feature-number">03</div><h3>Analyse PYQs</h3><p>Understand what UPSC has actually been asking.</p></div>
+        <div class="feature-card"><div class="feature-number">04</div><h3>Track your preparation</h3><p>Bookmark, revise and annotate important questions.</p></div>
       </div>
     </div>
 
+    <!-- PYQ Bank -->
     <div id="pyq-bank" class="workspace-section">
       <div style="display: flex; justify-content: space-between; margin-bottom: 20px;">
         <h2 style="font-size: 24px; font-weight: 800;">📖 PYQ Bank</h2>
-        <button class="btn-secondary" id="clear-bank-btn">⟳ Reset</button>
+        <button class="btn-clear" id="clear-bank-btn">⟳ Reset</button>
       </div>
       <div class="filter-bar-vertical">
         <div class="filter-group"><label>Paper</label><select id="filter-paper"><option value="ALL">All Papers</option><option value="GS1">GS1</option><option value="GS2">GS2</option><option value="GS3">GS3</option><option value="GS4">GS4</option><option value="anthropology_paper1">Anthro 1</option><option value="anthropology_paper2">Anthro 2</option></select></div>
@@ -106,10 +78,11 @@
       <div id="bank-results-container"></div>
     </div>
 
+    <!-- My QCAB -->
     <div id="my-qcab" class="workspace-section">
       <div style="display: flex; justify-content: space-between; margin-bottom: 20px;">
         <h2 style="font-size: 24px; font-weight: 800;">📋 My QCAB</h2>
-        <div><button class="btn-secondary" id="rename-folder-btn">✏️ Rename</button> <button class="btn-secondary" id="clear-q-btn">🧹 Clear</button></div>
+        <div><button class="btn-secondary" id="rename-folder-btn">✏️ Rename</button> <button class="btn-clear" id="clear-q-btn">🧹 Clear</button></div>
       </div>
       <div id="empty-state" class="stat-card" style="text-align: center; padding: 40px;">Your booklet is empty. Add questions from the PYQ Bank.</div>
       <ol class="q-list" id="q-list"></ol>
@@ -140,10 +113,7 @@
 <div class="modal-overlay" id="customModal">
   <div class="modal-content">
     <div class="modal-header"><h2 id="modalTitle">Notice</h2><button class="modal-close" onclick="document.getElementById('customModal').classList.remove('active')">✕</button></div>
-    <div class="modal-body">
-      <p id="modalMessage"></p>
-      <div id="modalInputContainer" style="display:none; margin-top:12px;"><input type="text" id="modalInput" placeholder="Enter value..." style="width:100%; padding:10px; border:1px solid var(--border); border-radius:8px;"></div>
-    </div>
+    <div class="modal-body"><p id="modalMessage"></p><div id="modalInputContainer" style="display:none; margin-top:12px;"><input type="text" id="modalInput" placeholder="Enter value..." style="width:100%; padding:10px; border:1px solid var(--border); border-radius:8px;"></div></div>
     <div class="modal-footer"><button class="btn-secondary" id="modalCancelBtn" style="display:none;">Cancel</button><button class="btn-primary" id="modalConfirmBtn">OK</button></div>
   </div>
 </div>
@@ -173,14 +143,13 @@
     </div>
   </div>
 </div>
-
 <div class="toast" id="toast">✅ Copied!</div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.6.2"></script>
 <script src="js/config.js?v=10002"></script>
 <script src="js/syllabus-data.js?v=10002"></script>
-<script src="js/app.js?v=10009"></script>
+<script src="js/app.js?v=10010"></script>
 <script src="js/features.js?v=10002"></script>
 <script>
   function switchSection(sectionId) {
@@ -194,11 +163,15 @@
     if(sectionId === 'pyq-bank') renderBankResults();
     if(sectionId === 'my-qcab') renderQuestions();
   }
-  document.getElementById('theme-toggle-workspace').addEventListener('click', () => {
+  
+  // Workspace Dark Mode
+  const themeToggleTop = document.getElementById('theme-toggle-top');
+  if(localStorage.getItem('qcab_theme') === 'dark') { document.body.classList.add('dark-mode'); themeToggleTop.textContent = '☀️'; }
+  themeToggleTop.addEventListener('click', () => {
       document.body.classList.toggle('dark-mode');
       localStorage.setItem('qcab_theme', document.body.classList.contains('dark-mode') ? 'dark' : 'light');
+      themeToggleTop.textContent = document.body.classList.contains('dark-mode') ? '☀️' : '🌙';
   });
-  if(localStorage.getItem('qcab_theme') === 'dark') document.body.classList.add('dark-mode');
 </script>
 </body>
 </html>
