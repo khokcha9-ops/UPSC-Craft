@@ -544,7 +544,7 @@ document.addEventListener('DOMContentLoaded', function() {
   async function loadRepositoryJSON() {
     try {
       const [gs1Data, gs2Data, gs3Data, gs4Data, opt1Data, opt2Data] = await Promise.all([
-        fetchJSONFile('./gs1_pyq.json'), fetchJSONFile('./gs2_pyq.json'), fetchJSONFile('./gs3_pyq.json'), fetchJSONFile('./gs4_pyq.json'), fetchJSONFile('./opt1_pyq.json'), fetchJSONFile('./opt2_pyq.json')
+        fetchJSONFile('./gs1_pyq.json'), fetchJSONFile('./gs2_pyq.json'), fetchJSONFile('./gs3_pyq.json'), fetchJSONFile('./gs4_pyq.json'), fetchJSONFile('./anthropology_paper1.json'), fetchJSONFile('./anthropology_paper2.json')
       ]);
       const incoming = [...gs1Data, ...gs2Data, ...gs3Data, ...gs4Data, ...opt1Data, ...opt2Data];
       const newQuestions = [];
