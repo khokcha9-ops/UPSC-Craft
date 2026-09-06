@@ -4,13 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>UPSC Craft | PYQ Intelligence</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         :root {
             --bg: #f8fafc; --surface: #ffffff; --surface-2: #f1f5f9;
             --border: #e2e8f0; --text: #0f172a; --text-soft: #64748b;
-            --accent: #e11d48; --accent-soft: #ffe4e6;
+            --accent: #e11d48; --accent-hover: #be123c; --accent-soft: #ffe4e6;
             --primary: #6366f1; --primary-soft: #e0e7ff;
             --shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
             --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
@@ -18,211 +18,240 @@
         body.dark-mode {
             --bg: #0f172a; --surface: #1e293b; --surface-2: #334155;
             --border: #334155; --text: #f1f5f9; --text-soft: #94a3b8;
-            --accent: #f43f5e; --accent-soft: #4c0519;
+            --accent: #f43f5e; --accent-hover: #e11d48; --accent-soft: #4c0519;
             --primary: #818cf8; --primary-soft: #312e81;
             --shadow: 0 1px 3px 0 rgb(0 0 0 / 0.3), 0 1px 2px -1px rgb(0 0 0 / 0.3);
             --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.3), 0 4px 6px -4px rgb(0 0 0 / 0.3);
         }
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; }
-        body { background: var(--bg); color: var(--text); height: 100vh; display: flex; transition: background 0.3s, color 0.3s; }
-        
-        .sidebar { width: 320px; background: var(--surface); border-right: 1px solid var(--border); display: flex; flex-direction: column; }
-        .logo { padding: 20px; font-weight: 800; font-size: 20px; display: flex; align-items: center; gap: 12px; border-bottom: 1px solid var(--border); }
-        .logo-icon { background: linear-gradient(135deg, #e11d48, #fb7185); color: white; padding: 6px; border-radius: 8px; }
-        
-        .paper-tabs { display: flex; padding: 12px; gap: 8px; border-bottom: 1px solid var(--border); }
-        .paper-tab { flex: 1; padding: 8px; border-radius: 8px; background: transparent; border: 1px solid var(--border); cursor: pointer; font-weight: 700; color: var(--text-soft); transition: 0.2s; }
+        body { background: var(--bg); color: var(--text); height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
+
+        /* Mobile Overlay */
+        .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 90; display: none; opacity: 0; transition: opacity 0.3s; }
+        .overlay.show { display: block; opacity: 1; }
+
+        /* Header */
+        .header { height: 70px; background: var(--surface); border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; padding: 0 24px; flex-shrink: 0; z-index: 100; }
+        .logo { display: flex; align-items: center; gap: 12px; font-weight: 900; font-size: 20px; }
+        .logo-icon { width: 36px; height: 36px; border-radius: 10px; background: linear-gradient(135deg, #e11d48, #fb7185); color: white; display: flex; align-items: center; justify-content: center; font-size: 20px; }
+        .header-controls { display: flex; gap: 16px; align-items: center; }
+        .search-box { display: flex; align-items: center; background: var(--surface-2); border: 1px solid var(--border); border-radius: 12px; padding: 8px 16px; width: 300px; }
+        .search-box input { border: none; background: transparent; outline: none; flex: 1; color: var(--text); font-size: 14px; }
+        .search-box input::placeholder { color: var(--text-soft); }
+        .theme-toggle { background: var(--surface-2); border: 1px solid var(--border); color: var(--text); padding: 8px 16px; border-radius: 8px; cursor: pointer; font-weight: 700; }
+        .theme-toggle:hover { background: var(--accent); color: white; border-color: var(--accent); }
+        .hamburger { display: none; background: none; border: none; color: var(--text); font-size: 24px; cursor: pointer; }
+
+        /* Layout */
+        .container { display: flex; flex: 1; overflow: hidden; position: relative; }
+
+        /* Sidebar */
+        .sidebar { width: 360px; background: var(--surface); border-right: 1px solid var(--border); display: flex; flex-direction: column; position: relative; z-index: 95; transition: transform 0.3s ease; }
+        .paper-tabs { display: flex; padding: 12px; gap: 8px; border-bottom: 1px solid var(--border); background: var(--surface); }
+        .paper-tab { flex: 1; padding: 10px; text-align: center; background: transparent; border: 1px solid var(--border); border-radius: 8px; cursor: pointer; font-weight: 800; color: var(--text-soft); transition: 0.2s; }
         .paper-tab.active { background: var(--accent); color: white; border-color: var(--accent); }
         
         .nav-scroll { flex: 1; overflow-y: auto; padding: 12px; }
-        .subject-title { font-size: 11px; font-weight: 800; text-transform: uppercase; color: var(--text-soft); margin: 16px 8px 8px; letter-spacing: 0.5px; }
+        .nav-scroll::-webkit-scrollbar { width: 6px; }
+        .nav-scroll::-webkit-scrollbar-thumb { background: var(--surface-2); border-radius: 4px; }
+
+        /* Accordion */
+        .broad-title { font-size: 11px; font-weight: 900; text-transform: uppercase; color: var(--primary); margin: 16px 8px 8px; letter-spacing: 0.5px; border-bottom: 1px solid var(--border); padding-bottom: 6px; }
         
-        .group-btn { width: 100%; display: flex; justify-content: space-between; align-items: center; background: var(--surface-2); border: none; padding: 10px 14px; border-radius: 8px; margin-bottom: 4px; cursor: pointer; font-weight: 700; }
-        .group-btn:hover { background: var(--accent-soft); color: var(--accent); }
-        .group-btn.active-group { background: var(--accent-soft); color: var(--accent); }
-        .group-arrow { transition: transform 0.2s; }
+        .group-btn { width: 100%; display: flex; justify-content: space-between; align-items: center; background: var(--surface-2); border: none; padding: 12px 14px; border-radius: 8px; margin-bottom: 4px; cursor: pointer; font-weight: 800; color: var(--text); }
+        .group-btn:hover { background: var(--primary-soft); color: var(--primary); }
+        .group-btn.active-group { background: var(--primary-soft); color: var(--primary); }
+        .group-arrow { transition: transform 0.2s; font-size: 14px; }
         .group-btn.open .group-arrow { transform: rotate(90deg); }
-        .micro-list { display: none; margin-left: 10px; border-left: 2px solid var(--border); padding-left: 10px; }
-        .micro-list.open { display: block; }
-        .micro-btn { width: 100%; text-align: left; padding: 8px; background: transparent; border: none; border-radius: 6px; cursor: pointer; color: var(--text-soft); font-size: 13px; font-weight: 600; }
-        .micro-btn:hover { background: var(--surface-2); color: var(--text); }
-        .micro-btn.active-micro { background: var(--accent); color: white; }
-
-        .main-content { flex: 1; overflow-y: auto; padding: 30px; }
-        .header { display: flex; justify-content: space-between; margin-bottom: 24px; }
-        .header h1 { font-size: 28px; font-weight: 800; }
-        .header p { color: var(--text-soft); font-size: 14px; }
-
-        .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 24px; }
-        .stat-card { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 20px; box-shadow: var(--shadow); }
-        .stat-icon { width: 40px; height: 40px; border-radius: 10px; background: var(--accent-soft); color: var(--accent); display: flex; align-items: center; justify-content: center; font-size: 20px; margin-bottom: 12px; }
-        .stat-value { font-size: 28px; font-weight: 800; letter-spacing: -1px; }
-        .stat-label { font-size: 13px; color: var(--text-soft); font-weight: 500; }
-
-        .charts-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; margin-bottom: 24px; }
-        .chart-card { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 20px; box-shadow: var(--shadow); }
-        .chart-card h3 { font-size: 15px; font-weight: 700; margin-bottom: 12px; }
-        .chart-container { height: 220px; position: relative; }
         
-        .radar-list { display: flex; flex-direction: column; gap: 12px; }
-        .radar-item { display: flex; align-items: center; gap: 10px; }
-        .radar-icon { background: var(--surface-2); color: var(--accent); width: 30px; height: 30px; border-radius: 8px; display: flex; align-items: center; justify-content: center; }
-        .radar-info { flex: 1; font-size: 13px; font-weight: 700; }
-        .radar-info span { display: block; font-size: 11px; color: var(--text-soft); font-weight: 500; }
-        .radar-tag { font-size: 10px; font-weight: 800; padding: 4px 8px; border-radius: 12px; }
-        .tag-high { background: var(--accent); color: white; }
-        .tag-med { background: #fbbf24; color: #78350f; }
+        .micro-list { display: none; margin-left: 12px; border-left: 3px solid var(--accent); padding-left: 10px; margin-bottom: 8px; }
+        .micro-list.open { display: block; }
+        .micro-btn { width: 100%; text-align: left; padding: 10px 12px; background: transparent; border: none; border-radius: 6px; cursor: pointer; color: var(--text-soft); font-size: 13px; font-weight: 700; margin-bottom: 2px; border: 1px solid transparent; }
+        .micro-btn:hover { background: var(--accent-soft); color: var(--accent); border-color: var(--accent); }
+        .micro-btn.active-micro { background: var(--accent); color: white; font-weight: 800; }
 
-        .explorer-section { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 20px; box-shadow: var(--shadow-lg); }
-        .explorer-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
-        .explorer-header h2 { font-size: 16px; font-weight: 800; }
-        .exp-card { display: flex; gap: 20px; background: var(--surface-2); border-radius: 12px; padding: 24px; align-items: flex-start; }
-        .exp-badges { display: flex; flex-direction: column; gap: 6px; align-items: center; padding-right: 15px; border-right: 1px solid var(--border); }
-        .exp-year { font-size: 24px; font-weight: 800; color: var(--accent); }
-        .exp-paper { font-size: 14px; font-weight: 700; }
-        .exp-question { flex: 1; }
-        .exp-question h4 { font-size: 18px; line-height: 1.6; margin-bottom: 12px; }
-        .exp-tags { display: flex; gap: 8px; margin-bottom: 12px; }
-        .exp-tag { background: var(--accent-soft); color: var(--accent); font-size: 12px; font-weight: 700; padding: 4px 8px; border-radius: 6px; }
-        .exp-meta { color: var(--text-soft); font-size: 12px; }
-        .exp-actions { display: flex; flex-direction: column; gap: 8px; }
-        .btn-action { background: var(--accent); color: white; border: none; padding: 10px 15px; border-radius: 8px; font-weight: 700; cursor: pointer; }
-        .btn-action:hover { opacity: 0.9; }
-        .btn-save { background: transparent; border: 1px solid var(--border); color: var(--text); padding: 10px 15px; border-radius: 8px; font-weight: 700; cursor: pointer; }
+        /* Main Content */
+        .main-content { flex: 1; overflow-y: auto; padding: 24px; background: var(--bg); }
+        
+        /* Priority Question Section */
+        .explorer-section { background: var(--surface); border: 2px solid var(--border); border-radius: 20px; padding: 24px; box-shadow: var(--shadow-lg); margin-bottom: 30px; }
+        .exp-badges { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 20px; }
+        .badge { font-size: 13px; font-weight: 900; padding: 6px 12px; border-radius: 50px; }
+        .badge-year { background: var(--accent); color: white; }
+        .badge-paper { background: var(--primary); color: white; }
+        .badge-marks { background: var(--primary-soft); color: var(--primary); }
+        .badge-subject { background: var(--surface-2); color: var(--text-soft); border: 1px solid var(--border); }
+        .q-text { font-size: 22px; font-weight: 800; line-height: 1.6; margin-bottom: 24px; }
+        .exp-actions { display: flex; gap: 12px; }
+        .btn-action { background: var(--accent); color: white; border: none; padding: 12px 20px; border-radius: 10px; font-weight: 800; cursor: pointer; transition: 0.2s; }
+        .btn-action:hover { background: var(--accent-hover); transform: translateY(-2px); }
+        .btn-save { background: transparent; border: 2px solid var(--border); color: var(--text); padding: 12px 20px; border-radius: 10px; font-weight: 800; cursor: pointer; transition: 0.2s; }
         .btn-save:hover { border-color: var(--accent); color: var(--accent); }
+        
+        .empty-state { text-align: center; padding: 60px; color: var(--text-soft); }
+        .empty-state h2 { font-size: 28px; color: var(--text); margin-bottom: 10px; font-weight: 900; }
 
-        .error-box { background: #fee2e2; border: 1px solid #fecaca; color: #991b1b; padding: 16px; border-radius: 10px; font-size: 14px; margin-top: 20px; }
-        .error-box strong { display: block; margin-bottom: 6px; font-size: 16px; }
-
+        /* Chart Section (Bottom) */
+        .charts-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
+        .chart-card { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 20px; box-shadow: var(--shadow); }
+        .chart-card h3 { font-size: 16px; font-weight: 900; margin-bottom: 15px; }
+        .chart-container { height: 250px; position: relative; }
+        
+        /* Mobile */
         @media (max-width: 900px) {
-            .sidebar { display: none; } 
-            .charts-grid, .stats-grid { grid-template-columns: 1fr; }
-            .exp-card { flex-direction: column; }
-            .exp-badges { border-right: none; border-bottom: 1px solid var(--border); padding-right: 0; padding-bottom: 10px; }
+            .header { padding: 0 16px; }
+            .search-box { display: none; }
+            .hamburger { display: block; }
+            .sidebar { position: fixed; top: 0; left: 0; height: 100%; transform: translateX(-100%); width: 320px; }
+            .sidebar.open { transform: translateX(0); }
+            .main-content { padding: 16px; }
+            .charts-row { grid-template-columns: 1fr; }
+            .q-text { font-size: 18px; }
+            .exp-actions { flex-direction: column; }
         }
     </style>
 </head>
 <body>
 
-    <div class="sidebar">
+    <div class="overlay" id="overlay" onclick="toggleSidebar(false)"></div>
+
+    <div class="header">
         <div class="logo"><div class="logo-icon">🦉</div> UPSC CRAFT</div>
-        <div class="paper-tabs">
-            <button class="paper-tab active" onclick="selectPaper('GS1')">GS1</button>
-            <button class="paper-tab" onclick="selectPaper('GS2')">GS2</button>
-            <button class="paper-tab" onclick="selectPaper('GS3')">GS3</button>
-            <button class="paper-tab" onclick="selectPaper('GS4')">GS4</button>
+        <div class="header-controls">
+            <div class="search-box">
+                <input type="text" id="searchInput" placeholder="Search questions, themes...">
+            </div>
+            <button class="theme-toggle" onclick="toggleTheme()">🌓 Theme</button>
+            <button class="hamburger" onclick="toggleSidebar(true)">☰</button>
         </div>
-        <div class="nav-scroll" id="sidebar-nav"></div>
-        <button class="btn-save" style="margin: 12px; border-radius: 8px; border: 1px solid var(--border); background: var(--surface-2); font-weight: 700; color: var(--text); padding: 10px; cursor: pointer;" onclick="toggleTheme()">🌓 Toggle Theme</button>
     </div>
 
-    <div class="main-content">
-        <div class="header">
-            <div>
-                <h1>PYQ Intelligence</h1>
-                <p>Decode what UPSC has been asking</p>
+    <div class="container">
+        <div class="sidebar" id="sidebar">
+            <div class="paper-tabs">
+                <button class="paper-tab active" onclick="selectPaper('GS1')">GS1</button>
+                <button class="paper-tab" onclick="selectPaper('GS2')">GS2</button>
+                <button class="paper-tab" onclick="selectPaper('GS3')">GS3</button>
+                <button class="paper-tab" onclick="selectPaper('GS4')">GS4</button>
+            </div>
+            <div class="nav-scroll" id="sidebar-nav">
+                <!-- Loaded dynamically -->
             </div>
         </div>
 
-        <div class="stats-grid">
-            <div class="stat-card">
-                <div class="stat-icon">📄</div>
-                <div class="stat-value" id="stat-qs">0</div>
-                <div class="stat-label">Total PYQs</div>
+        <div class="main-content">
+            <div class="explorer-section" id="expSection">
+                <div class="exp-badges" id="expBadges"></div>
+                <div class="q-text" id="qText">Select a micro-theme to explore</div>
+                <div class="exp-actions">
+                    <button class="btn-action" onclick="alert('AI Answer Generation Coming Soon!')">✨ Generate Answer</button>
+                    <button class="btn-save" onclick="alert('Question Saved to Bookmarks!')">💾 Save Question</button>
+                </div>
             </div>
-            <div class="stat-card">
-                <div class="stat-icon">🎯</div>
-                <div class="stat-value" id="stat-topics">0</div>
-                <div class="stat-label">Distinct Topics</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-icon">📊</div>
-                <div class="stat-value" id="stat-major">0</div>
-                <div class="stat-label">Major Themes</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-icon">📅</div>
-                <div class="stat-value" id="stat-years">0</div>
-                <div class="stat-label">Years Covered</div>
-            </div>
-        </div>
 
-        <div class="charts-grid">
-            <div class="chart-card">
-                <h3>Trend by Year</h3>
-                <div class="chart-container"><canvas id="trendChart"></canvas></div>
-            </div>
-            <div class="chart-card">
-                <h3>Most Repeated Topics</h3>
-                <div class="chart-container"><canvas id="topicChart"></canvas></div>
-            </div>
-            <div class="chart-card">
-                <h3>Repeat Radar</h3>
-                <div class="radar-list" id="radarList"></div>
-            </div>
-        </div>
-
-        <div class="explorer-section">
-            <div class="explorer-header">
-                <h2>Question Explorer</h2>
-            </div>
-            <div class="exp-card" id="expCard">
-                <div style="color: var(--text-soft);">Select a micro-theme from the sidebar to view the question.</div>
+            <div class="charts-row">
+                <div class="chart-card">
+                    <h3>Trend by Year</h3>
+                    <div class="chart-container"><canvas id="trendChart"></canvas></div>
+                </div>
+                <div class="chart-card">
+                    <h3>Most Repeated Themes</h3>
+                    <div class="chart-container"><canvas id="topicChart"></canvas></div>
+                </div>
+                <div class="chart-card">
+                    <h3>Radar</h3>
+                    <div class="chart-container"><canvas id="radarChart"></canvas></div>
+                </div>
             </div>
         </div>
     </div>
 
     <script>
+        // Theme
         const savedTheme = localStorage.getItem('pyq-theme') || 'light';
         if(savedTheme === 'dark') document.body.classList.add('dark-mode');
         function toggleTheme() { document.body.classList.toggle('dark-mode'); localStorage.setItem('pyq-theme', document.body.classList.contains('dark-mode') ? 'dark' : 'light'); }
+
+        // Mobile Sidebar
+        function toggleSidebar(open) {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('overlay');
+            if(open) {
+                sidebar.classList.add('open');
+                overlay.classList.add('show');
+            } else {
+                sidebar.classList.remove('open');
+                overlay.classList.remove('show');
+            }
+        }
+
+        // Exact Major Mapping
+        const MajorMap = {
+            'GS1': {
+                'Art & Culture': ['Indian Heritage & Culture'],
+                'Modern History': ['Modern Indian History'],
+                'Post Independence': ['Post Independence'],
+                'World History': ['World History'],
+                'Physical Geography': ['Physical Geography'],
+                'Economic & Human Geography': ['Economic & Human Geography'],
+                'Indian society': ['Indian Society', 'Society']
+            },
+            'GS2': {
+                'Polity': ['Polity'],
+                'Governance': ['Governance'],
+                'Social Justice': ['Social Justice'],
+                'International Relations': ['International Relations']
+            },
+            'GS3': {
+                'Economy': ['Economic Development'],
+                'Agriculture': ['Agriculture'],
+                'Internal Security': ['Internal Security'],
+                'Environment & Disaster Management': ['Environment', 'Disaster Management'],
+                'Science & Tech': ['Science & Technology']
+            },
+            'GS4': {
+                'Ethics Theory': ['Ethics'],
+                'Case Studies': ['Case Studies']
+            }
+        };
 
         let allData = {};
         let currentPaper = 'GS1';
         let myCharts = {};
 
-        // FIXED: rawData is the entire JSON from the file, so we just iterate over the subjects!
-        function processData(rawData) {
-            const grouped = {};
-            for (const subject in rawData) {
-                if (!grouped[subject]) grouped[subject] = {};
-                rawData[subject].forEach(q => {
-                    const parts = q.microtheme.split(' x ');
-                    const majorTheme = parts.length > 1 ? parts[0].trim() : 'General';
-                    if (!grouped[subject][majorTheme]) grouped[subject][majorTheme] = [];
-                    grouped[subject][majorTheme].push(q);
-                });
-            }
-            return grouped;
-        }
-
         async function loadData() {
             const files = { 'GS1': './gs1_themes.json', 'GS2': './gs2_themes.json', 'GS3': './gs3_themes.json', 'GS4': './gs4_themes.json' };
-            
             const results = await Promise.all(Object.entries(files).map(async ([paper, url]) => {
                 try { const res = await fetch(url); if (!res.ok) return { paper, data: {} }; return { paper, data: await res.json() }; } catch(e) { return { paper, data: {} }; }
             }));
-            
-            let allEmpty = true;
-            results.forEach(res => { 
-                if (Object.keys(res.data).length > 0) allEmpty = false;
-                allData[res.paper] = processData(res.data); // FIXED: pass res.data directly
-            });
 
-            if (allEmpty) {
-                document.getElementById('sidebar-nav').innerHTML = `
-                    <div class="error-box">
-                        <strong>🚫 File read error (CORS Blocked)</strong>
-                        Your browser is blocking the JSON files because you are opening this locally!<br><br>
-                        To fix this, <b>do not double-click this file.</b> Instead:
-                        <ol style="margin-top: 10px; padding-left: 20px;">
-                            <li>Enable GitHub Pages in your repo settings.</li>
-                            <li>Open the live URL (e.g., <b>https://username.github.io/UPSC-Craft/analyzer.html</b>)</li>
-                            <li>OR, use VS Code "Live Server" to run this locally.</li>
-                        </ol>
-                    </div>`;
-                return;
-            }
+            results.forEach(res => {
+                const grouped = {};
+                const rawPaperData = res.data || {};
+
+                // Map raw JSON subjects to Broad Subjects provided by user
+                for (const broadSubject in MajorMap[res.paper]) {
+                    const rawKeys = MajorMap[res.paper][broadSubject];
+                    grouped[broadSubject] = [];
+
+                    rawKeys.forEach(key => {
+                        if(rawPaperData[key]) {
+                            grouped[broadSubject] = grouped[broadSubject].concat(rawPaperData[key]);
+                        }
+                    });
+                }
+
+                // Catch any leftover subjects not in the map (fallback)
+                for (const subject in rawPaperData) {
+                    let isFound = false;
+                    for(const broadSubject in MajorMap[res.paper]) {
+                        if(MajorMap[res.paper][broadSubject].includes(subject)) isFound = true;
+                    }
+                    if(!isFound) grouped['General'] = (grouped['General'] || []).concat(rawPaperData[subject]);
+                }
+
+                allData[res.paper] = grouped;
+            });
 
             selectPaper('GS1');
         }
@@ -232,39 +261,55 @@
             document.querySelectorAll('.paper-tab').forEach(tab => tab.classList.toggle('active', tab.textContent === paper));
             renderSidebar();
             renderDashboard();
+            toggleSidebar(false); // Close mobile sidebar on selection
         }
 
         function renderSidebar() {
             const nav = document.getElementById('sidebar-nav');
             nav.innerHTML = '';
             const paperData = allData[currentPaper];
-            if (!paperData || Object.keys(paperData).length === 0) { nav.innerHTML = '<div style="padding: 20px; color: var(--text-soft);">No data found for this paper.</div>'; return; }
 
-            for (const subject in paperData) {
-                const subTitle = document.createElement('div');
-                subTitle.className = 'subject-title';
-                subTitle.textContent = subject;
-                nav.appendChild(subTitle);
+            if(!paperData || Object.keys(paperData).length === 0) {
+                nav.innerHTML = `<div style="padding: 20px; color: var(--text-soft);">No data found for ${currentPaper}. Please check file names and path.</div>`;
+                return;
+            }
 
-                for (const majorTheme in paperData[subject]) {
-                    const themeArr = paperData[subject][majorTheme];
-                    const themeId = `${currentPaper}-${subject}-${majorTheme}`;
+            for (const broadSubject in paperData) {
+                const title = document.createElement('div');
+                title.className = 'broad-title';
+                title.textContent = broadSubject;
+                nav.appendChild(title);
+
+                const questions = paperData[broadSubject];
+                
+                // Group by Microtheme Root (e.g., "Kingdoms")
+                const themeGroups = {};
+                questions.forEach(q => {
+                    const parts = q.microtheme.split(' x ');
+                    const root = parts.length > 1 ? parts[0].trim() : q.microtheme;
+                    if(!themeGroups[root]) themeGroups[root] = [];
+                    themeGroups[root].push(q);
+                });
+
+                for (const rootTheme in themeGroups) {
+                    const themeArr = themeGroups[rootTheme];
+                    const id = `${currentPaper}-${broadSubject}-${rootTheme}`;
 
                     const groupBtn = document.createElement('button');
                     groupBtn.className = 'group-btn';
-                    groupBtn.innerHTML = `<span>${majorTheme}</span> <span class="group-arrow">›</span>`;
+                    groupBtn.innerHTML = `<span>${rootTheme}</span> <span class="group-arrow">›</span>`;
                     groupBtn.onclick = () => {
-                        const list = document.getElementById(`list-${themeId}`);
+                        const list = document.getElementById(`list-${id}`);
                         const isOpen = list.classList.contains('open');
                         document.querySelectorAll('.micro-list').forEach(l => l.classList.remove('open'));
                         document.querySelectorAll('.group-btn').forEach(b => b.classList.remove('open'));
-                        if (!isOpen) { list.classList.add('open'); groupBtn.classList.add('open'); }
+                        if(!isOpen) { list.classList.add('open'); groupBtn.classList.add('open'); }
                     };
                     nav.appendChild(groupBtn);
 
                     const microList = document.createElement('div');
                     microList.className = 'micro-list';
-                    microList.id = `list-${themeId}`;
+                    microList.id = `list-${id}`;
 
                     themeArr.forEach(q => {
                         const microBtn = document.createElement('button');
@@ -282,53 +327,28 @@
             document.querySelectorAll('.micro-btn').forEach(b => b.classList.remove('active-micro'));
             btnElement.classList.add('active-micro');
 
-            const card = document.getElementById('expCard');
-            card.innerHTML = `
-                <div class="exp-badges">
-                    <div class="exp-year">${q.year}</div>
-                    <div class="exp-paper">${q.paper}</div>
-                    <div class="exp-meta" style="font-weight: 700;">${q.marks} M</div>
-                </div>
-                <div class="exp-question">
-                    <h4>${q.key_pyq}</h4>
-                    <div class="exp-tags">
-                        <span class="exp-tag">${q.subject}</span>
-                        <span class="exp-tag">${q.microtheme}</span>
-                    </div>
-                    <div class="exp-meta">Last Asked: ${q.year}</div>
-                </div>
-                <div class="exp-actions">
-                    <button class="btn-action">✨ Analyse</button>
-                    <button class="btn-action">⚡ Generate</button>
-                    <button class="btn-save">💾 Save</button>
-                </div>`;
+            document.getElementById('expBadges').innerHTML = `
+                <span class="badge badge-year">📅 ${q.year}</span>
+                <span class="badge badge-marks">🎯 ${q.marks} Marks</span>
+                <span class="badge badge-paper">📚 ${q.paper}</span>
+                <span class="badge badge-subject">${q.subject || 'Broad Subject'}</span>
+                <span class="badge badge-subject">${q.microtheme}</span>
+            `;
+            document.getElementById('qText').textContent = q.key_pyq;
         }
 
         function renderDashboard() {
-            let totalQs = 0, totalTopics = 0, totalMajor = 0;
+            // Stats
             let allQuestions = [];
             const paperData = allData[currentPaper] || {};
-            
             for(const subject in paperData) {
-                for(const major in paperData[subject]) {
-                    totalMajor++;
-                    paperData[subject][major].forEach(q => {
-                        totalQs++;
-                        totalTopics++;
-                        allQuestions.push(q);
-                    });
-                }
+                allQuestions = allQuestions.concat(paperData[subject]);
             }
 
-            const years = [...new Set(allQuestions.map(q => q.year))].sort();
-            document.getElementById('stat-qs').textContent = totalQs;
-            document.getElementById('stat-topics').textContent = totalTopics;
-            document.getElementById('stat-major').textContent = totalMajor;
-            document.getElementById('stat-years').textContent = years.length;
-
+            // Charts
             drawTrendChart(allQuestions);
             drawTopicChart(allQuestions);
-            drawRadar(allQuestions);
+            drawRadarChart(allQuestions);
         }
 
         function drawTrendChart(data) {
@@ -339,38 +359,60 @@
             if(myCharts.trend) myCharts.trend.destroy();
             myCharts.trend = new Chart(ctx, {
                 type: 'line',
-                data: { labels, datasets: [{ data: counts, borderColor: '#e11d48', backgroundColor: 'rgba(225,29,72,0.1)', fill: true, tension: 0.4, pointRadius: 3 }] },
+                data: { labels, datasets: [{ data: counts, borderColor: '#e11d48', backgroundColor: 'rgba(225,29,72,0.1)', fill: true, tension: 0.4, pointRadius: 4 }] },
                 options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { grid: { display: false } }, y: { beginAtZero: true } } }
             });
         }
 
         function drawTopicChart(data) {
             const topics = {}; data.forEach(q => topics[q.microtheme] = (topics[q.microtheme] || 0) + 1);
-            const sorted = Object.entries(topics).sort((a, b) => b[1] - a[1]).slice(0, 8);
+            const sorted = Object.entries(topics).sort((a, b) => b[1] - a[1]).slice(0, 6);
             const labels = sorted.map(t => t[0]); const counts = sorted.map(t => t[1]);
             const ctx = document.getElementById('topicChart').getContext('2d');
             if(myCharts.topic) myCharts.topic.destroy();
             myCharts.topic = new Chart(ctx, {
                 type: 'bar',
-                data: { labels, datasets: [{ data: counts, backgroundColor: '#e11d48', borderRadius: 4 }] },
+                data: { labels, datasets: [{ data: counts, backgroundColor: '#6366f1', borderRadius: 6 }] },
                 options: { indexAxis: 'y', responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { beginAtZero: true, grid: { display: false } }, y: { grid: { display: false } } } }
             });
         }
 
-        function drawRadar(data) {
+        function drawRadarChart(data) {
+            const ctx = document.getElementById('radarChart').getContext('2d');
             const topics = {}; data.forEach(q => topics[q.microtheme] = (topics[q.microtheme] || 0) + 1);
-            const sorted = Object.entries(topics).sort((a, b) => b[1] - a[1]);
-            const container = document.getElementById('radarList');
-            container.innerHTML = '';
-            sorted.slice(0, 5).forEach(([topic, count]) => {
-                const lastYear = data.filter(q => q.microtheme === topic).pop().year;
-                let tagClass = 'tag-med', tagText = 'High';
-                if(count >= 5) { tagClass = 'tag-high'; tagText = 'Very High'; }
-                const item = document.createElement('div');
-                item.className = 'radar-item';
-                item.innerHTML = `<div class="radar-icon">📚</div><div class="radar-info">${topic}<span>${count} Qs | Last: ${lastYear}</span></div><span class="radar-tag ${tagClass}">${tagText}</span>`;
-                container.appendChild(item);
+            const sorted = Object.entries(topics).sort((a, b) => b[1] - a[1]).slice(0, 5);
+            const labels = sorted.map(t => t[0]); const counts = sorted.map(t => t[1]);
+            if(myCharts.radar) myCharts.radar.destroy();
+            myCharts.radar = new Chart(ctx, {
+                type: 'radar',
+                data: { labels, datasets: [{ data: counts, backgroundColor: 'rgba(225,29,72,0.2)', borderColor: '#e11d48', pointBackgroundColor: '#e11d48', borderWidth: 2 }] },
+                options: { responsive: true, maintainAspectRatio: false, scales: { r: { beginAtZero: true } }, plugins: { legend: { display: false } } }
             });
+        }
+
+        // Search Debounce
+        document.getElementById('searchInput').addEventListener('input', debounce(applySearch, 300));
+
+        function applySearch() {
+            const query = document.getElementById('searchInput').value.toLowerCase();
+            const nav = document.getElementById('sidebar-nav');
+            const buttons = nav.querySelectorAll('.micro-btn');
+            let hasMatch = false;
+
+            buttons.forEach(btn => {
+                const text = btn.textContent.toLowerCase();
+                if(text.includes(query)) {
+                    btn.style.display = 'block';
+                    hasMatch = true;
+                } else {
+                    btn.style.display = 'none';
+                }
+            });
+        }
+
+        function debounce(func, wait) {
+            let timeout;
+            return function(...args) { clearTimeout(timeout); timeout = setTimeout(() => func.apply(this, args), wait); };
         }
 
         loadData();
