@@ -312,22 +312,25 @@ document.addEventListener('DOMContentLoaded', function() {
   // *** BULLETPROOF NORMALIZER (HANDLES OPT1, OPT2, ANTHRO1, PAPER1, ETC) ***
   function normalizePaperCode(paperVal) {
     if (!paperVal) return 'GS1';
+    // Remove spaces, dashes, dots and uppercase
     let cleaned = String(paperVal).toUpperCase().replace(/[\s\-\.]/g, ''); 
 
-    if (cleaned.includes('ANTHRO') || cleaned.includes('OPT') || cleaned.includes('PAPER')) {
-        if (cleaned.includes('2')) return 'anthropology_paper2';
-        return 'anthropology_paper1';
-    }
-    
+    // 1. FIRST Check for GS (to prevent "GS Paper 2" from being caught by PAPER logic)
     if (cleaned.includes('GS')) {
         if (cleaned.includes('2')) return 'GS2';
         if (cleaned.includes('3')) return 'GS3';
         if (cleaned.includes('4')) return 'GS4';
-        return 'GS1';
+        return 'GS1'; // Default for GS1
     }
-    
+
+    // 2. THEN Check for Anthropology / Optional / Paper
+    if (cleaned.includes('ANTHRO') || cleaned.includes('OPT') || cleaned.includes('PAPER')) {
+        if (cleaned.includes('2')) return 'anthropology_paper2';
+        return 'anthropology_paper1';
+    }
+
     return 'GS1';
-  }
+}
 
   // Display friendly name in UI
   function formatPaperName(paper) {
