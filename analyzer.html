@@ -47,8 +47,10 @@
 
         /* Sidebar */
         .sidebar { width: 360px; background: var(--surface); border-right: 1px solid var(--border); display: flex; flex-direction: column; position: relative; z-index: 95; transition: transform 0.3s ease; }
-        .paper-tabs { display: flex; padding: 12px; gap: 8px; border-bottom: 1px solid var(--border); background: var(--surface); }
-        .paper-tab { flex: 1; padding: 10px; text-align: center; background: transparent; border: 1px solid var(--border); border-radius: 8px; cursor: pointer; font-weight: 800; color: var(--text-soft); transition: 0.2s; }
+        
+        /* Center Paper Tabs */
+        .paper-tabs { display: flex; justify-content: center; padding: 12px; gap: 8px; border-bottom: 1px solid var(--border); background: var(--surface); }
+        .paper-tab { flex: 1; max-width: 100px; padding: 10px; text-align: center; background: transparent; border: 1px solid var(--border); border-radius: 8px; cursor: pointer; font-weight: 800; color: var(--text-soft); transition: 0.2s; }
         .paper-tab.active { background: var(--accent); color: white; border-color: var(--accent); }
         
         .nav-scroll { flex: 1; overflow-y: auto; padding: 12px; }
@@ -66,14 +68,29 @@
         
         .micro-list { display: none; margin-left: 12px; border-left: 3px solid var(--accent); padding-left: 10px; margin-bottom: 8px; }
         .micro-list.open { display: block; }
-        .micro-btn { width: 100%; text-align: left; padding: 10px 12px; background: transparent; border: none; border-radius: 6px; cursor: pointer; color: var(--text-soft); font-size: 13px; font-weight: 700; margin-bottom: 2px; border: 1px solid transparent; }
+        .micro-btn { width: 100%; text-align: left; padding: 10px 12px; background: transparent; border: none; border-radius: 6px; cursor: pointer; color: var(--text-soft); font-size: 13px; font-weight: 700; margin-bottom: 2px; border: 1px solid transparent; display: flex; justify-content: space-between; align-items: center; }
         .micro-btn:hover { background: var(--accent-soft); color: var(--accent); border-color: var(--accent); }
         .micro-btn.active-micro { background: var(--accent); color: white; font-weight: 800; }
+        
+        /* Direct buttons (no sub-themes) */
+        .direct-theme-btn { background: var(--surface-2); color: var(--text); border: none; width: 100%; text-align: left; padding: 12px 14px; border-radius: 8px; margin-bottom: 4px; cursor: pointer; font-weight: 800; display: flex; justify-content: space-between; align-items: center; }
+        .direct-theme-btn:hover { background: var(--accent-soft); color: var(--accent); }
+        .direct-theme-btn.active-micro { background: var(--accent); color: white; }
+
+        /* Count Badges */
+        .count-badge { background: var(--surface); border: 1px solid var(--border); color: var(--text-soft); padding: 2px 8px; border-radius: 50px; font-size: 12px; font-weight: 800; min-width: 28px; text-align: center; }
+        .active-micro .count-badge, .direct-theme-btn.active-micro .count-badge, .group-btn:hover .count-badge { background: rgba(255,255,255,0.3); border-color: transparent; color: white; }
 
         /* Main Content */
         .main-content { flex: 1; overflow-y: auto; padding: 24px; background: var(--bg); }
         
-        /* Priority Question Section */
+        /* Summary Section */
+        .paper-summary { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 24px; }
+        .sum-card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 16px; }
+        .sum-value { font-size: 28px; font-weight: 900; color: var(--accent); }
+        .sum-label { font-size: 12px; color: var(--text-soft); font-weight: 600; }
+
+        /* Explorer */
         .explorer-section { background: var(--surface); border: 2px solid var(--border); border-radius: 20px; padding: 24px; box-shadow: var(--shadow-lg); margin-bottom: 30px; }
         .exp-badges { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 20px; }
         .badge { font-size: 13px; font-weight: 900; padding: 6px 12px; border-radius: 50px; }
@@ -87,17 +104,13 @@
         .btn-action:hover { background: var(--accent-hover); transform: translateY(-2px); }
         .btn-save { background: transparent; border: 2px solid var(--border); color: var(--text); padding: 12px 20px; border-radius: 10px; font-weight: 800; cursor: pointer; transition: 0.2s; }
         .btn-save:hover { border-color: var(--accent); color: var(--accent); }
-        
-        .empty-state { text-align: center; padding: 60px; color: var(--text-soft); }
-        .empty-state h2 { font-size: 28px; color: var(--text); margin-bottom: 10px; font-weight: 900; }
 
-        /* Chart Section (Bottom) */
+        /* Chart Section */
         .charts-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
         .chart-card { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 20px; box-shadow: var(--shadow); }
         .chart-card h3 { font-size: 16px; font-weight: 900; margin-bottom: 15px; }
         .chart-container { height: 250px; position: relative; }
         
-        /* Mobile */
         @media (max-width: 900px) {
             .header { padding: 0 16px; }
             .search-box { display: none; }
@@ -105,6 +118,7 @@
             .sidebar { position: fixed; top: 0; left: 0; height: 100%; transform: translateX(-100%); width: 320px; }
             .sidebar.open { transform: translateX(0); }
             .main-content { padding: 16px; }
+            .paper-summary { grid-template-columns: repeat(2, 1fr); }
             .charts-row { grid-template-columns: 1fr; }
             .q-text { font-size: 18px; }
             .exp-actions { flex-direction: column; }
@@ -140,7 +154,16 @@
         </div>
 
         <div class="main-content">
-            <div class="explorer-section" id="expSection">
+            
+            <!-- Summary Stats for the selected paper -->
+            <div class="paper-summary" id="paperSummary">
+                <div class="sum-card"><div class="sum-value" id="sum-qs">0</div><div class="sum-label">Total Questions</div></div>
+                <div class="sum-card"><div class="sum-value" id="sum-themes">0</div><div class="sum-label">Micro-Themes</div></div>
+                <div class="sum-card"><div class="sum-value" id="sum-years">0</div><div class="sum-label">Years Covered</div></div>
+                <div class="sum-card"><div class="sum-value" id="sum-recent">0</div><div class="sum-label">2026 Questions</div></div>
+            </div>
+
+            <div class="explorer-section">
                 <div class="exp-badges" id="expBadges"></div>
                 <div class="q-text" id="qText">Select a micro-theme to explore</div>
                 <div class="exp-actions">
@@ -151,15 +174,15 @@
 
             <div class="charts-row">
                 <div class="chart-card">
-                    <h3>Trend by Year</h3>
+                    <h3 id="trend-title">Trend by Year</h3>
                     <div class="chart-container"><canvas id="trendChart"></canvas></div>
                 </div>
                 <div class="chart-card">
-                    <h3>Most Repeated Themes</h3>
+                    <h3 id="topic-title">Most Repeated Themes</h3>
                     <div class="chart-container"><canvas id="topicChart"></canvas></div>
                 </div>
                 <div class="chart-card">
-                    <h3>Radar</h3>
+                    <h3 id="radar-title">Radar</h3>
                     <div class="chart-container"><canvas id="radarChart"></canvas></div>
                 </div>
             </div>
@@ -167,12 +190,10 @@
     </div>
 
     <script>
-        // Theme (NO LocalStorage - Just in-memory)
         function toggleTheme() {
             document.body.classList.toggle('dark-mode');
         }
 
-        // Mobile Sidebar
         function toggleSidebar(open) {
             const sidebar = document.getElementById('sidebar');
             const overlay = document.getElementById('overlay');
@@ -185,41 +206,17 @@
             }
         }
 
-        // Exact Major Mapping
         const MajorMap = {
-            'GS1': {
-                'Art & Culture': ['Indian Heritage & Culture'],
-                'Modern History': ['Modern Indian History'],
-                'Post Independence': ['Post Independence'],
-                'World History': ['World History'],
-                'Physical Geography': ['Physical Geography'],
-                'Economic & Human Geography': ['Economic & Human Geography'],
-                'Indian society': ['Indian Society', 'Society']
-            },
-            'GS2': {
-                'Polity': ['Polity'],
-                'Governance': ['Governance'],
-                'Social Justice': ['Social Justice'],
-                'International Relations': ['International Relations']
-            },
-            'GS3': {
-                'Economy': ['Economic Development'],
-                'Agriculture': ['Agriculture'],
-                'Internal Security': ['Internal Security'],
-                'Environment & Disaster Management': ['Environment', 'Disaster Management'],
-                'Science & Tech': ['Science & Technology']
-            },
-            'GS4': {
-                'Ethics Theory': ['Ethics'],
-                'Case Studies': ['Case Studies']
-            }
+            'GS1': { 'Art & Culture': ['Indian Heritage & Culture'], 'Modern History': ['Modern Indian History'], 'Post Independence': ['Post Independence'], 'World History': ['World History'], 'Physical Geography': ['Physical Geography'], 'Economic & Human Geography': ['Economic & Human Geography'], 'Indian society': ['Indian Society', 'Society'] },
+            'GS2': { 'Polity': ['Polity'], 'Governance': ['Governance'], 'Social Justice': ['Social Justice'], 'International Relations': ['International Relations'] },
+            'GS3': { 'Economy': ['Economic Development'], 'Agriculture': ['Agriculture'], 'Internal Security': ['Internal Security'], 'Environment & Disaster Management': ['Environment', 'Disaster Management'], 'Science & Tech': ['Science & Technology'] },
+            'GS4': { 'Ethics Theory': ['Ethics'], 'Case Studies': ['Case Studies'] }
         };
 
         let allData = {};
         let currentPaper = 'GS1';
         let myCharts = {};
 
-        // Fetches directly from the server files
         async function loadData() {
             const files = { 'GS1': './gs1_themes.json', 'GS2': './gs2_themes.json', 'GS3': './gs3_themes.json', 'GS4': './gs4_themes.json' };
             const results = await Promise.all(Object.entries(files).map(async ([paper, url]) => {
@@ -229,20 +226,13 @@
             results.forEach(res => {
                 const grouped = {};
                 const rawPaperData = res.data || {};
-
-                // Map raw JSON subjects to Broad Subjects provided by user
                 for (const broadSubject in MajorMap[res.paper]) {
                     const rawKeys = MajorMap[res.paper][broadSubject];
                     grouped[broadSubject] = [];
-
                     rawKeys.forEach(key => {
-                        if(rawPaperData[key]) {
-                            grouped[broadSubject] = grouped[broadSubject].concat(rawPaperData[key]);
-                        }
+                        if(rawPaperData[key]) grouped[broadSubject] = grouped[broadSubject].concat(rawPaperData[key]);
                     });
                 }
-
-                // Catch any leftover subjects not in the map (fallback)
                 for (const subject in rawPaperData) {
                     let isFound = false;
                     for(const broadSubject in MajorMap[res.paper]) {
@@ -250,7 +240,6 @@
                     }
                     if(!isFound) grouped['General'] = (grouped['General'] || []).concat(rawPaperData[subject]);
                 }
-
                 allData[res.paper] = grouped;
             });
 
@@ -262,7 +251,10 @@
             document.querySelectorAll('.paper-tab').forEach(tab => tab.classList.toggle('active', tab.textContent === paper));
             renderSidebar();
             renderDashboard();
-            toggleSidebar(false); // Close mobile sidebar on selection
+            toggleSidebar(false);
+            // Auto-select the first question in the sidebar so it's never empty!
+            const firstBtn = document.querySelector('.micro-btn, .direct-theme-btn');
+            if (firstBtn) firstBtn.click();
         }
 
         function renderSidebar() {
@@ -271,7 +263,7 @@
             const paperData = allData[currentPaper];
 
             if(!paperData || Object.keys(paperData).length === 0) {
-                nav.innerHTML = `<div style="padding: 20px; color: var(--text-soft);">No data found for ${currentPaper}. Please check file names and path.</div>`;
+                nav.innerHTML = `<div style="padding: 20px; color: var(--text-soft);">No data found for ${currentPaper}.</div>`;
                 return;
             }
 
@@ -283,7 +275,6 @@
 
                 const questions = paperData[broadSubject];
                 
-                // Group by Microtheme Root (e.g., "Kingdoms")
                 const themeGroups = {};
                 questions.forEach(q => {
                     const parts = q.microtheme.split(' x ');
@@ -294,11 +285,20 @@
 
                 for (const rootTheme in themeGroups) {
                     const themeArr = themeGroups[rootTheme];
-                    const id = `${currentPaper}-${broadSubject}-${rootTheme}`;
 
+                    if (themeArr.every(q => q.microtheme === rootTheme)) {
+                        const btn = document.createElement('button');
+                        btn.className = 'direct-theme-btn';
+                        btn.innerHTML = `<span>${rootTheme}</span> <span class="count-badge">${themeArr.length}</span>`;
+                        btn.onclick = () => showQuestion(themeArr[0], btn);
+                        nav.appendChild(btn);
+                        continue;
+                    }
+
+                    const id = `${currentPaper}-${broadSubject}-${rootTheme}`;
                     const groupBtn = document.createElement('button');
                     groupBtn.className = 'group-btn';
-                    groupBtn.innerHTML = `<span>${rootTheme}</span> <span class="group-arrow">›</span>`;
+                    groupBtn.innerHTML = `<span>${rootTheme}</span> <span class="count-badge">${themeArr.length}</span> <span class="group-arrow">›</span>`;
                     groupBtn.onclick = () => {
                         const list = document.getElementById(`list-${id}`);
                         const isOpen = list.classList.contains('open');
@@ -312,20 +312,27 @@
                     microList.className = 'micro-list';
                     microList.id = `list-${id}`;
 
+                    const microCounts = {};
                     themeArr.forEach(q => {
+                        microCounts[q.microtheme] = (microCounts[q.microtheme] || 0) + 1;
+                    });
+
+                    for (const microTheme in microCounts) {
+                        const count = microCounts[microTheme];
                         const microBtn = document.createElement('button');
                         microBtn.className = 'micro-btn';
-                        microBtn.textContent = q.microtheme;
-                        microBtn.onclick = () => showQuestion(q, microBtn);
+                        microBtn.innerHTML = `<span>${microTheme}</span> <span class="count-badge">${count}</span>`;
+                        const firstQ = themeArr.find(q => q.microtheme === microTheme);
+                        microBtn.onclick = () => showQuestion(firstQ, microBtn);
                         microList.appendChild(microBtn);
-                    });
+                    }
                     nav.appendChild(microList);
                 }
             }
         }
 
         function showQuestion(q, btnElement) {
-            document.querySelectorAll('.micro-btn').forEach(b => b.classList.remove('active-micro'));
+            document.querySelectorAll('.micro-btn, .direct-theme-btn').forEach(b => b.classList.remove('active-micro'));
             btnElement.classList.add('active-micro');
 
             document.getElementById('expBadges').innerHTML = `
@@ -339,14 +346,28 @@
         }
 
         function renderDashboard() {
-            // Stats
             let allQuestions = [];
             const paperData = allData[currentPaper] || {};
             for(const subject in paperData) {
                 allQuestions = allQuestions.concat(paperData[subject]);
             }
 
-            // Charts
+            // Update Summary Stats
+            const totalQs = allQuestions.length;
+            const totalThemes = new Set(allQuestions.map(q => q.microtheme)).size;
+            const totalYears = new Set(allQuestions.map(q => q.year)).size;
+            const recentQs = allQuestions.filter(q => q.year === '2026').length;
+
+            document.getElementById('sum-qs').textContent = totalQs;
+            document.getElementById('sum-themes').textContent = totalThemes;
+            document.getElementById('sum-years').textContent = totalYears;
+            document.getElementById('sum-recent').textContent = recentQs;
+
+            // Update Chart Titles
+            document.getElementById('trend-title').textContent = `Trend by Year - ${currentPaper}`;
+            document.getElementById('topic-title').textContent = `Most Repeated Themes - ${currentPaper}`;
+            document.getElementById('radar-title').textContent = `Theme Radar - ${currentPaper}`;
+
             drawTrendChart(allQuestions);
             drawTopicChart(allQuestions);
             drawRadarChart(allQuestions);
@@ -391,23 +412,15 @@
             });
         }
 
-        // Search Debounce
         document.getElementById('searchInput').addEventListener('input', debounce(applySearch, 300));
-
         function applySearch() {
             const query = document.getElementById('searchInput').value.toLowerCase();
             const nav = document.getElementById('sidebar-nav');
-            const buttons = nav.querySelectorAll('.micro-btn');
-            let hasMatch = false;
-
+            const buttons = nav.querySelectorAll('.micro-btn, .direct-theme-btn');
             buttons.forEach(btn => {
                 const text = btn.textContent.toLowerCase();
-                if(text.includes(query)) {
-                    btn.style.display = 'block';
-                    hasMatch = true;
-                } else {
-                    btn.style.display = 'none';
-                }
+                if(text.includes(query)) btn.style.display = 'flex';
+                else btn.style.display = 'none';
             });
         }
 
