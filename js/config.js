@@ -7,7 +7,7 @@ const SYLLABUS = {
   GS2: ['Polity','Governance','Social Justice','International Relations'],
   GS3: ['Economy','Agriculture','Internal Security','Environment & Disaster Management','Science & Tech'],
   GS4: ['Ethics Theory','Case Studies'],
-  OPT1: [
+  anthropology_paper1: [
     '1.1 Meaning, Scope & Development of Anthropology',
     '1.2 Relationships with Other Disciplines',
     '1.3 Main Branches of Anthropology (Scope & Relevance)',
@@ -50,7 +50,7 @@ const SYLLABUS = {
     '11.3 Biological & Socio-ecological Factors in Demography',
     '12.0 Applications of Anthropology'
   ],
-  OPT2: [
+  anthropology_paper2: [
     '1.1 Evolution of Indian Culture & Civilization (Prehistoric to Harappan)',
     '1.2 Palaeo-Anthropological Evidences from India (Siwaliks & Narmada)',
     '1.3 Ethno-archaeology in India',
