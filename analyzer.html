@@ -167,10 +167,10 @@
     </div>
 
     <script>
-        // Theme
-        const savedTheme = localStorage.getItem('pyq-theme') || 'light';
-        if(savedTheme === 'dark') document.body.classList.add('dark-mode');
-        function toggleTheme() { document.body.classList.toggle('dark-mode'); localStorage.setItem('pyq-theme', document.body.classList.contains('dark-mode') ? 'dark' : 'light'); }
+        // Theme (NO LocalStorage - Just in-memory)
+        function toggleTheme() {
+            document.body.classList.toggle('dark-mode');
+        }
 
         // Mobile Sidebar
         function toggleSidebar(open) {
@@ -219,6 +219,7 @@
         let currentPaper = 'GS1';
         let myCharts = {};
 
+        // Fetches directly from the server files
         async function loadData() {
             const files = { 'GS1': './gs1_themes.json', 'GS2': './gs2_themes.json', 'GS3': './gs3_themes.json', 'GS4': './gs4_themes.json' };
             const results = await Promise.all(Object.entries(files).map(async ([paper, url]) => {
