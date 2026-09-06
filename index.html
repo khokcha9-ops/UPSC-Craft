@@ -59,7 +59,10 @@
             <a href="#built-for">How it works</a>
             <a href="workspace.html" target="_blank">PYQ Analyzer</a>
         </div>
-        <a href="workspace.html" class="btn-primary">Open Workspace</a>
+        <div style="display: flex; gap: 10px; align-items: center;">
+            <button class="theme-toggle" id="theme-toggle-landing">🌙</button>
+            <a href="workspace.html" class="btn-primary">Open Workspace</a>
+        </div>
     </nav>
 
     <header class="hero">
@@ -94,44 +97,33 @@
     <section class="features" id="features">
         <h2 class="section-title">Everything you need<br>to practice Mains better.</h2>
         <div class="feature-grid">
-            <div class="feature-card">
-                <div class="feature-number">01</div>
-                <h3>Explore PYQs</h3>
-                <p>Search UPSC Mains questions by year, paper, topic and marks.</p>
-            </div>
-            <div class="feature-card">
-                <div class="feature-number">02</div>
-                <h3>Build your QCAB</h3>
-                <p>Select questions and create your own practice booklet.</p>
-            </div>
-            <div class="feature-card">
-                <div class="feature-number">03</div>
-                <h3>Analyse PYQs</h3>
-                <p>Understand what UPSC has actually been asking.</p>
-            </div>
-            <div class="feature-card">
-                <div class="feature-number">04</div>
-                <h3>Track your preparation</h3>
-                <p>Bookmark, revise and annotate important questions.</p>
-            </div>
+            <div class="feature-card"><div class="feature-number">01</div><h3>Explore PYQs</h3><p>Search UPSC Mains questions by year, paper, topic and marks.</p></div>
+            <div class="feature-card"><div class="feature-number">02</div><h3>Build your QCAB</h3><p>Select questions and create your own practice booklet.</p></div>
+            <div class="feature-card"><div class="feature-number">03</div><h3>Analyse PYQs</h3><p>Understand what UPSC has actually been asking.</p></div>
+            <div class="feature-card"><div class="feature-number">04</div><h3>Track your preparation</h3><p>Bookmark, revise and annotate important questions.</p></div>
         </div>
     </section>
 
     <section class="built-for" id="built-for">
         <h2 class="section-title">Built for how you study.</h2>
         <p style="max-width: 500px; margin: 0 auto; color: var(--text-soft);">Not another resource library. UPSC Craft is designed around how serious aspirants actually prepare.</p>
-        <div class="workflow">
-            <div>PYQs</div> <span>→</span>
-            <div>Analysis</div> <span>→</span>
-            <div>Practice</div> <span>→</span>
-            <div>QCAB</div> <span>→</span>
-            <div>Revision</div>
-        </div>
+        <div class="workflow"><div>PYQs</div> <span>→</span> <div>Analysis</div> <span>→</span> <div>Practice</div> <span>→</span> <div>QCAB</div> <span>→</span> <div>Revision</div></div>
     </section>
 
     <footer class="footer">
         <p>UPSC CRAFT · Built for serious Mains preparation.</p>
         <p style="margin-top: 10px;">© 2024 UPSC Craft. All rights reserved.</p>
     </footer>
+
+    <script>
+        // Landing Dark Mode
+        const themeToggleLanding = document.getElementById('theme-toggle-landing');
+        if(localStorage.getItem('qcab_theme') === 'dark') { document.body.classList.add('dark-mode'); themeToggleLanding.textContent = '☀️'; }
+        themeToggleLanding.addEventListener('click', () => {
+            document.body.classList.toggle('dark-mode');
+            localStorage.setItem('qcab_theme', document.body.classList.contains('dark-mode') ? 'dark' : 'light');
+            themeToggleLanding.textContent = document.body.classList.contains('dark-mode') ? '☀️' : '🌙';
+        });
+    </script>
 </body>
 </html>
