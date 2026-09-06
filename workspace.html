@@ -10,24 +10,30 @@
 <body>
 <div class="app">
   <aside class="sidebar" id="main-sidebar">
+    <!-- Only one logo in sidebar -->
     <a href="index.html" class="brand-logo"><span class="logo-icon">🦉</span> UPSC CRAFT</a>
+    
     <div class="nav-title">Workspace</div>
     <nav class="nav">
         <button class="nav-btn active" data-section="dashboard" onclick="switchSection('dashboard')"><span class="nav-icon">⌂</span> Overview</button>
         <button class="nav-btn" data-section="pyq-bank" onclick="switchSection('pyq-bank')"><span class="nav-icon">⌕</span> PYQ Bank</button>
+        <button class="nav-btn" data-section="create-question" onclick="switchSection('create-question')"><span class="nav-icon">＋</span> Create Question</button>
         <button class="nav-btn" data-section="my-qcab" onclick="switchSection('my-qcab')"><span class="nav-icon">▣</span> My QCAB</button>
         <button class="nav-btn" onclick="openAnalyzerModal()"><span class="nav-icon">◈</span> Analyzer</button>
     </nav>
+    
     <div class="nav-title">Reference</div>
     <nav class="nav">
-        <button class="nav-btn" id="syllabus-sidebar-btn"><span class="nav-icon">◎</span> Syllabus</button>
+        <!-- Direct onclick to guarantee it opens -->
+        <button class="nav-btn" onclick="openSyllabusModal()"><span class="nav-icon">◎</span> Syllabus</button>
     </nav>
+    
     <div class="sidebar-bottom">UPSC CRAFT v1.0</div>
   </aside>
 
   <div class="content">
+    <!-- Mobile Nav (No Duplicate Logo, just text and hamburger) -->
     <div class="mobile-nav">
-      <div class="logo-icon">🦉</div>
       <span style="font-weight: 800;">UPSC CRAFT</span>
       <button class="hamburger" onclick="document.getElementById('main-sidebar').classList.toggle('mobile-open'); document.getElementById('mobile-backdrop').classList.toggle('active');">☰</button>
     </div>
@@ -52,7 +58,8 @@
         <a href="#" class="stat-card" onclick="switchSection('my-qcab'); return false;"><div class="stat-label">📋 ACTIVE QCAB</div><div class="stat-value" id="dashboard-q-count">0</div><div class="stat-note">Questions selected</div></a>
         <div class="stat-card"><div class="stat-label">📄 PAGES</div><div class="stat-value" id="dashboard-pages">0</div><div class="stat-note">Based on marks selected</div></div>
       </div>
-      <div class="section-heading">Everything you need to practice Mains better</div>
+      
+      <div class="section-heading" style="font-size: 18px; font-weight: 700; margin-top: 40px;">Everything you need to practice Mains better</div>
       <div class="features-grid">
         <div class="feature-card"><div class="feature-number">01</div><h3>Explore PYQs</h3><p>Search UPSC Mains questions by year, paper, topic and marks.</p></div>
         <div class="feature-card"><div class="feature-number">02</div><h3>Build your QCAB</h3><p>Select questions and create your own practice booklet.</p></div>
@@ -67,15 +74,36 @@
         <h2 style="font-size: 24px; font-weight: 800;">📖 PYQ Bank</h2>
         <button class="btn-clear" id="clear-bank-btn">⟳ Reset</button>
       </div>
+      
       <div class="filter-bar-vertical">
         <div class="filter-group"><label>Paper</label><select id="filter-paper"><option value="ALL">All Papers</option><option value="GS1">GS1</option><option value="GS2">GS2</option><option value="GS3">GS3</option><option value="GS4">GS4</option><option value="anthropology_paper1">Anthro 1</option><option value="anthropology_paper2">Anthro 2</option></select></div>
         <div class="filter-group"><label>Subtopic</label><select id="filter-topic"><option value="ALL">All Subtopics</option></select></div>
         <div class="filter-group"><label>Year</label><select id="filter-year"><option value="ALL">All Years</option></select></div>
         <div class="filter-group"><label>Search</label><input type="text" id="search-input" placeholder="Search questions..."></div>
+        <!-- Search/Clear now aligned right in a full-width row -->
         <div class="filter-actions"><button class="btn-primary" id="search-bank-btn">Search</button><button class="btn-clear" id="clear-results-btn">✖ Clear</button></div>
       </div>
+      
       <div id="bank-status-text" style="color: var(--text-soft); margin-bottom: 15px; font-weight: 600;">Loading...</div>
       <div id="bank-results-container"></div>
+    </div>
+
+    <!-- Create Question Section (Restored) -->
+    <div id="create-question" class="workspace-section">
+      <h2 style="font-size: 24px; font-weight: 800; margin-bottom: 20px;">✏️ Create Custom Question</h2>
+      <div class="create-form">
+        <div><label>Paper</label><select id="q-paper"><option value="GS1">GS Paper 1</option><option value="GS2">GS Paper 2</option><option value="GS3">GS Paper 3</option><option value="GS4">GS Paper 4</option><option value="anthropology_paper1">Anthropology Optional Paper 1</option><option value="anthropology_paper2">Anthropology Optional Paper 2</option></select></div>
+        <div><label>Subtopic</label><select id="q-topic"></select></div>
+        <div><label>Question Text</label><textarea id="q-text" placeholder="Paste or type your question here..."></textarea></div>
+        <div><label>Marks</label><div class="marks-row"><button type="button" class="marks-btn" data-marks="10" aria-pressed="true">10 Marks</button><button type="button" class="marks-btn" data-marks="15" aria-pressed="false">15 Marks</button><button type="button" class="marks-btn" data-marks="20" aria-pressed="false">20 Marks</button></div></div>
+        <div><label>Year (optional)</label><input type="text" id="q-year" placeholder="e.g. 2025"></div>
+        <div class="checkbox-row"><input type="checkbox" id="include-index" checked><label for="include-index">Include index page in PDF</label></div>
+        <div style="display: flex; gap: 10px; margin-top: 10px;">
+          <button class="btn-primary" id="add-btn">➕ Add to Active Folder</button>
+          <button class="btn-secondary" id="add-preset-btn">📥 Save as Preset Question</button>
+          <button class="btn-clear" id="cancel-edit-btn" style="display:none;">✖ Cancel Edit</button>
+        </div>
+      </div>
     </div>
 
     <!-- My QCAB -->
@@ -149,7 +177,7 @@
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.6.2"></script>
 <script src="js/config.js?v=10002"></script>
 <script src="js/syllabus-data.js?v=10002"></script>
-<script src="js/app.js?v=10010"></script>
+<script src="js/app.js?v=10015"></script>
 <script src="js/features.js?v=10002"></script>
 <script>
   function switchSection(sectionId) {
@@ -158,10 +186,12 @@
     document.querySelectorAll('.nav-btn[data-section]').forEach(btn => btn.classList.remove('active'));
     const activeBtn = document.querySelector(`.nav-btn[data-section="${sectionId}"]`);
     if(activeBtn) activeBtn.classList.add('active');
-    document.getElementById('topbar-title').textContent = sectionId === 'dashboard' ? 'Good Morning, Aspirant' : (sectionId === 'pyq-bank' ? 'PYQ Bank' : 'My QCAB');
+    document.getElementById('topbar-title').textContent = sectionId === 'dashboard' ? 'Good Morning, Aspirant' : (sectionId === 'pyq-bank' ? 'PYQ Bank' : (sectionId === 'create-question' ? 'Create Question' : 'My QCAB'));
     document.getElementById('topbar-subtitle').textContent = sectionId === 'dashboard' ? 'Your Mains Workspace' : 'Workspace';
+    
     if(sectionId === 'pyq-bank') renderBankResults();
     if(sectionId === 'my-qcab') renderQuestions();
+    if(sectionId === 'create-question') populateFormSubtopics();
   }
   
   // Workspace Dark Mode
