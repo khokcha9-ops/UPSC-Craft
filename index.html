@@ -83,43 +83,42 @@
     </header>
 
     <main class="page">
-      <div class="workspace">
-        <div class="card" id="pyq-bank">
-          <div class="card-header">
-            <div><h2 class="card-title">📖 PYQ Bank</h2><p class="card-sub">Search by question, topic, paper or year. Results update as you type.</p></div>
-            <div class="bank-top-actions">
-              <button type="button" class="btn btn-secondary-sm" id="toggle-bank-btn"><span class="action-arrow" id="toggle-bank-icon">▼</span><span id="toggle-bank-text">Hide Bank</span></button>
-              <button type="button" class="btn btn-secondary-sm reset-btn" id="clear-bank-btn">⟳ Reset Bank</button>
+      <!-- Clean Entry: No Hero or Stats, Straight to PYQ Bank -->
+      <div class="card" id="pyq-bank">
+        <div class="card-header">
+          <div><h2 class="card-title">📖 PYQ Bank</h2><p class="card-sub">Search by question, topic, paper or year. Results update as you type.</p></div>
+          <div class="bank-top-actions">
+            <button type="button" class="btn btn-secondary-sm" id="toggle-bank-btn"><span class="action-arrow" id="toggle-bank-icon">▼</span><span id="toggle-bank-text">Hide Bank</span></button>
+            <button type="button" class="btn btn-secondary-sm reset-btn" id="clear-bank-btn">⟳ Reset Bank</button>
+          </div>
+        </div>
+        
+        <div id="pyq-bank-body">
+          <div class="filter-bar-vertical">
+            <div class="filter-group">
+              <label>📂 Paper</label>
+              <select id="filter-paper"><option value="ALL">All Papers</option><option value="GS1">GS Paper 1</option><option value="GS2">GS Paper 2</option><option value="GS3">GS Paper 3</option><option value="GS4">GS Paper 4</option><option value="anthropology_paper1">Anthro Paper 1</option><option value="anthropology_paper2">Anthro Paper 2</option></select>
+            </div>
+            <div class="filter-group">
+              <label>🏷️ Subtopic</label>
+              <select id="filter-topic"><option value="ALL">All Subtopics</option></select>
+            </div>
+            <div class="filter-group">
+              <label>📅 Year</label>
+              <select id="filter-year"><option value="ALL">All Years</option></select>
+            </div>
+            <div class="filter-group filter-search">
+              <label>🔍 Search</label>
+              <input type="text" id="search-input" placeholder="Search questions...">
+            </div>
+            <div class="filter-actions">
+              <button type="button" class="btn btn-filter-search" id="search-bank-btn">🔍 Search</button>
+              <button type="button" class="btn btn-clear-filter" id="clear-results-btn">✖ Clear</button>
             </div>
           </div>
-          
-          <div id="pyq-bank-body">
-            <div class="filter-bar-vertical">
-              <div class="filter-group">
-                <label>📂 Paper</label>
-                <select id="filter-paper"><option value="ALL">All Papers</option><option value="GS1">GS Paper 1</option><option value="GS2">GS Paper 2</option><option value="GS3">GS Paper 3</option><option value="GS4">GS Paper 4</option><option value="anthropology_paper1">Anthro Paper 1</option><option value="anthropology_paper2">Anthro Paper 2</option></select>
-              </div>
-              <div class="filter-group">
-                <label>🏷️ Subtopic</label>
-                <select id="filter-topic"><option value="ALL">All Subtopics</option></select>
-              </div>
-              <div class="filter-group">
-                <label>📅 Year</label>
-                <select id="filter-year"><option value="ALL">All Years</option></select>
-              </div>
-              <div class="filter-group filter-search">
-                <label>🔍 Search</label>
-                <input type="text" id="search-input" placeholder="Search questions...">
-              </div>
-              <div class="filter-actions">
-                <button type="button" class="btn btn-filter-search" id="search-bank-btn">🔍 Search</button>
-                <button type="button" class="btn btn-clear-filter" id="clear-results-btn">✖ Clear</button>
-              </div>
-            </div>
 
-            <div id="bank-status-text">Loading question bank...</div>
-            <div id="bank-results-container"></div>
-          </div>
+          <div id="bank-status-text">Loading question bank...</div>
+          <div id="bank-results-container"></div>
         </div>
       </div>
 
@@ -230,7 +229,7 @@
   </div>
 </div>
 
-<!-- New Analyzer Modal -->
+<!-- Analyzer Modal (Full Screen) -->
 <div class="analyzer-modal-overlay" id="analyzer-modal-overlay">
   <div class="analyzer-content">
     <div class="analyzer-header">
