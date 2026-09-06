@@ -28,6 +28,11 @@
         .nav-link.active { color: var(--accent); }
         .nav-link:hover { color: var(--text); }
         .theme-toggle { background: var(--surface); border: 1px solid var(--border); color: var(--text); padding: 8px 12px; border-radius: 10px; cursor: pointer; font-weight: 700; }
+        
+        /* Top Navigation Actions */
+        .top-actions { display: flex; gap: 10px; align-items: center; }
+        .btn-secondary { background: var(--surface); border: 1px solid var(--border); color: var(--text); padding: 8px 12px; border-radius: 10px; font-weight: 700; font-size: 14px; text-decoration: none; transition: all 0.2s; }
+        .btn-secondary:hover { border-color: var(--accent); color: var(--accent); }
 
         .container { padding: 40px 5%; max-width: 1400px; margin: 0 auto; }
         .section-title { font-size: 32px; font-weight: 700; margin-bottom: 5px; letter-spacing: -0.03em; }
@@ -49,7 +54,6 @@
         .card { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 25px; box-shadow: var(--shadow); }
         .card-header { font-size: 18px; font-weight: 800; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; }
 
-        /* Theme Ranking Table Restored */
         .data-table { width: 100%; border-collapse: collapse; font-size: 14px; }
         .data-table th { text-align: left; padding: 12px; border-bottom: 2px solid var(--border); color: var(--text-soft); font-weight: 700; }
         .data-table td { padding: 12px; border-bottom: 1px solid var(--border); }
@@ -69,26 +73,24 @@
         .capsule-btn:hover { border-color: var(--accent); color: var(--accent); transform: translateY(-2px); box-shadow: var(--shadow); }
         .capsule-btn.active { background: var(--accent); color: #fff; border-color: var(--accent); box-shadow: var(--shadow-glow); }
 
-        /* Questions appear immediately under the clicked button */
         .theme-inline-questions { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 15px; margin-top: 10px; margin-bottom: 30px; box-shadow: var(--shadow); }
 
         .view-section { display: none; }
         .view-section.active { display: block; animation: fadeIn 0.4s ease; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* Mobile Responsive Fixes */
         @media (max-width: 900px) {
             .top-bar { flex-wrap: wrap; gap: 10px; padding: 15px; }
             .nav-links { width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; padding-bottom: 5px; gap: 20px; }
             .nav-link { white-space: nowrap; font-size: 14px; }
-            .theme-toggle { font-size: 13px; padding: 8px 10px; }
+            .top-actions { width: 100%; justify-content: space-between; }
+            .btn-secondary { font-size: 12px; padding: 8px 10px; }
             .controls { flex-direction: column; gap: 12px; padding: 15px; }
             .control-group { width: 100%; min-width: 100%; }
             .kpi-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
             .kpi-value { font-size: 28px; }
             .grid-2, .grid-3 { grid-template-columns: 1fr !important; gap: 15px; }
             .card { padding: 15px; }
-            .section-title { font-size: 26px; }
             .data-table { display: block; overflow-x: auto; white-space: nowrap; width: 100%; }
             .heatmap { grid-template-columns: 120px repeat(14, 1fr); }
             .hm-cell { font-size: 11px; height: 30px; }
@@ -106,7 +108,11 @@
         <button class="nav-link" onclick="showSection('patterns')">Patterns</button>
         <button class="nav-link" onclick="showSection('questions')">Questions</button>
     </div>
-    <button class="theme-toggle" onclick="toggleTheme()">🌙 Dark</button>
+    <div class="top-actions">
+        <a href="workspace.html" class="btn-secondary">← Workspace</a>
+        <a href="index.html" class="btn-secondary">Main Page</a>
+        <button class="theme-toggle" onclick="toggleTheme()">🌙 Dark</button>
+    </div>
 </div>
 
 <div class="container">
@@ -164,9 +170,7 @@
         </div>
     </div>
 
-    <!-- 3. Themes -->
     <div id="themes" class="view-section">
-        <!-- Theme Ranking Table Restored -->
         <div class="card" style="margin-bottom: 20px;">
             <div class="card-header">Theme Ranking Table</div>
             <table class="data-table" id="theme-table">
@@ -174,9 +178,8 @@
                 <tbody></tbody>
             </table>
         </div>
-
         <div class="card">
-            <div class="card-header">Theme Explorer (Auto-Mapping)</div>
+            <div class="card-header">Theme Explorer</div>
             <div id="theme-capsules" style="margin-bottom: 20px;"></div>
             <div id="theme-questions" style="border-top: 1px solid var(--border); padding-top: 20px;"></div>
         </div>
@@ -237,13 +240,9 @@
         });
     }
 
-    // Auto-Mapping Function: Creates new themes for any unmapped question based on subtopic
     function getThemeForQuestion(q) {
-        // Step 1: Check existing themes
         const found = themeData.find(t => t.tags.includes(q.id));
         if (found) return found.theme;
-
-        // Step 2: If not found, create a "New Auto-Theme" based on the subtopic
         return "Additional: " + q.subtopic;
     }
 
@@ -311,7 +310,7 @@
         `;
 
         renderHeatmap(questions);
-        renderThemeTable(questions); // Theme Table logic
+        renderThemeTable(questions);
         renderThemeExplorer(questions);
 
         document.getElementById('recurrence-list').innerHTML = Object.entries(themeCounts).sort((a,b) => b[1] - a[1]).map(([theme, count]) => {
@@ -324,52 +323,36 @@
         questions.forEach(q => qTable.innerHTML += `<tr><td>${q.year}</td><td>${q.marks}</td><td>${q.question}</td><td>${getThemeForQuestion(q)}</td></tr>`);
     }
 
-    // Restored Theme Ranking Table
     function renderThemeTable(questions) {
         const tbody = document.getElementById('theme-table').querySelector('tbody');
         tbody.innerHTML = '';
-        
         const themeCounts = {};
         questions.forEach(q => {
             const t = getThemeForQuestion(q);
             themeCounts[t] = (themeCounts[t] || 0) + 1;
         });
-
         const years = [...new Set(questions.map(q => q.year))].sort();
         const recentYears = years.slice(-2);
-
         Object.entries(themeCounts).sort((a,b) => b[1] - a[1]).forEach(([theme, count]) => {
             const yearsAppeared = new Set(questions.filter(q => getThemeForQuestion(q) === theme).map(q => q.year)).size;
             const recentCount = questions.filter(q => recentYears.includes(q.year) && getThemeForQuestion(q) === theme).length;
             const trend = recentCount > 0 ? '🔥 Hot' : '❄️ Dormant';
             const priority = count > 4 ? 'High' : count > 1 ? 'Med' : 'Low';
-
-            tbody.innerHTML += `
-                <tr onclick="loadTheme('${theme.replace(/'/g, "\\'")}')">
-                    <td><b>${theme}</b></td>
-                    <td>${count}</td>
-                    <td>${recentCount}</td>
-                    <td>${yearsAppeared}</td>
-                    <td>${trend}</td>
-                    <td>${priority}</td>
-                </tr>`;
+            tbody.innerHTML += `<tr onclick="loadTheme('${theme.replace(/'/g, "\\'")}')"><td><b>${theme}</b></td><td>${count}</td><td>${recentCount}</td><td>${yearsAppeared}</td><td>${trend}</td><td>${priority}</td></tr>`;
         });
     }
 
-    // Theme Explorer with inline questions under the clicked theme
     function renderThemeExplorer(questions) {
         const container = document.getElementById('theme-capsules');
         const questionContainer = document.getElementById('theme-questions');
         if(!container || !questionContainer) return;
 
-        // Group themes by subject, but include the auto-generated ones
         const grouped = {};
         themeData.forEach(t => { 
             if(!grouped[t.subject]) grouped[t.subject] = []; 
             grouped[t.subject].push(t.theme); 
         });
 
-        // Identify Auto-Themes
         questions.forEach(q => {
             const theme = getThemeForQuestion(q);
             if(theme.startsWith("Additional: ")) {
@@ -395,7 +378,6 @@
             });
             html += `</div>`;
 
-            // Inline Question Block (Right after this subject group if clicked)
             if (currentTheme && subjectThemes.includes(currentTheme)) {
                 const themeQuestions = questions.filter(q => getThemeForQuestion(q) === currentTheme);
                 html += `<div class="theme-inline-questions">
@@ -412,7 +394,7 @@
     function loadTheme(themeName) {
         currentTheme = themeName;
         const questions = getFilteredQuestions();
-        renderThemeTable(questions); // Reload table to highlight
+        renderThemeTable(questions);
         renderThemeExplorer(questions);
     }
 
