@@ -320,3 +320,94 @@ body.menu-open { overflow: hidden; }
   flex: 0 1 auto;
   min-width: 200px;
 }
+
+/* ========================================
+   ANALYZER MODAL (FULL SCREEN)
+   ======================================== */
+.analyzer-modal-overlay {
+  position: fixed;
+  top: 0; left: 0; width: 100%; height: 100%;
+  background: rgba(0,0,0,0.8);
+  z-index: 10000;
+  display: none;
+  justify-content: center;
+  align-items: center;
+}
+.analyzer-modal-overlay.active { display: flex; }
+
+.analyzer-content {
+  background: var(--surface);
+  width: 95%; max-width: 1000px; height: 90vh;
+  border-radius: 16px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  box-shadow: var(--shadow-lg);
+}
+.analyzer-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+  border-bottom: 1px solid var(--border);
+  background: var(--surface);
+}
+.analyzer-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 20px;
+}
+.analyzer-view-header {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  margin-bottom: 20px;
+}
+.analyzer-paper-btn.active {
+  background: linear-gradient(135deg, var(--primary), var(--accent));
+  color: #fff;
+  border: none;
+  box-shadow: var(--shadow-glow);
+}
+
+/* Capsule / Tag styles */
+.analyzer-capsule {
+  border: none;
+  padding: 14px 20px;
+  border-radius: 12px;
+  cursor: pointer;
+  font-weight: 800;
+  color: white;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  transition: all 0.2s;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+}
+.analyzer-capsule.active { outline: 4px solid var(--bg); box-shadow: var(--shadow-glow); }
+.analyzer-capsule:hover { transform: translateY(-3px); }
+.analyzer-count { background: rgba(255,255,255,0.3); padding: 4px 8px; border-radius: 20px; font-size: 12px; }
+
+/* Gradients for the capsule tags */
+.grad-1 { background: linear-gradient(135deg, #f43f5e, #fb923c); }
+.grad-2 { background: linear-gradient(135deg, #3b82f6, #06b6d4); }
+.grad-3 { background: linear-gradient(135deg, #10b981, #84cc16); }
+.grad-4 { background: linear-gradient(135deg, #8b5cf6, #d946ef); }
+.grad-5 { background: linear-gradient(135deg, #f59e0b, #ef4444); }
+.grad-6 { background: linear-gradient(135deg, #06b6d4, #3b82f6); }
+.grad-7 { background: linear-gradient(135deg, #ec4899, #f97316); }
+.grad-8 { background: linear-gradient(135deg, #6366f1, #a855f7); }
+
+/* ========================================
+   SCROLL LOCK (Prevents main page scrolling)
+   ======================================== */
+body.modal-open {
+  overflow: hidden !important;
+}
+body.modal-open #main-sidebar {
+  overflow-y: hidden !important;
+}
+body.modal-open .syllabus-modal-overlay {
+  display: none !important;
+}
