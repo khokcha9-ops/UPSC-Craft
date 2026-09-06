@@ -2,7 +2,7 @@
   {
     "subtopic": "Art & Culture",
     "themes": [
-      { "theme": "Harappan Civilization & Urban Planning", "desc": "IVC architecture, planning, continuity to present.", "question_tags": ["gs1-2014-004", "gs1-2025-031"] },
+      { "theme": "Harappan Civilization & Urban Planning", "desc": "IVC architecture, planning, continuity to present, geographical factors.", "question_tags": ["gs1-2014-004", "gs1-2025-031", "gs1-2023-025"] },
       { "theme": "Buddhist Art, Stupas & Pala Patronage", "desc": "Stupa-art, Buddhist ideals, Pala Buddhism.", "question_tags": ["gs1-2016-010", "gs1-2020-018"] },
       { "theme": "Rock-cut Architecture & Caves", "desc": "Mesolithic rock art, early rock-cut structures.", "question_tags": ["gs1-2015-009", "gs1-2020-017"] },
       { "theme": "Temple Architecture (Chola, Pallava, Vijayanagara)", "desc": "Chola high watermark, Pallavas, Vijayanagara.", "question_tags": ["gs1-2013-002", "gs1-2024-029", "gs1-2024-030", "gs1-2026-034"] },
@@ -16,13 +16,14 @@
       { "theme": "Philosophy Shaping Art & Monuments", "desc": "Indian philosophy and tradition.", "question_tags": ["gs1-2020-019"] },
       { "theme": "Literature & Foreign Accounts", "desc": "Sangam, Persian sources, Chinese/Arab travelers.", "question_tags": ["gs1-2013-003", "gs1-2018-014", "gs1-2020-020"] },
       { "theme": "Inscriptions, Epigraphy & Ancient Universities", "desc": "Ashokan inscriptions, Taxila/Nalanda.", "question_tags": ["gs1-2026-035", "gs1-2014-006"] },
-      { "theme": "Heritage Conservation & Patronage", "desc": "Safeguarding heritage, Krishnadeva Raya.", "question_tags": ["gs1-2016-011", "gs1-2018-013"] }
+      { "theme": "Heritage Conservation & Patronage", "desc": "Safeguarding heritage, Krishnadeva Raya, Cultural Continuity.", "question_tags": ["gs1-2016-011", "gs1-2018-013", "gs1-2015-008"] },
+      { "theme": "Society, Economy & Technological Change", "desc": "Vedic society, Sultanate technological changes, economic shifts.", "question_tags": ["gs1-2023-027", "gs1-2024-028"] }
     ]
   },
   {
     "subtopic": "Modern History",
     "themes": [
-      { "theme": "British Policies & Viceroys", "desc": "Dalhousie, Curzon, Macaulay, fragmented polity.", "question_tags": ["gs1-2013-038", "gs1-2017-047", "gs1-2020-057", "gs1-2026-069"] },
+      { "theme": "British Policies & Viceroys", "desc": "Dalhousie, Curzon, Macaulay, fragmented polity, Panipat.", "question_tags": ["gs1-2013-038", "gs1-2017-047", "gs1-2020-057", "gs1-2026-069", "gs1-2014-039"] },
       { "theme": "Economic Exploitation & Deindustrialization", "desc": "Handicrafts, famines, British economic policies, Industrial Revolution.", "question_tags": ["gs1-2014-040", "gs1-2017-049", "gs1-2022-062", "gs1-2022-063", "gs1-2024-067"] },
       { "theme": "Revolt of 1857 & Tribal Struggles", "desc": "Uprising, culmination, tribal oppression.", "question_tags": ["gs1-2016-044", "gs1-2019-053", "gs1-2023-065"] },
       { "theme": "Socio-Religious Reform Movements", "desc": "Young Bengal, Brahmo Samaj, Phule, Renaissance.", "question_tags": ["gs1-2019-054", "gs1-2021-059", "gs1-2025-068"] },
@@ -42,9 +43,9 @@
     "subtopic": "Post Independence",
     "themes": [
       { "theme": "Integration of Princely States", "desc": "Administrative issues, integration process.", "question_tags": ["gs1-2021-076"] },
-      { "theme": "Linguistic Reorganization", "desc": "Reorganization, popular pressure, unity.", "question_tags": ["gs1-2016-231", "gs1-2022-077", "gs1-2026-079"] },
+      { "theme": "Linguistic Reorganization", "desc": "Reorganization, popular pressure, unity.", "question_tags": ["gs1-2022-077", "gs1-2026-079"] },
       { "theme": "Land Reforms & Bhoodan", "desc": "Bhoodan, Gramdan, Jai Jawana.", "question_tags": ["gs1-2013-071", "gs1-2013-072"] },
-      { "theme": "Foreign Policy & Regional Security", "desc": "Tashkent, Bangladesh, Suez.", "question_tags": ["gs1-2013-074", "gs1-2013-075", "gs1-2014-086"] },
+      { "theme": "Foreign Policy & Regional Security", "desc": "Tashkent, Bangladesh.", "question_tags": ["gs1-2013-074", "gs1-2013-075"] },
       { "theme": "Leaders & Nation Building", "desc": "Maulana Azad, political consolidation.", "question_tags": ["gs1-2013-073", "gs1-2025-078", "gs1-2026-080"] }
     ]
   },
@@ -56,7 +57,7 @@
       { "theme": "French Revolution", "desc": "Enduring relevance, modern world foundation.", "question_tags": ["gs1-2019-093", "gs1-2025-097"] },
       { "theme": "World Wars & Balance of Power", "desc": "Germany's responsibility, WW1, WW2.", "question_tags": ["gs1-2015-089", "gs1-2024-096"] },
       { "theme": "Great Depression & Economic Policies", "desc": "Policy instruments, NEP.", "question_tags": ["gs1-2013-084", "gs1-2014-087"] },
-      { "theme": "Colonization & Decolonization", "desc": "Africa, Malay Peninsula, Suez Crisis.", "question_tags": ["gs1-2013-082", "gs1-2016-090", "gs1-2017-091"] },
+      { "theme": "Colonization & Decolonization", "desc": "Africa, Malay Peninsula, Suez Crisis.", "question_tags": ["gs1-2013-082", "gs1-2016-090", "gs1-2017-091", "gs1-2014-086"] },
       { "theme": "Indentured Labour", "desc": "British taking labour, cultural identity.", "question_tags": ["gs1-2018-092"] },
       { "theme": "Communism, Capitalism & Socialism", "desc": "Democratic State System, Ideologies.", "question_tags": ["gs1-2021-094"] },
       { "theme": "Anti-Colonial Movements Worldwide", "desc": "Motivations for anti-colonial, West Africa.", "question_tags": ["gs1-2014-085"] }
@@ -102,7 +103,7 @@
       { "theme": "Women's Empowerment & Suicide", "desc": "Globalisation effects, suicide among women.", "question_tags": ["gs1-2015-225", "gs1-2023-272"] },
       { "theme": "Caste Identity & Dalit Assertion", "desc": "Fluid/static, Dalit identity, annihilation, inter-caste marriages.", "question_tags": ["gs1-2015-228", "gs1-2018-243", "gs1-2023-271", "gs1-2024-275"] },
       { "theme": "Communalism & Secularism (Indian vs West)", "desc": "Power struggle, religiousness, challenges.", "question_tags": ["gs1-2014-221", "gs1-2017-237", "gs1-2018-244", "gs1-2018-245", "gs1-2022-265", "gs1-2023-274"] },
-      { "theme": "Regionalism & Cultural Assertiveness", "desc": "Basis of regionalism, separate state, cultural units.", "question_tags": ["gs1-2013-216", "gs1-2016-233", "gs1-2020-256", "gs1-2015-227", "gs1-2024-276"] },
+      { "theme": "Regionalism & Cultural Assertiveness", "desc": "Basis of regionalism, separate state, cultural units.", "question_tags": ["gs1-2013-216", "gs1-2016-233", "gs1-2020-256", "gs1-2015-227", "gs1-2024-276", "gs1-2016-231"] },
       { "theme": "Tribal Issues & Constitutional Safeguards", "desc": "Scheduled Tribes, displacement, knowledge system.", "question_tags": ["gs1-2016-232", "gs1-2017-234", "gs1-2021-258", "gs1-2022-264", "gs1-2025-285"] },
       { "theme": "Family, Socialization & Marriage", "desc": "Joint family, child cuddling, sacrament, WFH.", "question_tags": ["gs1-2014-220", "gs1-2022-263", "gs1-2023-269", "gs1-2023-270"] },
       { "theme": "Poverty & Human Development", "desc": "Poverty eradication, human development.", "question_tags": ["gs1-2015-223", "gs1-2016-229", "gs1-2018-239", "gs1-2023-273", "gs1-2024-280", "gs1-2024-281"] },
