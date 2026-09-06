@@ -14,7 +14,6 @@
             --primary: #6366f1; --primary-soft: #e0e7ff;
             --shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
             --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
-            --matrix-0: #ffffff; --matrix-1: #ffe4e6; --matrix-2: #fecdd3; --matrix-3: #fda4af; --matrix-4: #fb7185; --matrix-5: #e11d48;
         }
         body.dark-mode {
             --bg: #0f172a; --surface: #1e293b; --surface-2: #334155;
@@ -23,12 +22,10 @@
             --primary: #818cf8; --primary-soft: #312e81;
             --shadow: 0 1px 3px 0 rgb(0 0 0 / 0.3), 0 1px 2px -1px rgb(0 0 0 / 0.3);
             --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.3), 0 4px 6px -4px rgb(0 0 0 / 0.3);
-            --matrix-0: #1e293b; --matrix-1: #4c0519; --matrix-2: #881337; --matrix-3: #be123c; --matrix-4: #e11d48; --matrix-5: #f43f5e;
         }
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; }
         body { background: var(--bg); color: var(--text); height: 100vh; display: flex; transition: background 0.3s, color 0.3s; }
         
-        /* SIDEBAR */
         .sidebar { width: 320px; background: var(--surface); border-right: 1px solid var(--border); display: flex; flex-direction: column; }
         .logo { padding: 20px; font-weight: 800; font-size: 20px; display: flex; align-items: center; gap: 12px; border-bottom: 1px solid var(--border); }
         .logo-icon { background: linear-gradient(135deg, #e11d48, #fb7185); color: white; padding: 6px; border-radius: 8px; }
@@ -40,7 +37,6 @@
         .nav-scroll { flex: 1; overflow-y: auto; padding: 12px; }
         .subject-title { font-size: 11px; font-weight: 800; text-transform: uppercase; color: var(--text-soft); margin: 16px 8px 8px; letter-spacing: 0.5px; }
         
-        /* Accordion */
         .group-btn { width: 100%; display: flex; justify-content: space-between; align-items: center; background: var(--surface-2); border: none; padding: 10px 14px; border-radius: 8px; margin-bottom: 4px; cursor: pointer; font-weight: 700; }
         .group-btn:hover { background: var(--accent-soft); color: var(--accent); }
         .group-btn.active-group { background: var(--accent-soft); color: var(--accent); }
@@ -52,7 +48,6 @@
         .micro-btn:hover { background: var(--surface-2); color: var(--text); }
         .micro-btn.active-micro { background: var(--accent); color: white; }
 
-        /* MAIN CONTENT */
         .main-content { flex: 1; overflow-y: auto; padding: 30px; }
         .header { display: flex; justify-content: space-between; margin-bottom: 24px; }
         .header h1 { font-size: 28px; font-weight: 800; }
@@ -78,7 +73,6 @@
         .tag-high { background: var(--accent); color: white; }
         .tag-med { background: #fbbf24; color: #78350f; }
 
-        /* QUESTION EXPLORER */
         .explorer-section { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 20px; box-shadow: var(--shadow-lg); }
         .explorer-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
         .explorer-header h2 { font-size: 16px; font-weight: 800; }
@@ -96,6 +90,9 @@
         .btn-action:hover { opacity: 0.9; }
         .btn-save { background: transparent; border: 1px solid var(--border); color: var(--text); padding: 10px 15px; border-radius: 8px; font-weight: 700; cursor: pointer; }
         .btn-save:hover { border-color: var(--accent); color: var(--accent); }
+
+        .error-box { background: #fee2e2; border: 1px solid #fecaca; color: #991b1b; padding: 16px; border-radius: 10px; font-size: 14px; margin-top: 20px; }
+        .error-box strong { display: block; margin-bottom: 6px; font-size: 16px; }
 
         @media (max-width: 900px) {
             .sidebar { display: none; } 
@@ -176,23 +173,20 @@
     </div>
 
     <script>
-        // Theme
         const savedTheme = localStorage.getItem('pyq-theme') || 'light';
         if(savedTheme === 'dark') document.body.classList.add('dark-mode');
         function toggleTheme() { document.body.classList.toggle('dark-mode'); localStorage.setItem('pyq-theme', document.body.classList.contains('dark-mode') ? 'dark' : 'light'); }
 
-        // State & Data
         let allData = {};
         let currentPaper = 'GS1';
         let myCharts = {};
 
-        // Grouping Function: "Kingdoms x Chola" -> Major Theme: "Kingdoms"
-        function processData(rawData, paperKey) {
+        // FIXED: rawData is the entire JSON from the file, so we just iterate over the subjects!
+        function processData(rawData) {
             const grouped = {};
-            const rawPaperData = rawData[paperKey] || {};
-            for (const subject in rawPaperData) {
+            for (const subject in rawData) {
                 if (!grouped[subject]) grouped[subject] = {};
-                rawPaperData[subject].forEach(q => {
+                rawData[subject].forEach(q => {
                     const parts = q.microtheme.split(' x ');
                     const majorTheme = parts.length > 1 ? parts[0].trim() : 'General';
                     if (!grouped[subject][majorTheme]) grouped[subject][majorTheme] = [];
@@ -202,17 +196,37 @@
             return grouped;
         }
 
-        // Load Data
         async function loadData() {
             const files = { 'GS1': './gs1_themes.json', 'GS2': './gs2_themes.json', 'GS3': './gs3_themes.json', 'GS4': './gs4_themes.json' };
+            
             const results = await Promise.all(Object.entries(files).map(async ([paper, url]) => {
                 try { const res = await fetch(url); if (!res.ok) return { paper, data: {} }; return { paper, data: await res.json() }; } catch(e) { return { paper, data: {} }; }
             }));
-            results.forEach(res => { allData[res.paper] = processData(res.data, res.paper); });
+            
+            let allEmpty = true;
+            results.forEach(res => { 
+                if (Object.keys(res.data).length > 0) allEmpty = false;
+                allData[res.paper] = processData(res.data); // FIXED: pass res.data directly
+            });
+
+            if (allEmpty) {
+                document.getElementById('sidebar-nav').innerHTML = `
+                    <div class="error-box">
+                        <strong>🚫 File read error (CORS Blocked)</strong>
+                        Your browser is blocking the JSON files because you are opening this locally!<br><br>
+                        To fix this, <b>do not double-click this file.</b> Instead:
+                        <ol style="margin-top: 10px; padding-left: 20px;">
+                            <li>Enable GitHub Pages in your repo settings.</li>
+                            <li>Open the live URL (e.g., <b>https://username.github.io/UPSC-Craft/analyzer.html</b>)</li>
+                            <li>OR, use VS Code "Live Server" to run this locally.</li>
+                        </ol>
+                    </div>`;
+                return;
+            }
+
             selectPaper('GS1');
         }
 
-        // Select Paper
         function selectPaper(paper) {
             currentPaper = paper;
             document.querySelectorAll('.paper-tab').forEach(tab => tab.classList.toggle('active', tab.textContent === paper));
@@ -220,12 +234,11 @@
             renderDashboard();
         }
 
-        // Render Sidebar with Grouped Accordions
         function renderSidebar() {
             const nav = document.getElementById('sidebar-nav');
             nav.innerHTML = '';
             const paperData = allData[currentPaper];
-            if (!paperData || Object.keys(paperData).length === 0) { nav.innerHTML = '<div style="padding: 20px; color: var(--text-soft);">No data found.</div>'; return; }
+            if (!paperData || Object.keys(paperData).length === 0) { nav.innerHTML = '<div style="padding: 20px; color: var(--text-soft);">No data found for this paper.</div>'; return; }
 
             for (const subject in paperData) {
                 const subTitle = document.createElement('div');
@@ -265,7 +278,6 @@
             }
         }
 
-        // Show Question in Explorer
         function showQuestion(q, btnElement) {
             document.querySelectorAll('.micro-btn').forEach(b => b.classList.remove('active-micro'));
             btnElement.classList.add('active-micro');
@@ -292,9 +304,7 @@
                 </div>`;
         }
 
-        // Render Charts & Stats
         function renderDashboard() {
-            // Flatten data for stats
             let totalQs = 0, totalTopics = 0, totalMajor = 0;
             let allQuestions = [];
             const paperData = allData[currentPaper] || {};
@@ -363,7 +373,6 @@
             });
         }
 
-        // Initialize
         loadData();
     </script>
 </body>
