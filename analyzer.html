@@ -34,8 +34,8 @@
         .header { height: 70px; background: var(--surface); border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; padding: 0 24px; flex-shrink: 0; z-index: 100; }
         .logo { display: flex; align-items: center; gap: 12px; font-weight: 900; font-size: 20px; }
         .logo-icon { width: 36px; height: 36px; border-radius: 10px; background: linear-gradient(135deg, #e11d48, #fb7185); color: white; display: flex; align-items: center; justify-content: center; font-size: 20px; }
-        
         .header-controls { display: flex; gap: 16px; align-items: center; }
+        
         .btn-back { text-decoration: none; background: var(--surface-2); border: 1px solid var(--border); color: var(--text); padding: 8px 16px; border-radius: 8px; font-weight: 800; font-size: 14px; transition: 0.2s; }
         .btn-back:hover { background: var(--accent); color: white; border-color: var(--accent); }
         
@@ -52,7 +52,6 @@
         /* Sidebar */
         .sidebar { width: 360px; background: var(--surface); border-right: 1px solid var(--border); display: flex; flex-direction: column; position: relative; z-index: 95; transition: transform 0.3s ease; }
         
-        /* Center Paper Tabs */
         .paper-tabs { display: flex; justify-content: center; padding: 12px; gap: 8px; border-bottom: 1px solid var(--border); background: var(--surface); }
         .paper-tab { flex: 1; max-width: 100px; padding: 10px; text-align: center; background: transparent; border: 1px solid var(--border); border-radius: 8px; cursor: pointer; font-weight: 800; color: var(--text-soft); transition: 0.2s; }
         .paper-tab.active { background: var(--accent); color: white; border-color: var(--accent); }
@@ -76,25 +75,22 @@
         .micro-btn:hover { background: var(--accent-soft); color: var(--accent); border-color: var(--accent); }
         .micro-btn.active-micro { background: var(--accent); color: white; font-weight: 800; }
         
-        /* Direct buttons (no sub-themes) */
         .direct-theme-btn { background: var(--surface-2); color: var(--text); border: none; width: 100%; text-align: left; padding: 12px 14px; border-radius: 8px; margin-bottom: 4px; cursor: pointer; font-weight: 800; display: flex; justify-content: space-between; align-items: center; }
         .direct-theme-btn:hover { background: var(--accent-soft); color: var(--accent); }
         .direct-theme-btn.active-micro { background: var(--accent); color: white; }
 
-        /* Count Badges */
         .count-badge { background: var(--surface); border: 1px solid var(--border); color: var(--text-soft); padding: 2px 8px; border-radius: 50px; font-size: 12px; font-weight: 800; min-width: 28px; text-align: center; }
         .active-micro .count-badge, .direct-theme-btn.active-micro .count-badge, .group-btn:hover .count-badge { background: rgba(255,255,255,0.3); border-color: transparent; color: white; }
 
         /* Main Content */
         .main-content { flex: 1; overflow-y: auto; padding: 24px; background: var(--bg); }
         
-        /* Summary Section */
         .paper-summary { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 24px; }
         .sum-card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 16px; }
         .sum-value { font-size: 28px; font-weight: 900; color: var(--accent); }
         .sum-label { font-size: 12px; color: var(--text-soft); font-weight: 600; }
 
-        /* Explorer */
+        /* Explorer (Modified to hold multiple questions) */
         .explorer-section { background: var(--surface); border: 2px solid var(--border); border-radius: 20px; padding: 24px; box-shadow: var(--shadow-lg); margin-bottom: 30px; }
         .exp-badges { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 20px; }
         .badge { font-size: 13px; font-weight: 900; padding: 6px 12px; border-radius: 50px; }
@@ -102,6 +98,14 @@
         .badge-paper { background: var(--primary); color: white; }
         .badge-marks { background: var(--primary-soft); color: var(--primary); }
         .badge-subject { background: var(--surface-2); color: var(--text-soft); border: 1px solid var(--border); }
+        
+        .q-item {
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 20px;
+            margin-bottom: 20px;
+        }
+        .q-item:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+
         .q-text { font-size: 22px; font-weight: 800; line-height: 1.6; margin-bottom: 24px; }
         .exp-actions { display: flex; gap: 12px; }
         .btn-action { background: var(--accent); color: white; border: none; padding: 12px 20px; border-radius: 10px; font-weight: 800; cursor: pointer; transition: 0.2s; }
@@ -109,7 +113,6 @@
         .btn-save { background: transparent; border: 2px solid var(--border); color: var(--text); padding: 12px 20px; border-radius: 10px; font-weight: 800; cursor: pointer; transition: 0.2s; }
         .btn-save:hover { border-color: var(--accent); color: var(--accent); }
 
-        /* Chart Section */
         .charts-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
         .chart-card { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 20px; box-shadow: var(--shadow); }
         .chart-card h3 { font-size: 16px; font-weight: 900; margin-bottom: 15px; }
@@ -117,7 +120,7 @@
         
         @media (max-width: 900px) {
             .header { padding: 0 16px; }
-            .btn-back { display: none; } /* Hide back button on mobile to save space */
+            .btn-back { display: none; }
             .search-box { display: none; }
             .hamburger { display: block; }
             .sidebar { position: fixed; top: 0; left: 0; height: 100%; transform: translateX(-100%); width: 320px; }
@@ -137,9 +140,7 @@
     <div class="header">
         <div class="logo"><div class="logo-icon">🦉</div> UPSC CRAFT</div>
         <div class="header-controls">
-            <!-- Added Back to Main Site Button -->
             <a href="index.html" class="btn-back">← Back to Site</a>
-            
             <div class="search-box">
                 <input type="text" id="searchInput" placeholder="Search questions, themes...">
             </div>
@@ -170,11 +171,12 @@
             </div>
 
             <div class="explorer-section">
-                <div class="exp-badges" id="expBadges"></div>
-                <div class="q-text" id="qText">Select a micro-theme to explore</div>
-                <div class="exp-actions">
-                    <button class="btn-action" onclick="alert('AI Answer Generation Coming Soon!')">✨ Generate Answer</button>
-                    <button class="btn-save" onclick="alert('Question Saved to Bookmarks!')">💾 Save Question</button>
+                <div id="q-container">
+                    <div class="q-text" id="qText">Select a micro-theme to explore</div>
+                    <div class="exp-actions">
+                        <button class="btn-action" onclick="alert('AI Answer Generation Coming Soon!')">✨ Generate Answer</button>
+                        <button class="btn-save" onclick="alert('Question Saved to Bookmarks!')">💾 Save Question</button>
+                    </div>
                 </div>
             </div>
 
@@ -196,20 +198,13 @@
     </div>
 
     <script>
-        function toggleTheme() {
-            document.body.classList.toggle('dark-mode');
-        }
+        function toggleTheme() { document.body.classList.toggle('dark-mode'); }
 
         function toggleSidebar(open) {
             const sidebar = document.getElementById('sidebar');
             const overlay = document.getElementById('overlay');
-            if(open) {
-                sidebar.classList.add('open');
-                overlay.classList.add('show');
-            } else {
-                sidebar.classList.remove('open');
-                overlay.classList.remove('show');
-            }
+            if(open) { sidebar.classList.add('open'); overlay.classList.add('show'); }
+            else { sidebar.classList.remove('open'); overlay.classList.remove('show'); }
         }
 
         const MajorMap = {
@@ -231,8 +226,6 @@
 
             results.forEach(res => {
                 const grouped = {};
-                
-                // **FIXED**: Handles BOTH JSON formats (Wrapped in GS1, GS2, etc. OR Unwrapped)
                 const rawPaperData = res.data[res.paper] ? res.data[res.paper] : res.data;
                 
                 for (const broadSubject in MajorMap[res.paper]) {
@@ -240,9 +233,9 @@
                     grouped[broadSubject] = [];
                     rawKeys.forEach(key => {
                         if(rawPaperData[key]) {
-                            // **FIXED**: Injecting the subject here so it doesn't show "undefined"
                             rawPaperData[key].forEach(q => {
                                 q.subject = broadSubject;
+                                q.paper = res.paper; // FIX: Inject paper!
                             });
                             grouped[broadSubject] = grouped[broadSubject].concat(rawPaperData[key]);
                         }
@@ -254,9 +247,9 @@
                         if(MajorMap[res.paper][broadSubject].includes(subject)) isFound = true;
                     }
                     if(!isFound) {
-                        // **FIXED**: Injecting fallback subject
                         rawPaperData[subject].forEach(q => {
                             q.subject = 'General';
+                            q.paper = res.paper; // FIX: Inject paper!
                         });
                         grouped['General'] = (grouped['General'] || []).concat(rawPaperData[subject]);
                     }
@@ -273,9 +266,6 @@
             renderSidebar();
             renderDashboard();
             toggleSidebar(false);
-            // Auto-select the first question in the sidebar so it's never empty!
-            const firstBtn = document.querySelector('.micro-btn, .direct-theme-btn');
-            if (firstBtn) firstBtn.click();
         }
 
         function renderSidebar() {
@@ -311,7 +301,8 @@
                         const btn = document.createElement('button');
                         btn.className = 'direct-theme-btn';
                         btn.innerHTML = `<span>${rootTheme}</span> <span class="count-badge">${themeArr.length}</span>`;
-                        btn.onclick = () => showQuestion(themeArr[0], btn);
+                        // FIX: Pass the entire array
+                        btn.onclick = () => showQuestions(themeArr, btn);
                         nav.appendChild(btn);
                         continue;
                     }
@@ -343,8 +334,9 @@
                         const microBtn = document.createElement('button');
                         microBtn.className = 'micro-btn';
                         microBtn.innerHTML = `<span>${microTheme}</span> <span class="count-badge">${count}</span>`;
-                        const firstQ = themeArr.find(q => q.microtheme === microTheme);
-                        microBtn.onclick = () => showQuestion(firstQ, microBtn);
+                        // FIX: Pass the filtered array
+                        const microQs = themeArr.filter(q => q.microtheme === microTheme);
+                        microBtn.onclick = () => showQuestions(microQs, microBtn);
                         microList.appendChild(microBtn);
                     }
                     nav.appendChild(microList);
@@ -352,18 +344,37 @@
             }
         }
 
-        function showQuestion(q, btnElement) {
+        // FIX: Completely rewritten to show ALL questions
+        function showQuestions(questions, btnElement) {
             document.querySelectorAll('.micro-btn, .direct-theme-btn').forEach(b => b.classList.remove('active-micro'));
             btnElement.classList.add('active-micro');
 
-            document.getElementById('expBadges').innerHTML = `
-                <span class="badge badge-year">📅 ${q.year}</span>
-                <span class="badge badge-marks">🎯 ${q.marks} Marks</span>
-                <span class="badge badge-paper">📚 ${q.paper}</span>
-                <span class="badge badge-subject">${q.subject || 'Broad Subject'}</span>
-                <span class="badge badge-subject">${q.microtheme}</span>
-            `;
-            document.getElementById('qText').textContent = q.key_pyq;
+            const container = document.getElementById('q-container');
+            container.innerHTML = '';
+
+            questions.forEach(q => {
+                const qDiv = document.createElement('div');
+                qDiv.className = 'q-item';
+                
+                qDiv.innerHTML = `
+                    <div class="exp-badges">
+                        <span class="badge badge-year">📅 ${q.year}</span>
+                        <span class="badge badge-marks">🎯 ${q.marks} Marks</span>
+                        <span class="badge badge-paper">📚 ${q.paper}</span>
+                        <span class="badge badge-subject">${q.subject}</span>
+                        <span class="badge badge-subject">${q.microtheme}</span>
+                    </div>
+                    <div class="q-text">${q.key_pyq}</div>
+                    <div class="exp-actions">
+                        <button class="btn-action" onclick="alert('Generate Answer for Year ${q.year}!')">✨ Generate Answer</button>
+                        <button class="btn-save" onclick="alert('Saved!')">💾 Save Question</button>
+                    </div>
+                `;
+                
+                container.appendChild(qDiv);
+            });
+
+            container.scrollTop = 0;
         }
 
         function renderDashboard() {
