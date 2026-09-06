@@ -390,9 +390,10 @@
     // URL PARAMETERS
     // ================================================================
     const urlParams = new URLSearchParams(window.location.search);
-    const questionText = urlParams.get('q');
-    const yearText = urlParams.get('y');
-    const marksText = urlParams.get('m');
+const question = urlParams.get('q') || '';
+const year = urlParams.get('y') || '';
+const marks = urlParams.get('m') || '';
+const subject = urlParams.get('paper') || 'gs1';  // <--- Make sure this line is there!
 
     const titleEl = document.getElementById('q-title');
     const metaEl = document.getElementById('q-meta');
