@@ -132,15 +132,19 @@ function generateFullPrompt(question) {
 
 function generatePerplexityQuery(question) { return generateFullPrompt(question); }
 
-console.log('✅ Custom modal + toast system loaded');
+// ============================================================
+// GLOBAL DATA
+// ============================================================
+window.presetBank = [];
 
 // ============================================================
-// ANALYZER DATA (GLOBAL FOR MODAL)
+// ANALYZER MODAL LOGIC (FIXED COUNT MISMATCH)
 // ============================================================
 let analyzerData = { GS1: {}, GS2: {}, GS3: {}, GS4: {} };
 let currentAnalyzerPaper = 'GS1';
 let currentAnalyzerSubject = null;
 let currentAnalyzerTheme = null;
+let showAllQuestions = false; // Flag to show all questions in subject
 
 const analyzerOverlay = document.getElementById('analyzer-modal-overlay');
 const analyzerContainer = document.getElementById('analyzer-container');
@@ -151,6 +155,7 @@ function openAnalyzerModal() {
     currentAnalyzerPaper = 'GS1';
     currentAnalyzerSubject = null;
     currentAnalyzerTheme = null;
+    showAllQuestions = false;
     selectAnalyzerPaper('GS1');
 }
 
@@ -163,6 +168,7 @@ function selectAnalyzerPaper(paper) {
     currentAnalyzerPaper = paper;
     currentAnalyzerSubject = null;
     currentAnalyzerTheme = null;
+    showAllQuestions = false;
     document.querySelectorAll('.analyzer-paper-btn').forEach(btn => {
         btn.classList.toggle('active', btn.textContent === paper);
     });
@@ -172,11 +178,13 @@ function selectAnalyzerPaper(paper) {
 function selectAnalyzerSubject(subject) {
     currentAnalyzerSubject = subject;
     currentAnalyzerTheme = null;
+    showAllQuestions = false;
     renderAnalyzer();
 }
 
 function selectAnalyzerTheme(theme) {
     currentAnalyzerTheme = theme;
+    showAllQuestions = false; // Reset to theme view when clicking a tag
     renderAnalyzer();
 }
 
@@ -207,58 +215,78 @@ function renderAnalyzer() {
         let index = 0;
         for (const subject in paperData) {
             const count = paperData[subject].reduce((sum, t) => sum + (t.question_tags ? t.question_tags.length : 0), 0);
-            html += `<button class="analyzer-capsule grad-${(index%8)+1}" onclick="selectAnalyzerSubject('${subject}')">
+            html += `<button class="analyzer-capsule grad-${(index%5)+1}" onclick="selectAnalyzerSubject('${subject}')">
                 <span>${subject}</span> <span class="analyzer-count">${count}</span>
             </button>`;
             index++;
         }
         html += `</div>`;
     } else {
-        html += `<div class="analyzer-view-header">
-            <button class="btn btn-secondary-sm" onclick="currentAnalyzerSubject=null; currentAnalyzerTheme=null; renderAnalyzer();">← Back to Subjects</button>
-            <h3 style="margin:0;">${currentAnalyzerSubject}</h3>
-        </div><div style="display:flex; flex-wrap:wrap; gap:10px; margin-top:15px;">`;
-
         const themes = paperData[currentAnalyzerSubject] || [];
+        let allSubjectIds = [];
+        themes.forEach(t => {
+            if (t.question_tags) allSubjectIds = allSubjectIds.concat(t.question_tags);
+        });
+        // Deduplicate IDs
+        allSubjectIds = [...new Set(allSubjectIds)];
+
+        // Header
+        html += `<div class="analyzer-view-header">
+            <button class="btn btn-secondary-sm" onclick="currentAnalyzerSubject=null; currentAnalyzerTheme=null; showAllQuestions=false; renderAnalyzer();">← Back to Subjects</button>
+            <h3 style="margin:0;">${currentAnalyzerSubject}</h3>
+        </div>`;
+
+        // "View All Questions" button to catch any missing from tags (Fixes 35 vs 31)
+        html += `<div style="margin-bottom: 15px;">
+            <button class="btn btn-primary" onclick="showAllQuestions=true; currentAnalyzerTheme=null; renderAnalyzer();">View All Questions in Subject (${allSubjectIds.length})</button>
+        </div>`;
+
+        // Show Questions (If Theme selected OR "Show All" is clicked)
+        if (currentAnalyzerTheme || showAllQuestions) {
+            let questions = [];
+            if (showAllQuestions) {
+                questions = window.presetBank.filter(q => allSubjectIds.includes(q.id));
+            } else {
+                const selectedTheme = themes.find(t => t.theme === currentAnalyzerTheme);
+                if (selectedTheme && selectedTheme.question_tags) {
+                    const tags = selectedTheme.question_tags;
+                    questions = window.presetBank.filter(q => tags.includes(q.id));
+                }
+            }
+            
+            if (questions.length > 0) {
+                html += `<div style="background: var(--surface-2); border-radius: 12px; padding: 20px; margin-bottom: 20px; border: 1px solid var(--border);">
+                    <h3>${showAllQuestions ? 'All Questions' : currentAnalyzerTheme} (${questions.length} Questions)</h3>`;
+
+                questions.forEach((q, idx) => {
+                    let paperName = q.paper;
+                    if (typeof formatPaperName === 'function') paperName = formatPaperName(q.paper);
+                    html += `
+                        <div class="bank-item" style="margin-top:15px;">
+                            <div class="tags">
+                                <span class="tag tag-year">${q.year}</span>
+                                <span class="tag tag-marks">${q.marks} M</span>
+                                <span class="tag tag-subject">${paperName}</span>
+                            </div>
+                            <div class="bank-question">${idx + 1}. ${escapeHtml(q.question)}</div>
+                            <div class="bank-actions">
+                                <button class="btn btn-secondary-sm" onclick="window.fetchAIAnswer(this)">✨ Generate Answer</button>
+                            </div>
+                        </div>`;
+                });
+                html += `</div>`;
+            }
+        }
+
+        // Show Tag Buttons (Below Questions)
+        html += `<div style="display:flex; flex-wrap:wrap; gap:10px; margin-top:15px;">`;
         themes.forEach((theme, index) => {
             const count = theme.question_tags ? theme.question_tags.length : 0;
-            html += `<button class="analyzer-capsule grad-${(index%8)+1} ${currentAnalyzerTheme === theme.theme ? 'active' : ''}" onclick="selectAnalyzerTheme('${theme.theme.replace(/'/g, "\\'")}')">
+            html += `<button class="analyzer-capsule grad-${(index%5)+1} ${currentAnalyzerTheme === theme.theme ? 'active' : ''}" onclick="selectAnalyzerTheme('${theme.theme.replace(/'/g, "\\'")}')">
                 <span>${theme.theme}</span> <span class="analyzer-count">${count}</span>
             </button>`;
         });
         html += `</div>`;
-
-        if (currentAnalyzerTheme) {
-            const selectedTheme = themes.find(t => t.theme === currentAnalyzerTheme);
-            if (selectedTheme && selectedTheme.question_tags) {
-                const tags = selectedTheme.question_tags;
-                if (window.presetBank.length === 0) {
-                    html += `<div style="margin-top:30px; text-align:center; color:var(--muted);">Loading questions...</div>`;
-                } else {
-                    const questions = window.presetBank.filter(q => tags.includes(q.id));
-                    html += `<div style="margin-top:30px; border-top:2px solid var(--border); padding-top:20px;">
-                        <h3>${currentAnalyzerTheme} (${questions.length} Questions)</h3>`;
-
-                    questions.forEach((q, idx) => {
-                        let paperName = q.paper;
-                        if (typeof formatPaperName === 'function') paperName = formatPaperName(q.paper);
-                        html += `
-                            <div class="bank-item" style="margin-top:15px;">
-                                <div class="tags">
-                                    <span class="tag tag-year">${q.year}</span>
-                                    <span class="tag tag-marks">${q.marks} M</span>
-                                    <span class="tag tag-subject">${paperName}</span>
-                                </div>
-                                <div class="bank-question">${idx + 1}. ${escapeHtml(q.question)}</div>
-                                <div class="bank-actions">
-                                    <button class="btn btn-secondary-sm" onclick="window.fetchAIAnswer(this)">✨ Generate Answer</button>
-                                </div>
-                            </div>`;
-                    });
-                    html += `</div>`;
-                }
-            }
-        }
     }
     analyzerContainer.innerHTML = html;
 }
@@ -268,41 +296,8 @@ function renderAnalyzer() {
 // ============================================================
 document.addEventListener('DOMContentLoaded', function() {
   console.log('🚀 App.js loaded');
-  
-  // FILTER TAB SWITCHER
-  const filterByYearBtn = document.getElementById('btn-filter-year');
-  const filterBySubtopicBtn = document.getElementById('btn-filter-subtopic');
-  const filterYearSelect = document.getElementById('filter-year');
-  const filterTopicSelect = document.getElementById('filter-topic');
 
-  if (filterByYearBtn && filterBySubtopicBtn) {
-    filterByYearBtn.addEventListener('click', (e) => {
-      e.preventDefault();
-      filterByYearBtn.classList.add('active');
-      filterBySubtopicBtn.classList.remove('active');
-      if (filterYearSelect) filterYearSelect.style.display = 'block';
-      if (filterTopicSelect) filterTopicSelect.style.display = 'none';
-      if (filterTopicSelect) filterTopicSelect.value = 'ALL';
-      renderBankResults();
-    });
-
-    filterBySubtopicBtn.addEventListener('click', (e) => {
-      e.preventDefault();
-      filterBySubtopicBtn.classList.add('active');
-      filterByYearBtn.classList.remove('active');
-      if (filterTopicSelect) filterTopicSelect.style.display = 'block';
-      if (filterYearSelect) filterYearSelect.style.display = 'none';
-      if (filterYearSelect) filterYearSelect.value = 'ALL';
-      renderBankResults();
-    });
-  }
-
-  // Safely define fallbacks
-  window.SYLLABUS = window.SYLLABUS || { 'GS1': ['General'], 'GS2': ['General'], 'GS3': ['General'], 'GS4': ['General'], 'anthropology_paper1': ['General'], 'anthropology_paper2': ['General'] };
-  window.MARK_RULES = window.MARK_RULES || { 10: 2, 15: 3, 20: 4 };
-  window.WORKER_URL = window.WORKER_URL || '';
-
-  // 1. NAVIGATION
+  // NAVIGATION
   document.querySelectorAll('[data-scroll]').forEach(btn => {
     btn.addEventListener('click', () => {
       const id = btn.dataset.scroll;
@@ -318,7 +313,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   });
 
-  // 2. THEME
+  // THEME
   function applyTheme(theme) {
     const isDark = theme === 'dark';
     document.body.classList.toggle('dark-mode', isDark);
@@ -341,7 +336,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   });
 
-  // 3. MOBILE MENU
+  // MOBILE MENU
   (function() {
     const sidebar = document.getElementById('main-sidebar');
     const toggleBtn = document.getElementById('mobile-menu-toggle');
@@ -364,16 +359,13 @@ document.addEventListener('DOMContentLoaded', function() {
     backdrop?.addEventListener('click', closeMenu);
   })();
 
-  // 4. BANK COLLAPSE
+  // BANK COLLAPSE
   const toggleBankBtn = document.getElementById('toggle-bank-btn');
   const toggleBankIcon = document.getElementById('toggle-bank-icon');
   const toggleBankText = document.getElementById('toggle-bank-text');
   const bankBody = document.getElementById('pyq-bank-body');
 
   if (bankBody) bankBody.style.display = 'block';
-  if (toggleBankIcon) toggleBankIcon.textContent = '▾';
-  if (toggleBankText) toggleBankText.textContent = 'Hide Bank';
-
   if (toggleBankBtn && bankBody) {
     toggleBankBtn.addEventListener('click', () => {
       const isHidden = bankBody.style.display === 'none';
@@ -383,7 +375,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   }
 
-  // 5. CREATE FORM COLLAPSE
+  // CREATE FORM COLLAPSE
   const toggleCreateBtn = document.getElementById('toggle-create-section-btn');
   const createFormBody = document.getElementById('create-form-body');
   if (toggleCreateBtn && createFormBody) {
@@ -394,7 +386,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   }
 
-  // 6. POPULATE FORM SUBTOPICS
+  // POPULATE FORM SUBTOPICS
   function populateFormSubtopics() {
     const qPaper = document.getElementById('q-paper');
     const qTopic = document.getElementById('q-topic');
@@ -412,7 +404,7 @@ document.addEventListener('DOMContentLoaded', function() {
   document.getElementById('q-paper')?.addEventListener('change', populateFormSubtopics);
   populateFormSubtopics();
 
-  // 7. DASHBOARD SYNC
+  // DASHBOARD SYNC
   function syncDashboard() {
     const qList = document.getElementById('q-list');
     const count = qList ? qList.querySelectorAll('.q-item').length : 0;
@@ -429,31 +421,20 @@ document.addEventListener('DOMContentLoaded', function() {
     if (bankCountEl) bankCountEl.textContent = bankCount;
   }
 
-  // 8. SCROLL TO TOP
-  const backToTopBtn = document.getElementById('back-to-top');
-  window.addEventListener('scroll', () => {
-    if (window.scrollY > 300) backToTopBtn?.classList.add('visible');
-    else backToTopBtn?.classList.remove('visible');
-  });
-  backToTopBtn?.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
-
-  // 9. HELPER FUNCTIONS
+  // HELPER FUNCTIONS
   function normalizePaperCode(paperVal) {
     if (!paperVal) return 'GS1';
     let cleaned = String(paperVal).toUpperCase().replace(/[\s\-\.]/g, ''); 
-
     if (cleaned.includes('GS')) {
-        if (cleaned.includes('2')) return 'GS2';
-        if (cleaned.includes('3')) return 'GS3';
-        if (cleaned.includes('4')) return 'GS4';
-        return 'GS1';
+      if (cleaned.includes('2')) return 'GS2';
+      if (cleaned.includes('3')) return 'GS3';
+      if (cleaned.includes('4')) return 'GS4';
+      return 'GS1';
     }
-
     if (cleaned.includes('ANTHRO') || cleaned.includes('OPT') || cleaned.includes('PAPER')) {
-        if (cleaned.includes('2')) return 'anthropology_paper2';
-        return 'anthropology_paper1';
+      if (cleaned.includes('2')) return 'anthropology_paper2';
+      return 'anthropology_paper1';
     }
-
     return 'GS1';
   }
 
@@ -485,7 +466,7 @@ document.addEventListener('DOMContentLoaded', function() {
     return 'Other';
   }
 
-  // 10. STORAGE & STATE
+  // STORAGE & STATE
   const PRESET_STORAGE_KEY = 'qcab_preset_bank';
   const VERSION_KEY = 'qcab_data_version';
   const CURRENT_VERSION = '5';
@@ -502,7 +483,7 @@ document.addEventListener('DOMContentLoaded', function() {
   let studyData = {};
   let editingIndex = null;
 
-  // 11. FOLDER & BOOKLET STATE
+  // FOLDER & BOOKLET STATE
   const defaultRoot = { id: 'root', name: 'General Booklet', parentId: null, subfolders: [], questions: [] };
   let folderMap = JSON.parse(localStorage.getItem('qcab_nested_folders')) || { root: defaultRoot };
   let activeFolderId = localStorage.getItem('qcab_active_nested_folder') || 'root';
@@ -515,7 +496,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
   function getActiveFolder() { return folderMap[activeFolderId] || folderMap['root']; }
 
-  // 12. DOM REFERENCES
+  // DOM REFERENCES
   const qPaper = document.getElementById('q-paper');
   const qTopic = document.getElementById('q-topic');
   const qText = document.getElementById('q-text');
@@ -553,7 +534,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   });
 
-  // 13. STUDY DATA FUNCTIONS
+  // STUDY DATA FUNCTIONS
   function getStudyRecord(q) {
     const id = q.id || q.question;
     if (!studyData[id]) studyData[id] = { bookmarked: false, revised: false, note: '' };
@@ -561,65 +542,21 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 
   function updateStudyDashboard() {
-    let bookmarked = 0, revised = 0, withNotes = 0;
-    const listContainer = document.getElementById('study-list-container');
-    if (!listContainer) return;
-    const items = [];
-
+    let bookmarked = 0, revised = 0;
     window.presetBank.forEach(q => {
       const id = q.id;
       if (studyData[id] && studyData[id].bookmarked) {
         bookmarked++;
         if (studyData[id].revised) revised++;
-        if (studyData[id].note && studyData[id].note.trim()) withNotes++;
-        items.push(q);
       }
     });
-
-    const bmEl = document.getElementById('study-bookmarked');
-    const revEl = document.getElementById('study-revised');
-    const notesEl = document.getElementById('study-notes');
-    if (bmEl) bmEl.textContent = bookmarked;
-    if (revEl) revEl.textContent = revised;
-    if (notesEl) notesEl.textContent = withNotes;
-
     const sbBookmarked = document.getElementById('sidebar-bookmarked');
     const sbRevised = document.getElementById('sidebar-revised');
-    const sbNotes = document.getElementById('sidebar-notes');
-    const sbProgress = document.getElementById('sidebar-progress');
     if (sbBookmarked) sbBookmarked.textContent = bookmarked;
     if (sbRevised) sbRevised.textContent = revised;
-    if (sbNotes) sbNotes.textContent = withNotes;
-    if (sbProgress) sbProgress.style.display = 'block';
-
-    if (items.length === 0) {
-      listContainer.innerHTML = '<p style="color:var(--muted);font-style:italic;">You haven\'t bookmarked any questions yet. Use the ⭐ button on any question to start.</p>';
-      return;
-    }
-
-    let html = '<div style="display:grid;gap:10px;">';
-    items.forEach(q => {
-      const rec = getStudyRecord(q);
-      const status = rec.revised ? '✅ Revised' : '⏳ Not revised';
-      const notePreview = rec.note ? rec.note.substring(0, 60) + (rec.note.length > 60 ? '…' : '') : 'No note';
-      html += `
-        <div style="border:1px solid var(--border);border-radius:10px;padding:12px;background:var(--surface-2);">
-          <div style="font-weight:700;margin-bottom:4px;">${escapeHtml(q.question)}</div>
-          <div style="display:flex;gap:8px;flex-wrap:wrap;font-size:12px;">
-            <span class="tag">${escapeHtml(formatPaperName(q.paper))}</span>
-            <span class="tag tag-topic">${escapeHtml(q.topic)}</span>
-            <span class="tag">${q.year || ''}</span>
-            <span class="tag">${status}</span>
-            <span class="tag">📝 ${notePreview}</span>
-          </div>
-        </div>
-      `;
-    });
-    html += '</div>';
-    listContainer.innerHTML = html;
   }
 
-  // 14. POPULATE FILTERS
+  // POPULATE FILTERS
   function populateFilterTopics() {
     if (!filterTopic || !filterPaper) return;
     filterTopic.innerHTML = '<option value="ALL">All Subtopics</option>';
@@ -654,7 +591,7 @@ document.addEventListener('DOMContentLoaded', function() {
     if (prevSelected && filterYear.querySelector(`option[value="${prevSelected}"]`)) filterYear.value = prevSelected;
   }
 
-  // 15. LOAD QUESTIONS FROM JSON
+  // LOAD QUESTIONS FROM JSON
   async function fetchJSONFile(url) {
     try {
       const response = await fetch(url + '?t=' + Date.now());
@@ -702,7 +639,7 @@ document.addEventListener('DOMContentLoaded', function() {
   function savePresets() { localStorage.setItem(PRESET_STORAGE_KEY, JSON.stringify(window.presetBank)); updateBankStatus(); }
   function updateBankStatus() { if (bankStatusText) bankStatusText.textContent = `Current Bank Size: ${window.presetBank.length} question(s) loaded.`; syncDashboard(); }
 
-  // 16. RENDER BANK RESULTS
+  // RENDER BANK RESULTS
   let renderRequestId = 0;
   async function renderBankResults() {
     if (!bankResultsContainer) return;
@@ -814,7 +751,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   }
 
-  // 17. NOTE MODAL
+  // NOTE MODAL
   let currentNoteId = null;
   function openNoteModal(id) {
     currentNoteId = id;
@@ -836,7 +773,7 @@ document.addEventListener('DOMContentLoaded', function() {
   });
   document.getElementById('note-modal')?.addEventListener('click', function(e) { if (e.target === this) closeNoteModal(); });
 
-  // 18. STUDY SAVE/LOAD
+  // STUDY SAVE/LOAD
   async function saveStudyData() {
     const USER_TOKEN = localStorage.getItem('userToken') || localStorage.getItem('qcab_owner_key');
     if (!USER_TOKEN || !WORKER_URL) return;
@@ -869,7 +806,7 @@ document.addEventListener('DOMContentLoaded', function() {
     } catch (e) { console.error('Failed to load study data from cloud', e); }
   }
 
-  // 19. EXPORT/IMPORT STUDY DATA
+  // EXPORT/IMPORT STUDY DATA
   document.getElementById('export-study-btn')?.addEventListener('click', () => {
     const data = JSON.stringify(studyData, null, 2);
     const blob = new Blob([data], { type: 'application/json' });
@@ -894,7 +831,7 @@ document.addEventListener('DOMContentLoaded', function() {
     input.click();
   });
 
-  // 20. RENDER QUESTIONS
+  // RENDER QUESTIONS
   function renderQuestions() {
     if (!qList) return;
     const questions = getActiveFolder().questions;
@@ -963,7 +900,7 @@ document.addEventListener('DOMContentLoaded', function() {
     syncDashboard();
   }
 
-  // 21. ADD/EDIT QUESTION
+  // ADD/EDIT QUESTION
   function resetForm() {
     editingIndex = null;
     if (qText) qText.value = '';
@@ -989,7 +926,7 @@ document.addEventListener('DOMContentLoaded', function() {
     window.presetBank.push(newPreset); savePresets(); populateFilterYears(); populateFilterTopics(); showToast('Question saved to Preset Bank!', '📥'); resetForm(); renderBankResults();
   });
 
-  // 22. FOLDER MANAGEMENT
+  // FOLDER MANAGEMENT
   function renderBreadcrumbs() {
     const breadcrumbs = document.getElementById('breadcrumbs'); if (!breadcrumbs) return;
     breadcrumbs.innerHTML = ''; const path = []; let curr = getActiveFolder();
@@ -1038,7 +975,7 @@ document.addEventListener('DOMContentLoaded', function() {
     if (await showConfirm('Clear all questions from active folder?', 'Confirm Clear')) { getActiveFolder().questions = []; saveState(); renderQuestions(); }
   });
 
-  // 23. PDF GENERATOR
+  // PDF GENERATOR
   function generatePDF() {
     const questions = getActiveFolder().questions; if (questions.length === 0) return;
     if (!window.jspdf) { showToast('jsPDF library not loaded.', '❌'); return; }
@@ -1089,10 +1026,10 @@ document.addEventListener('DOMContentLoaded', function() {
   }
   generateBtn?.addEventListener('click', generatePDF);
 
-  // 24. RENDER ALL
+  // RENDER ALL
   function renderAll() { renderBreadcrumbs(); renderFolders(); renderQuestions(); updateStudyDashboard(); }
 
-  // 25. SEARCH & FILTER LISTENERS
+  // SEARCH & FILTER LISTENERS
   let searchTimeout;
   searchInput?.addEventListener('input', () => { clearTimeout(searchTimeout); searchTimeout = setTimeout(() => renderBankResults(), 300); });
   searchBankBtn?.addEventListener('click', (e) => { e.preventDefault(); renderBankResults(); });
@@ -1115,7 +1052,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   });
 
-  // ========== AI MODAL HANDLING ==========
+  // AI MODAL HANDLING
   const aiModal = document.getElementById('ai-model-modal');
   const aiModalClose = document.getElementById('ai-model-close');
   const cancelAiModal = document.getElementById('cancel-ai-modal');
@@ -1171,7 +1108,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   });
 
-  // ========== FETCH AI ANSWER ==========
+  // FETCH AI ANSWER
   window.fetchAIAnswer = function(buttonElement) {
     const card = buttonElement.closest('.bank-item');
     if (!card) return;
@@ -1198,6 +1135,57 @@ document.addEventListener('DOMContentLoaded', function() {
     openAIModal(questionItem);
   };
 
+  // ========== CRITICAL FIX: SYLLABUS MODAL (Using body.syllabus-open) ==========
+  const syllabusSidebarBtn = document.getElementById('syllabus-sidebar-btn');
+  if (syllabusSidebarBtn) {
+      syllabusSidebarBtn.addEventListener('click', openSyllabusModal);
+  }
+
+  function openSyllabusModal() {
+    var cardsHolder = document.getElementById('syllabus-cards-holder');
+    var menu = document.getElementById('syllabus-main-menu');
+    var detail = document.getElementById('syllabus-detail-view');
+    menu.style.display = 'block'; detail.style.display = 'none';
+    if (cardsHolder.children.length === 0) {
+      cardsHolder.innerHTML = '';
+      for (var key in SYLLABUS_DATA) {
+        var item = SYLLABUS_DATA[key];
+        var card = document.createElement('div');
+        card.className = 'syllabus-menu-card';
+        card.style.borderTop = '5px solid ' + item.color;
+        card.innerHTML = '<span class="syllabus-menu-card-icon">' + item.icon + '</span><div class="syllabus-menu-card-title syllabus-title-' + key + '">' + item.title + '</div>';
+        card.onclick = function() { openSyllabusTopic(this.getAttribute('data-key')); };
+        cardsHolder.appendChild(card);
+      }
+    }
+    document.getElementById('syllabus-modal-overlay').classList.add('active');
+    document.body.classList.add('syllabus-open');
+  }
+
+  window.openSyllabusModal = openSyllabusModal;
+  window.closeSyllabusModal = closeSyllabusModal;
+  window.openSyllabusTopic = openSyllabusTopic;
+  window.backToSyllabusMenu = backToSyllabusMenu;
+
+  function closeSyllabusModal() {
+    document.getElementById('syllabus-modal-overlay').classList.remove('active');
+    document.body.classList.remove('syllabus-open');
+  }
+
+  function openSyllabusTopic(key) {
+    var item = SYLLABUS_DATA[key]; if (!item) return;
+    document.getElementById('syllabus-main-menu').style.display = 'none';
+    document.getElementById('syllabus-detail-view').style.display = 'block';
+    var detailContent = document.getElementById('syllabus-detail-content');
+    detailContent.style.borderTop = '5px solid ' + item.color;
+    detailContent.innerHTML = '<h3 style="color:' + item.color + '; margin-bottom: 15px;">' + item.title + '</h3>' + item.html;
+  }
+
+  function backToSyllabusMenu() {
+    document.getElementById('syllabus-detail-view').style.display = 'none';
+    document.getElementById('syllabus-main-menu').style.display = 'block';
+  }
+
   // ========== ANALYZER INITIALIZATION & HANDLERS ==========
   const analyzerCloseBtn = document.getElementById('analyzer-close-btn');
   const analyzerBackBtn = document.getElementById('analyzer-back-btn');
@@ -1209,6 +1197,7 @@ document.addEventListener('DOMContentLoaded', function() {
     } else {
       currentAnalyzerSubject = null;
     }
+    showAllQuestions = false;
     renderAnalyzer();
   });
 
