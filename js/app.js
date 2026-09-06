@@ -234,8 +234,9 @@ function renderAnalyzer() {
             <h3 style="margin:0;">${currentAnalyzerSubject}</h3>
         </div>`;
 
+                const trueSubjectCount = window.presetBank.filter(q => q.paper === currentAnalyzerPaper).length;
         html += `<div style="margin-bottom: 15px;">
-            <button class="btn btn-primary" onclick="showAllQuestions=true; currentAnalyzerTheme=null; renderAnalyzer();">View All Questions in Subject (${allSubjectIds.length})</button>
+            <button class="btn btn-primary" onclick="showAllQuestions=true; currentAnalyzerTheme=null; renderAnalyzer();">View All Questions in Subject (${trueSubjectCount})</button>
         </div>`;
 
         if (currentAnalyzerTheme || showAllQuestions) {
@@ -628,6 +629,7 @@ document.addEventListener('DOMContentLoaded', function() {
       renderBankResults();
       updateBankStatus();
       updateStudyDashboard();
+      if (analyzerOverlay.classList.contains('active')) { renderAnalyzer(); }
     } catch (err) { console.warn('Repository load error:', err); updateBankStatus(); }
   }
 
