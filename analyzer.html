@@ -3,311 +3,256 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>UPSC Mains Micro-Theme Analyzer</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <title>UPSC Craft | PYQ Intelligence</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         :root {
-            --bg: #0f172a;
-            --surface: #1e293b;
-            --surface-2: #334155;
-            --border: #334155;
-            --text: #f8fafc;
-            --text-secondary: #94a3b8;
-            --accent: #6366f1;
-            --accent-hover: #818cf8;
-            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-            --radius: 12px;
+            --bg: #f9fafb; --surface: #ffffff; --surface-2: #f3f4f6;
+            --border: #e5e7eb; --text: #111827; --text-soft: #6b7280;
+            --accent: #e11d48; --accent-soft: #ffe4e6;
+            --primary: #4f46e5; --primary-soft: #e0e7ff;
+            --shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+            --matrix-0: #ffffff; --matrix-1: #ffe4e6; --matrix-2: #fecdd3; --matrix-3: #fda4af; --matrix-4: #fb7185; --matrix-5: #e11d48;
         }
-
-        body.light-mode {
-            --bg: #f8fafc;
-            --surface: #ffffff;
-            --surface-2: #f1f5f9;
-            --border: #e2e8f0;
-            --text: #0f172a;
-            --text-secondary: #64748b;
-            --accent: #4f46e5;
-            --accent-hover: #6366f1;
-            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+        body.dark-mode {
+            --bg: #0f172a; --surface: #1e293b; --surface-2: #334155;
+            --border: #334155; --text: #f1f5f9; --text-soft: #94a3b8;
+            --accent: #f43f5e; --accent-soft: #4c0519;
+            --primary: #818cf8; --primary-soft: #312e81;
+            --shadow: 0 1px 3px 0 rgb(0 0 0 / 0.3), 0 1px 2px -1px rgb(0 0 0 / 0.3);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.3), 0 4px 6px -4px rgb(0 0 0 / 0.3);
+            --matrix-0: #1e293b; --matrix-1: #4c0519; --matrix-2: #881337; --matrix-3: #be123c; --matrix-4: #e11d48; --matrix-5: #f43f5e;
         }
-
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        body {
-            font-family: 'Inter', sans-serif;
-            background: var(--bg);
-            color: var(--text);
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-            transition: background 0.3s, color 0.3s;
-        }
-
-        .header {
-            height: 70px;
-            background: var(--surface);
-            border-bottom: 1px solid var(--border);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 0 24px;
-            flex-shrink: 0;
-            z-index: 10;
-        }
-
-        .header h1 {
-            font-size: 20px;
-            font-weight: 800;
-            letter-spacing: -0.5px;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .header-controls {
-            display: flex;
-            gap: 12px;
-            align-items: center;
-        }
-
-        .theme-toggle {
-            background: var(--surface-2);
-            color: var(--text);
-            border: 1px solid var(--border);
-            padding: 8px 16px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: 600;
-            font-size: 14px;
-            transition: all 0.2s;
-        }
-
-        .theme-toggle:hover { background: var(--accent); color: white; border-color: var(--accent); }
-
-        .container {
-            display: flex;
-            flex: 1;
-            overflow: hidden;
-        }
-
-        .sidebar {
-            width: 320px;
-            background: var(--surface);
-            border-right: 1px solid var(--border);
-            display: flex;
-            flex-direction: column;
-            flex-shrink: 0;
-        }
-
-        .paper-tabs {
-            display: flex;
-            padding: 12px;
-            gap: 8px;
-            border-bottom: 1px solid var(--border);
-            background: var(--surface);
-        }
-
-        .paper-tab {
-            flex: 1;
-            padding: 10px;
-            text-align: center;
-            background: transparent;
-            color: var(--text-secondary);
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: 700;
-            transition: all 0.2s;
-        }
-
-        .paper-tab.active {
-            background: var(--accent);
-            color: white;
-            border-color: var(--accent);
-        }
-
-        .subject-list {
-            flex: 1;
-            overflow-y: auto;
-            padding: 12px;
-        }
-
-        .subject-group {
-            margin-bottom: 16px;
-        }
-
-        .subject-title {
-            font-size: 11px;
-            font-weight: 800;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            color: var(--text-secondary);
-            padding: 8px 12px;
-        }
-
-        .theme-btn {
-            width: 100%;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 10px 14px;
-            background: var(--surface-2);
-            color: var(--text);
-            border: 1px solid transparent;
-            border-radius: 8px;
-            margin-bottom: 6px;
-            cursor: pointer;
-            font-size: 14px;
-            font-weight: 500;
-            transition: all 0.2s;
-        }
-
-        .theme-btn:hover { border-color: var(--accent); transform: translateX(2px); }
-        .theme-btn.active { background: var(--accent); color: white; border-color: var(--accent); }
-
-        .count-badge {
-            background: rgba(0,0,0,0.2);
-            padding: 2px 8px;
-            border-radius: 99px;
-            font-size: 11px;
-            font-weight: 800;
-            color: inherit;
-        }
-
-        .main-content {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-            background: var(--bg);
-        }
-
-        .content-header {
-            padding: 20px 24px;
-            border-bottom: 1px solid var(--border);
-            background: var(--surface);
-        }
-
-        .content-header h2 { font-size: 24px; font-weight: 800; }
-        .content-header p { color: var(--text-secondary); font-size: 14px; margin-top: 4px; }
-
-        .questions-container {
-            flex: 1;
-            overflow-y: auto;
-            padding: 24px;
-        }
-
-        .q-card {
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: var(--radius);
-            padding: 20px;
-            margin-bottom: 16px;
-            box-shadow: var(--shadow);
-            transition: transform 0.2s;
-        }
-
-        .q-card:hover { transform: translateY(-2px); border-color: var(--accent); }
-
-        .q-meta {
-            display: flex;
-            gap: 12px;
-            margin-bottom: 10px;
-        }
-
-        .badge {
-            font-size: 12px;
-            font-weight: 700;
-            padding: 4px 10px;
-            border-radius: 6px;
-        }
-
-        .badge-year { background: var(--surface-2); color: var(--text-secondary); }
-        .badge-marks { background: #fef3c7; color: #92400e; }
-        body.light-mode .badge-marks { background: #fef3c7; color: #92400e; } /* Keep consistent in light mode */
-
-        .q-text {
-            font-size: 16px;
-            line-height: 1.6;
-            font-weight: 400;
-        }
-
-        .welcome-msg {
-            text-align: center;
-            padding: 60px 20px;
-            color: var(--text-secondary);
-        }
-
-        .welcome-msg h2 { font-size: 28px; color: var(--text); margin-bottom: 10px; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; }
+        body { background: var(--bg); color: var(--text); height: 100vh; display: flex; transition: background 0.3s, color 0.3s; }
         
-        /* Scrollbar */
-        ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: var(--surface-2); border-radius: 4px; }
-        ::-webkit-scrollbar-thumb:hover { background: var(--text-secondary); }
+        /* Sidebar */
+        .sidebar { width: 260px; background: var(--surface); border-right: 1px solid var(--border); display: flex; flex-direction: column; padding: 20px; gap: 20px; }
+        .logo { display: flex; align-items: center; gap: 10px; font-weight: 800; font-size: 18px; }
+        .logo-icon { width: 32px; height: 32px; background: var(--primary); color: white; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 18px; }
+        .nav { display: flex; flex-direction: column; gap: 4px; }
+        .nav-item { display: flex; align-items: center; gap: 12px; padding: 10px 12px; border-radius: 8px; color: var(--text-soft); cursor: pointer; font-weight: 600; transition: all 0.2s; }
+        .nav-item:hover { background: var(--surface-2); color: var(--text); }
+        .nav-item.active { background: var(--primary-soft); color: var(--primary); }
+        .nav-icon { font-size: 18px; }
+        .tip-box { background: var(--surface-2); padding: 16px; border-radius: 12px; border: 1px solid var(--border); font-size: 13px; margin-top: auto; }
+        .tip-box strong { display: block; margin-bottom: 4px; }
+        .theme-toggle { margin-top: 12px; background: var(--surface-2); border: 1px solid var(--border); color: var(--text); padding: 10px; border-radius: 8px; cursor: pointer; font-weight: 600; }
+        
+        /* Main Content */
+        .main-content { flex: 1; overflow-y: auto; padding: 30px; }
+        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .header h1 { font-size: 28px; font-weight: 800; letter-spacing: -0.5px; }
+        .header p { color: var(--text-soft); font-size: 14px; margin-top: 4px; }
+        .search-box { display: flex; align-items: center; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 10px 16px; width: 400px; box-shadow: var(--shadow); }
+        .search-box input { border: none; background: transparent; outline: none; flex: 1; color: var(--text); font-size: 14px; }
+        .search-box input::placeholder { color: var(--text-soft); }
+        .avatar { width: 40px; height: 40px; border-radius: 50%; background: var(--accent); color: white; display: flex; align-items: center; justify-content: center; font-weight: 700; }
 
-        /* Mobile Responsiveness */
-        @media (max-width: 768px) {
-            .container { flex-direction: column; }
-            .sidebar { width: 100%; max-height: 40vh; border-bottom: 1px solid var(--border); border-right: none; }
-            .main-content { min-height: 60vh; }
-            .header h1 { font-size: 16px; }
+        /* Filters */
+        .filters { display: flex; gap: 12px; margin-bottom: 24px; flex-wrap: wrap; }
+        .filter-select { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 10px 16px; color: var(--text); font-weight: 600; cursor: pointer; outline: none; }
+        .btn-reset { background: var(--accent-soft); border: 1px solid var(--accent); color: var(--accent); padding: 10px 16px; border-radius: 10px; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 6px; }
+        .btn-reset:hover { background: var(--accent); color: white; }
+
+        /* Stats Cards */
+        .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 24px; }
+        .stat-card { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 20px; box-shadow: var(--shadow); }
+        .stat-icon { width: 40px; height: 40px; border-radius: 10px; background: var(--primary-soft); color: var(--primary); display: flex; align-items: center; justify-content: center; font-size: 20px; margin-bottom: 12px; }
+        .stat-value { font-size: 28px; font-weight: 800; letter-spacing: -1px; }
+        .stat-label { font-size: 13px; color: var(--text-soft); font-weight: 500; margin-top: 4px; }
+        .sparkline { margin-top: 10px; height: 30px; width: 100%; }
+
+        /* Charts Grid */
+        .charts-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; margin-bottom: 24px; }
+        .chart-card { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 20px; box-shadow: var(--shadow); }
+        .chart-card h3 { font-size: 16px; font-weight: 700; margin-bottom: 15px; }
+        .chart-card h3 span { float: right; font-size: 12px; color: var(--text-soft); font-weight: 500; }
+        .chart-container { height: 250px; position: relative; }
+
+        /* Radar */
+        .radar-list { display: flex; flex-direction: column; gap: 12px; }
+        .radar-item { display: flex; align-items: center; gap: 12px; }
+        .radar-icon { width: 32px; height: 32px; border-radius: 8px; background: var(--surface-2); color: var(--primary); display: flex; align-items: center; justify-content: center; }
+        .radar-info { flex: 1; }
+        .radar-name { font-size: 14px; font-weight: 700; }
+        .radar-year { font-size: 12px; color: var(--text-soft); }
+        .radar-tag { font-size: 10px; font-weight: 800; padding: 4px 8px; border-radius: 12px; }
+        .tag-high { background: var(--accent); color: white; }
+        .tag-med { background: #fbbf24; color: #78350f; }
+        .tag-low { background: #10b981; color: #064e3b; }
+
+        /* Matrix */
+        .matrix-section { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 20px; margin-bottom: 24px; box-shadow: var(--shadow); overflow-x: auto; }
+        .matrix-title { font-size: 16px; font-weight: 700; margin-bottom: 15px; }
+        .matrix-title span { float: right; font-size: 12px; color: var(--text-soft); font-weight: 500; }
+        .matrix-table { border-collapse: collapse; width: 100%; min-width: 800px; }
+        .matrix-table th, .matrix-table td { text-align: center; padding: 8px; font-size: 12px; }
+        .matrix-table th { color: var(--text-soft); font-weight: 600; border-bottom: 1px solid var(--border); }
+        .matrix-table td.cell { border: 1px solid var(--border); border-radius: 4px; width: 40px; height: 28px; cursor: pointer; transition: transform 0.1s; }
+        .matrix-table td.cell:hover { transform: scale(1.1); border-color: var(--text); }
+        .matrix-label { text-align: left !important; font-weight: 600; white-space: nowrap; }
+
+        /* Question Explorer */
+        .explorer-section { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 20px; box-shadow: var(--shadow-lg); position: relative; }
+        .explorer-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+        .explorer-header h2 { font-size: 16px; font-weight: 700; }
+        .explorer-header a { color: var(--primary); font-size: 13px; font-weight: 600; text-decoration: none; }
+        .exp-card { display: flex; gap: 16px; background: var(--surface-2); border-radius: 12px; padding: 20px; align-items: center; }
+        .exp-badges { display: flex; flex-direction: column; gap: 8px; }
+        .exp-year { font-size: 24px; font-weight: 800; color: var(--accent); }
+        .exp-paper { font-size: 14px; font-weight: 700; }
+        .exp-question { flex: 1; }
+        .exp-question h4 { font-size: 18px; font-weight: 700; margin-bottom: 10px; line-height: 1.5; }
+        .exp-tags { display: flex; gap: 8px; margin-bottom: 15px; }
+        .exp-tag { background: var(--primary-soft); color: var(--primary); font-size: 12px; font-weight: 700; padding: 4px 8px; border-radius: 6px; }
+        .exp-meta { color: var(--text-soft); font-size: 13px; }
+        .exp-actions { display: flex; flex-direction: column; gap: 10px; }
+        .btn-action { background: var(--primary-soft); color: var(--primary); border: none; padding: 10px 16px; border-radius: 8px; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: all 0.2s; }
+        .btn-action:hover { background: var(--primary); color: white; }
+        .btn-save { background: transparent; border: 1px solid var(--border); color: var(--text); padding: 10px 16px; border-radius: 8px; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: all 0.2s; }
+        .btn-save:hover { border-color: var(--primary); color: var(--primary); }
+
+        @media (max-width: 900px) {
+            .stats-grid { grid-template-columns: repeat(2, 1fr); }
+            .charts-grid { grid-template-columns: 1fr; }
+            .sidebar { display: none; }
+            .search-box { width: 100%; }
+            .exp-card { flex-direction: column; align-items: flex-start; }
         }
     </style>
 </head>
 <body>
 
-    <div class="header">
-        <h1>📊 UPSC Mains Analyzer</h1>
-        <div class="header-controls">
-            <button class="theme-toggle" onclick="toggleTheme()">🌓 Toggle Theme</button>
+    <div class="sidebar">
+        <div class="logo"><div class="logo-icon">🦉</div> UPSC CRAFT</div>
+        <div class="nav">
+            <div class="nav-item"><span class="nav-icon">📊</span> Dashboard</div>
+            <div class="nav-item"><span class="nav-icon">📚</span> PYQs</div>
+            <div class="nav-item active"><span class="nav-icon">🧠</span> PYQ Intelligence</div>
+            <div class="nav-item"><span class="nav-icon">📝</span> Practice</div>
+            <div class="nav-item"><span class="nav-icon">🔖</span> Bookmarks</div>
+            <div class="nav-item"><span class="nav-icon">📈</span> Reports</div>
         </div>
+        <div class="tip-box">
+            <strong>⚡ Quick Tip</strong>
+            Federalism has appeared 12 times in the last 14 years.
+        </div>
+        <button class="theme-toggle" onclick="toggleTheme()">🌓 Toggle Theme</button>
     </div>
 
-    <div class="container">
-        <div class="sidebar">
-            <div class="paper-tabs">
-                <button class="paper-tab active" onclick="selectPaper('GS1')">GS1</button>
-                <button class="paper-tab" onclick="selectPaper('GS2')">GS2</button>
-                <button class="paper-tab" onclick="selectPaper('GS3')">GS3</button>
-                <button class="paper-tab" onclick="selectPaper('GS4')">GS4</button>
+    <div class="main-content">
+        <div class="header">
+            <div>
+                <h1>PYQ Intelligence</h1>
+                <p>Decode what UPSC has been asking</p>
             </div>
-            <div class="subject-list" id="theme-sidebar">
-                <div class="welcome-msg" style="padding: 20px;">Loading Themes...</div>
+            <div style="display: flex; align-items: center; gap: 16px;">
+                <div class="search-box">
+                    <input type="text" id="searchInput" placeholder="Search topics, years, questions...">
+                </div>
+                <div class="avatar">B</div>
             </div>
         </div>
 
-        <div class="main-content">
-            <div class="content-header">
-                <h2 id="content-title">Welcome!</h2>
-                <p id="content-subtitle">Select a micro-theme from the left sidebar to see its PYQs.</p>
+        <div class="filters">
+            <select class="filter-select" id="paperFilter" onchange="applyFilters()">
+                <option value="ALL">All Papers</option>
+                <option value="GS1">GS1</option>
+                <option value="GS2">GS2</option>
+                <option value="GS3">GS3</option>
+                <option value="GS4">GS4</option>
+            </select>
+            <select class="filter-select" id="yearFilter" onchange="applyFilters()">
+                <option value="ALL">All Years</option>
+            </select>
+            <button class="btn-reset" onclick="resetFilters()">⟳ Reset all</button>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon">📄</div>
+                <div class="stat-value" id="totalQs">0</div>
+                <div class="stat-label">Total PYQs found</div>
             </div>
-            <div class="questions-container" id="questions-view">
-                <div class="welcome-msg">
-                    <h2>👈 Select a Theme</h2>
-                    <p>Explore GS 1, 2, 3, and 4 papers in a beautiful, dark-mode friendly interface.</p>
+            <div class="stat-card">
+                <div class="stat-icon">🎯</div>
+                <div class="stat-value" id="totalTopics">0</div>
+                <div class="stat-label">Distinct Topics</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">🔁</div>
+                <div class="stat-value" id="recurringQs">0</div>
+                <div class="stat-label">Repeating Themes</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">📅</div>
+                <div class="stat-value" id="totalYears">0</div>
+                <div class="stat-label">Years Covered</div>
+            </div>
+        </div>
+
+        <div class="charts-grid">
+            <div class="chart-card">
+                <h3>Question Trend by Year <span>All Topics</span></h3>
+                <div class="chart-container"><canvas id="trendChart"></canvas></div>
+            </div>
+            <div class="chart-card">
+                <h3>Most Repeated Topics <span>View all</span></h3>
+                <div class="chart-container"><canvas id="topicChart"></canvas></div>
+            </div>
+            <div class="chart-card">
+                <h3>Repeat Radar <span>High Frequency</span></h3>
+                <div class="radar-list" id="radarList"></div>
+            </div>
+        </div>
+
+        <div class="matrix-section">
+            <div class="matrix-title">PYQ Matrix <span>(Year × Topic)</span></div>
+            <table class="matrix-table" id="matrixTable"></table>
+        </div>
+
+        <div class="explorer-section">
+            <div class="explorer-header">
+                <h2>Question Explorer</h2>
+                <a href="#">Explore and analyze PYQs in detail →</a>
+            </div>
+            <div class="exp-card" id="explorerCard">
+                <div class="exp-badges">
+                    <div class="exp-year" id="expYear">2026</div>
+                    <div class="exp-paper" id="expPaper">GS2</div>
+                    <div class="exp-meta" id="expMarks">15 Marks</div>
+                </div>
+                <div class="exp-question">
+                    <h4 id="expQuestionText">Loading question...</h4>
+                    <div class="exp-tags" id="expTags"></div>
+                    <div class="exp-meta" id="expLastAsked">Last Asked: 2026</div>
+                </div>
+                <div class="exp-actions">
+                    <button class="btn-action">✨ Analyse Question</button>
+                    <button class="btn-action">⚡ Generate Answer</button>
+                    <button class="btn-save">💾 Save Question</button>
                 </div>
             </div>
         </div>
     </div>
 
     <script>
-        // Set initial theme based on user preference or default to dark
-        const savedTheme = localStorage.getItem('qs-theme') || 'dark';
-        document.body.classList.toggle('light-mode', savedTheme === 'light');
+        // Theme
+        const savedTheme = localStorage.getItem('pyq-theme') || 'light';
+        if(savedTheme === 'dark') document.body.classList.add('dark-mode');
 
         function toggleTheme() {
-            document.body.classList.toggle('light-mode');
-            const isLight = document.body.classList.contains('light-mode');
-            localStorage.setItem('qs-theme', isLight ? 'light' : 'dark');
+            document.body.classList.toggle('dark-mode');
+            localStorage.setItem('pyq-theme', document.body.classList.contains('dark-mode') ? 'dark' : 'light');
         }
 
-        // State
-        let currentPaper = 'GS1';
-        let allData = {};
-        let currentThemeId = null;
+        // Data Processing
+        let allQuestions = [];
+        let myCharts = {};
 
-        // Fetch Data
         async function loadData() {
             const files = {
                 'GS1': './gs1_themes.json',
@@ -316,99 +261,250 @@
                 'GS4': './gs4_themes.json'
             };
 
-            try {
-                const results = await Promise.all(
-                    Object.keys(files).map(async key => {
-                        try {
-                            const res = await fetch(files[key]);
-                            if (!res.ok) throw new Error('Not Found');
-                            const data = await res.json();
-                            return { key, data };
-                        } catch (e) {
-                            return { key, data: {} };
-                        }
-                    })
-                );
+            const rawData = await Promise.all(Object.entries(files).map(async ([paper, url]) => {
+                try {
+                    const res = await fetch(url);
+                    if (!res.ok) return { paper, data: {} };
+                    const json = await res.json();
+                    return { paper, data: json };
+                } catch (e) {
+                    console.warn(`Could not load ${url}`);
+                    return { paper, data: {} };
+                }
+            }));
 
-                results.forEach(result => {
-                    allData[result.key] = result.data;
-                });
-
-                selectPaper('GS1');
-
-            } catch (error) {
-                console.error("Error loading JSON files", error);
-                document.getElementById('theme-sidebar').innerHTML = `<div class="welcome-msg" style="padding: 20px;">Error loading JSON. Ensure the files are in the same folder and served over HTTP.</div>`;
-            }
-        }
-
-        // Select GS Paper
-        function selectPaper(paper) {
-            currentPaper = paper;
-            document.querySelectorAll('.paper-tab').forEach(tab => {
-                tab.classList.toggle('active', tab.textContent === paper);
+            // Flatten JSON into single array
+            rawData.forEach(({ paper, data }) => {
+                // Data structure is { "GS1": { "Subject": [ { ... } ] } }
+                // The top level key is the paper itself. So we get the paper data directly from data[paper]
+                if(data[paper]) {
+                    for(const subject in data[paper]) {
+                        data[paper][subject].forEach(q => {
+                            allQuestions.push({
+                                paper: paper,
+                                subject: subject,
+                                ...q
+                            });
+                        });
+                    }
+                }
             });
-            
-            renderSidebar();
+
+            // Populate year filter
+            const years = [...new Set(allQuestions.map(q => q.year))].sort();
+            const yearFilter = document.getElementById('yearFilter');
+            years.forEach(y => {
+                const opt = document.createElement('option');
+                opt.value = y;
+                opt.textContent = y;
+                yearFilter.appendChild(opt);
+            });
+
+            renderDashboard();
         }
 
-        // Render Sidebar based on selected paper
-        function renderSidebar() {
-            const sidebar = document.getElementById('theme-sidebar');
-            sidebar.innerHTML = '';
-
-            const paperData = allData[currentPaper];
-            if (!paperData || Object.keys(paperData).length === 0) {
-                sidebar.innerHTML = `<div class="welcome-msg" style="padding: 20px;">No data found for ${currentPaper}</div>`;
-                return;
-            }
-
-            for (const [subject, themes] of Object.entries(paperData)) {
-                const subjectDiv = document.createElement('div');
-                subjectDiv.className = 'subject-group';
-
-                const subjectTitle = document.createElement('div');
-                subjectTitle.className = 'subject-title';
-                subjectTitle.textContent = subject;
-                subjectDiv.appendChild(subjectTitle);
-
-                themes.forEach(theme => {
-                    const btn = document.createElement('button');
-                    btn.className = 'theme-btn';
-                    btn.innerHTML = `<span>${theme.microtheme}</span> <span class="count-badge">${theme.year}</span>`;
-                    
-                    // Generate a unique ID for the theme (using microtheme + year for uniqueness)
-                    const themeId = `${currentPaper}-${subject}-${theme.microtheme}`;
-                    btn.onclick = () => selectTheme(themeId, btn, theme);
-                    
-                    subjectDiv.appendChild(btn);
-                });
-
-                sidebar.appendChild(subjectDiv);
-            }
+        function applyFilters() {
+            renderDashboard();
         }
 
-        // Select a specific micro-theme
-        function selectTheme(themeId, btnElement, theme) {
-            // Highlight button
-            document.querySelectorAll('.theme-btn').forEach(b => b.classList.remove('active'));
-            btnElement.classList.add('active');
-            
-            // Update header
-            document.getElementById('content-title').textContent = theme.microtheme;
-            document.getElementById('content-subtitle').textContent = `Year: ${theme.year} | Marks: ${theme.marks}`;
+        function resetFilters() {
+            document.getElementById('paperFilter').value = 'ALL';
+            document.getElementById('yearFilter').value = 'ALL';
+            document.getElementById('searchInput').value = '';
+            renderDashboard();
+        }
 
-            // Render question
-            const view = document.getElementById('questions-view');
-            view.innerHTML = `
-                <div class="q-card">
-                    <div class="q-meta">
-                        <span class="badge badge-year">Year: ${theme.year}</span>
-                        <span class="badge badge-marks">Marks: ${theme.marks}</span>
+        function renderDashboard() {
+            const paper = document.getElementById('paperFilter').value;
+            const year = document.getElementById('yearFilter').value;
+            const search = document.getElementById('searchInput').value.toLowerCase();
+
+            let filtered = allQuestions.filter(q => {
+                if(paper !== 'ALL' && q.paper !== paper) return false;
+                if(year !== 'ALL' && q.year !== year) return false;
+                if(search && !q.key_pyq.toLowerCase().includes(search) && !q.microtheme.toLowerCase().includes(search)) return false;
+                return true;
+            });
+
+            // 1. Stats Cards
+            const totalTopics = new Set(filtered.map(q => q.microtheme)).size;
+            const totalYears = new Set(filtered.map(q => q.year)).size;
+            const recurringCount = filtered.filter(q => {
+                return filtered.filter(x => x.microtheme === q.microtheme).length > 1;
+            }).length / 2; // approximate
+
+            document.getElementById('totalQs').textContent = filtered.length;
+            document.getElementById('totalTopics').textContent = totalTopics;
+            document.getElementById('recurringQs').textContent = Math.round(recurringCount);
+            document.getElementById('totalYears').textContent = totalYears;
+
+            // 2. Charts
+            drawTrendChart(filtered);
+            drawTopicChart(filtered);
+            drawRadar(filtered);
+
+            // 3. Matrix
+            drawMatrix(filtered);
+
+            // 4. Explorer
+            updateExplorer(filtered[Math.floor(Math.random() * Math.min(filtered.length, 20))]);
+        }
+
+        function drawTrendChart(data) {
+            const years = {};
+            data.forEach(q => {
+                years[q.year] = (years[q.year] || 0) + 1;
+            });
+            const labels = Object.keys(years).sort();
+            const counts = labels.map(y => years[y]);
+
+            const ctx = document.getElementById('trendChart').getContext('2d');
+            if(myCharts.trend) myCharts.trend.destroy();
+
+            myCharts.trend = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels,
+                    datasets: [{
+                        label: 'Questions',
+                        data: counts,
+                        borderColor: '#e11d48',
+                        backgroundColor: 'rgba(225, 29, 72, 0.1)',
+                        fill: true,
+                        tension: 0.4,
+                        pointRadius: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        x: { grid: { display: false } },
+                        y: { beginAtZero: true }
+                    }
+                }
+            });
+        }
+
+        function drawTopicChart(data) {
+            const topics = {};
+            data.forEach(q => {
+                topics[q.microtheme] = (topics[q.microtheme] || 0) + 1;
+            });
+            const sorted = Object.entries(topics).sort((a, b) => b[1] - a[1]).slice(0, 8);
+            const labels = sorted.map(t => t[0]);
+            const counts = sorted.map(t => t[1]);
+
+            const ctx = document.getElementById('topicChart').getContext('2d');
+            if(myCharts.topic) myCharts.topic.destroy();
+
+            myCharts.topic = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels,
+                    datasets: [{
+                        label: 'Count',
+                        data: counts,
+                        backgroundColor: '#e11d48',
+                        borderRadius: 6
+                    }]
+                },
+                options: {
+                    indexAxis: 'y',
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        x: { beginAtZero: true, grid: { display: false } },
+                        y: { grid: { display: false } }
+                    }
+                }
+            });
+        }
+
+        function drawRadar(data) {
+            const topics = {};
+            data.forEach(q => {
+                topics[q.microtheme] = (topics[q.microtheme] || 0) + 1;
+            });
+            const sorted = Object.entries(topics).sort((a, b) => b[1] - a[1]);
+
+            const radarContainer = document.getElementById('radarList');
+            radarContainer.innerHTML = '';
+
+            sorted.slice(0, 5).forEach(([topic, count]) => {
+                const lastYear = data.filter(q => q.microtheme === topic).pop().year;
+                let tagClass = 'tag-low';
+                let tagText = 'Low';
+                if(count >= 5) { tagClass = 'tag-high'; tagText = 'Very High'; }
+                else if(count >= 3) { tagClass = 'tag-med'; tagText = 'High'; }
+
+                const item = document.createElement('div');
+                item.className = 'radar-item';
+                item.innerHTML = `
+                    <div class="radar-icon">📚</div>
+                    <div class="radar-info">
+                        <div class="radar-name">${topic}</div>
+                        <div class="radar-year">${count} Questions | Last Asked: ${lastYear}</div>
                     </div>
-                    <div class="q-text">${theme.key_pyq}</div>
-                </div>
-            `;
+                    <span class="radar-tag ${tagClass}">${tagText}</span>
+                `;
+                radarContainer.appendChild(item);
+            });
+        }
+
+        function drawMatrix(data) {
+            const table = document.getElementById('matrixTable');
+            table.innerHTML = '';
+
+            const years = [...new Set(data.map(q => q.year))].sort();
+            const subjects = [...new Set(data.map(q => q.subject))].sort();
+
+            let html = '<tr><th>Subject</th>';
+            years.forEach(y => html += `<th>${y}</th>`);
+            html += '</tr>';
+
+            subjects.forEach(subject => {
+                html += `<tr><td class="matrix-label">${subject}</td>`;
+                years.forEach(year => {
+                    const count = data.filter(q => q.subject === subject && q.year === year).length;
+                    let colorClass = 'matrix-0';
+                    if(count === 1) colorClass = 'matrix-1';
+                    else if(count === 2) colorClass = 'matrix-2';
+                    else if(count === 3) colorClass = 'matrix-3';
+                    else if(count === 4) colorClass = 'matrix-4';
+                    else if(count >= 5) colorClass = 'matrix-5';
+
+                    html += `<td class="cell ${colorClass}" title="${count} question(s)"></td>`;
+                });
+                html += '</tr>';
+            });
+
+            table.innerHTML = html;
+        }
+
+        function updateExplorer(q) {
+            if(!q) return;
+            document.getElementById('expYear').textContent = q.year;
+            document.getElementById('expPaper').textContent = q.paper;
+            document.getElementById('expMarks').textContent = q.marks + " Marks";
+            document.getElementById('expQuestionText').textContent = q.key_pyq;
+            document.getElementById('expLastAsked').textContent = `Last Asked: ${q.year}`;
+
+            const tags = document.getElementById('expTags');
+            tags.innerHTML = `<span class="exp-tag">${q.paper}</span><span class="exp-tag">${q.subject}</span><span class="exp-tag">${q.microtheme}</span>`;
+        }
+
+        // Search on Enter or Debounced
+        document.getElementById('searchInput').addEventListener('input', debounce(applyFilters, 300));
+
+        function debounce(func, wait) {
+            let timeout;
+            return function (...args) {
+                clearTimeout(timeout);
+                timeout = setTimeout(() => func.apply(this, args), wait);
+            };
         }
 
         // Initialize
