@@ -6,6 +6,58 @@
   <title>UPSC CRAFT | Workspace</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
+  <style>
+    /* Mobile Responsive Fixes for Workspace */
+    @media (max-width: 900px) {
+      .filter-bar-vertical {
+        grid-template-columns: 1fr !important;
+        gap: 12px;
+        padding: 15px;
+      }
+      .filter-group label {
+        margin-bottom: 4px;
+      }
+      .filter-actions {
+        flex-direction: column !important;
+        gap: 8px;
+        width: 100%;
+      }
+      .filter-actions .btn-primary,
+      .filter-actions .btn-clear {
+        width: 100%;
+        text-align: center;
+      }
+      .stats-row {
+        grid-template-columns: 1fr !important;
+        gap: 12px;
+      }
+      .form-row {
+        grid-template-columns: 1fr !important;
+        gap: 15px;
+      }
+      .marks-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+      .marks-btn {
+        flex: 1;
+        min-width: 100px;
+      }
+      .content {
+        padding: 15px 15px 60px;
+      }
+      .topbar {
+        padding: 20px 0 15px;
+      }
+      .features-grid {
+        grid-template-columns: 1fr !important;
+      }
+      .q-item {
+        padding: 12px 0;
+      }
+    }
+  </style>
 </head>
 <body>
 <div class="app">
@@ -18,6 +70,7 @@
         <button class="nav-btn" data-section="pyq-bank" onclick="switchSection('pyq-bank')"><span class="nav-icon">⌕</span> PYQ Bank</button>
         <button class="nav-btn" data-section="create-question" onclick="switchSection('create-question')"><span class="nav-icon">＋</span> Create Question</button>
         <button class="nav-btn" data-section="my-qcab" onclick="switchSection('my-qcab')"><span class="nav-icon">▣</span> My QCAB</button>
+        <!-- Updated to open in same tab -->
         <button class="nav-btn" onclick="window.location.href='analyzer.html'"><span class="nav-icon">◈</span> PYQ Intelligence</button>
     </nav>
     
@@ -64,7 +117,7 @@
       </div>
     </div>
 
-    <!-- PYQ Bank (New Vertical Filter Grid) -->
+    <!-- PYQ Bank -->
     <div id="pyq-bank" class="workspace-section">
       <div style="display: flex; justify-content: space-between; margin-bottom: 20px;">
         <h2 style="font-size: 24px; font-weight: 800;">📖 PYQ Bank</h2>
@@ -88,7 +141,7 @@
       <div id="bank-results-container"></div>
     </div>
 
-    <!-- Create Question Section (Clean Design) -->
+    <!-- Create Question Section -->
     <div id="create-question" class="workspace-section">
       <h2 style="font-size: 24px; font-weight: 800; margin-bottom: 20px;">✏️ Create Custom Question</h2>
       <div class="create-form">
@@ -156,23 +209,7 @@
     </div>
   </div>
 </div>
-<div class="analyzer-modal-overlay" id="analyzer-modal-overlay">
-  <div class="analyzer-content">
-    <div class="analyzer-header">
-      <h2>📊 PYQ Theme Analyzer</h2>
-      <div><button class="btn-secondary" id="analyzer-back-btn">← Back</button> <button class="btn-secondary" id="analyzer-close-btn">✕ Close</button></div>
-    </div>
-    <div class="analyzer-body">
-      <div style="display: flex; gap: 10px; margin-bottom: 20px;">
-        <button class="analyzer-paper-btn active" onclick="selectAnalyzerPaper('GS1')">GS1</button>
-        <button class="analyzer-paper-btn" onclick="selectAnalyzerPaper('GS2')">GS2</button>
-        <button class="analyzer-paper-btn" onclick="selectAnalyzerPaper('GS3')">GS3</button>
-        <button class="analyzer-paper-btn" onclick="selectAnalyzerPaper('GS4')">GS4</button>
-      </div>
-      <div id="analyzer-container"><p style="text-align: center; color: var(--text-soft);">Click a Subject to view Themes with counts.</p></div>
-    </div>
-  </div>
-</div>
+
 <div class="toast" id="toast">✅ Copied!</div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
@@ -195,23 +232,13 @@
     if(sectionId === 'my-qcab') renderQuestions();
     if(sectionId === 'create-question') populateFormSubtopics();
   }
-  
-  const themeToggleTop = document.getElementById('theme-toggle-top');
-  if(localStorage.getItem('qcab_theme') === 'dark') { document.body.classList.add('dark-mode'); themeToggleTop.textContent = '☀️'; }
-  themeToggleTop.addEventListener('click', () => {
-      document.body.classList.toggle('dark-mode');
-      localStorage.setItem('qcab_theme', document.body.classList.contains('dark-mode') ? 'dark' : 'light');
-      themeToggleTop.textContent = document.body.classList.contains('dark-mode') ? '☀️' : '🌙';
-  });
-</script>
-<script>
-  // SYLLABUS LOGIC (Global Fix)
+
+  // Global Syllabus Functions (Fixed Scope)
   function openSyllabusModal() {
     var cardsHolder = document.getElementById('syllabus-cards-holder');
     var menu = document.getElementById('syllabus-main-menu');
     var detail = document.getElementById('syllabus-detail-view');
     menu.style.display = 'block'; detail.style.display = 'none';
-    
     if (cardsHolder.children.length === 0) {
       cardsHolder.innerHTML = '';
       for (var key in SYLLABUS_DATA) {
@@ -248,11 +275,19 @@
     document.getElementById('syllabus-detail-view').style.display = 'none';
     document.getElementById('syllabus-main-menu').style.display = 'block';
   }
-  
+
   window.openSyllabusModal = openSyllabusModal;
   window.closeSyllabusModal = closeSyllabusModal;
   window.openSyllabusTopic = openSyllabusTopic;
   window.backToSyllabusMenu = backToSyllabusMenu;
+  
+  const themeToggleTop = document.getElementById('theme-toggle-top');
+  if(localStorage.getItem('qcab_theme') === 'dark') { document.body.classList.add('dark-mode'); themeToggleTop.textContent = '☀️'; }
+  themeToggleTop.addEventListener('click', () => {
+      document.body.classList.toggle('dark-mode');
+      localStorage.setItem('qcab_theme', document.body.classList.contains('dark-mode') ? 'dark' : 'light');
+      themeToggleTop.textContent = document.body.classList.contains('dark-mode') ? '☀️' : '🌙';
+  });
 </script>
 </body>
 </html>
