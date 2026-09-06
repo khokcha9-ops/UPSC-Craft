@@ -171,7 +171,7 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 
   // Safely define fallbacks
-  window.SYLLABUS = window.SYLLABUS || { 'GS1': ['General'], 'GS2': ['General'], 'GS3': ['General'], 'GS4': ['General'], 'OPT1': ['General'], 'OPT2': ['General'] };
+  window.SYLLABUS = window.SYLLABUS || { 'GS1': ['General'], 'GS2': ['General'], 'GS3': ['General'], 'GS4': ['General'], 'anthropology_paper1': ['General'], 'anthropology_paper2': ['General'] };
   window.MARK_RULES = window.MARK_RULES || { 10: 2, 15: 3, 20: 4 };
   window.WORKER_URL = window.WORKER_URL || '';
 
@@ -311,10 +311,12 @@ document.addEventListener('DOMContentLoaded', function() {
   backToTopBtn?.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
 
   // 9. HELPER FUNCTIONS
+  // **UPDATED**: Map old OPT1/OPT2 codes to new anthropology_paper1/2
   function normalizePaperCode(paperVal) {
     if (!paperVal) return 'GS1';
     let cleaned = String(paperVal).toUpperCase().replace(/[\s\-\.]/g, ''); 
-    if (cleaned.includes('OPT')) return cleaned.includes('2') ? 'OPT2' : 'OPT1';
+    if (cleaned === 'OPT1' || cleaned === 'ANTHROPOLOGYPAPER1' || cleaned === 'ANTHRO1') return 'anthropology_paper1';
+    if (cleaned === 'OPT2' || cleaned === 'ANTHROPOLOGYPAPER2' || cleaned === 'ANTHRO2') return 'anthropology_paper2';
     if (cleaned.includes('GS')) {
       if (cleaned.includes('2')) return 'GS2';
       if (cleaned.includes('3')) return 'GS3';
@@ -324,9 +326,18 @@ document.addEventListener('DOMContentLoaded', function() {
     return 'GS1';
   }
 
+  // **NEW**: Display friendly name in UI
+  function formatPaperName(paper) {
+    const norm = normalizePaperCode(paper);
+    if (norm === 'anthropology_paper1') return 'Anthro Paper 1';
+    if (norm === 'anthropology_paper2') return 'Anthro Paper 2';
+    return norm;
+  }
+
   function getPaperTagClass(paper) {
     const norm = normalizePaperCode(paper);
     const classes = { 'GS1': 'tag-paper-gs1', 'GS2': 'tag-paper-gs2', 'GS3': 'tag-paper-gs3', 'GS4': 'tag-paper-gs4' };
+    if (norm === 'anthropology_paper1' || norm === 'anthropology_paper2') return 'tag-paper-opt';
     return classes[norm] || 'tag-paper-opt';
   }
 
@@ -472,7 +483,7 @@ document.addEventListener('DOMContentLoaded', function() {
         <div style="border:1px solid var(--border);border-radius:10px;padding:12px;background:var(--surface-2);">
           <div style="font-weight:700;margin-bottom:4px;">${escapeHtml(q.question)}</div>
           <div style="display:flex;gap:8px;flex-wrap:wrap;font-size:12px;">
-            <span class="tag">${escapeHtml(q.paper)}</span>
+            <span class="tag">${escapeHtml(formatPaperName(q.paper))}</span>
             <span class="tag tag-topic">${escapeHtml(q.topic)}</span>
             <span class="tag">${q.year || ''}</span>
             <span class="tag">${status}</span>
@@ -620,6 +631,7 @@ document.addEventListener('DOMContentLoaded', function() {
       const div = document.createElement('div');
       div.className = 'bank-item';
       const paperClass = getPaperTagClass(q.paper);
+      const displayPaper = formatPaperName(q.paper);
       const rec = getStudyRecord(q);
       const bookmarked = rec.bookmarked;
       const revised = rec.revised;
@@ -635,7 +647,7 @@ document.addEventListener('DOMContentLoaded', function() {
         <div class="bank-question">${numberedQuestion}</div>
         <div class="bank-bottom">
           <div class="tags">
-            <span class="tag ${paperClass}">${escapeHtml(q.paper || 'GS1')}</span>
+            <span class="tag ${paperClass}">${escapeHtml(displayPaper)}</span>
             <span class="tag tag-topic">${escapeHtml(q.topic || 'General')}</span>
             <span class="tag ${isRepeated ? 'tag-repeat' : ''}">${q.marks} M ${yearTagText ? '/ ' + escapeHtml(yearTagText) : ''}</span>
           </div>
@@ -783,12 +795,13 @@ document.addEventListener('DOMContentLoaded', function() {
       const li = document.createElement('li');
       li.className = 'q-item';
       const paperClass = getPaperTagClass(q.paper);
+      const displayPaper = formatPaperName(q.paper);
       li.innerHTML = `
         <div class="q-num">${i+1}.</div>
         <div>
           <div class="q-text">${escapeHtml(q.question)}</div>
           <div class="q-meta">
-            ${q.paper ? `<span class="tag ${paperClass}">${escapeHtml(q.paper)}</span>` : ''}
+            ${q.paper ? `<span class="tag ${paperClass}">${escapeHtml(displayPaper)}</span>` : ''}
             ${q.topic ? `<span class="tag tag-topic">${escapeHtml(q.topic)}</span>` : ''}
             <span class="tag">${q.marks} M ${q.year ? '/ ' + escapeHtml(q.year) : ''}</span>
             <span class="tag pages">${MARK_RULES[q.marks] || 2} pages</span>
@@ -1007,9 +1020,12 @@ document.addEventListener('DOMContentLoaded', function() {
       const question = pendingQuestion.question;
       const year = pendingQuestion.year || '';
       const marks = pendingQuestion.marks || '';
+      // **CRITICAL UPDATE**: Ensure 'paper' is included!
+      const paper = pendingQuestion.paper || 'gs1';
 
       if (model === 'secret') { // My AI Answer
-        const params = new URLSearchParams({ q: question, y: year, m: marks, model: 'secret' });
+        // **CRITICAL UPDATE**: Pass 'paper' in the URL parameters
+        const params = new URLSearchParams({ q: question, y: year, m: marks, model: 'secret', paper: paper });
         window.open(`answer.html?${params.toString()}`, '_blank');
         closeAIModal();
         return;
@@ -1043,16 +1059,23 @@ document.addEventListener('DOMContentLoaded', function() {
     let questionText = questionEl ? questionEl.innerText.trim() : '';
     questionText = questionText.replace(/^\d+\.\s*/, '');
     const tags = card.querySelectorAll('.tag');
-    let marks = '', year = '';
+    let marks = '', year = '', paper = 'GS1';
     tags.forEach(tag => {
       const text = tag.innerText;
       if (text.includes('M')) {
         const parts = text.split('/');
         marks = parts[0].trim();
         if (parts[1]) year = parts[1].trim();
+      } else if (text.includes('Anthro Paper 1')) {
+        // **CRITICAL UPDATE**: Extract and map back to exact Worker code
+        paper = 'anthropology_paper1';
+      } else if (text.includes('Anthro Paper 2')) {
+        paper = 'anthropology_paper2';
+      } else if (text.includes('GS')) {
+        paper = text.trim();
       }
     });
-    const questionItem = { question: questionText, marks, year };
+    const questionItem = { question: questionText, marks, year, paper };
     openAIModal(questionItem);
   };
 
